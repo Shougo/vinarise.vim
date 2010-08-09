@@ -1,0 +1,82 @@
+*vinarise.txt*	Ultimate hex editing system with Vim.
+
+Version: 0.1
+Author : Shougo <Shougo.Matsu@gmail.com>
+License: MIT license  {{{
+    Permission is hereby granted, free of charge, to any person obtaining
+    a copy of this software and associated documentation files (the
+    "Software"), to deal in the Software without restriction, including
+    without limitation the rights to use, copy, modify, merge, publish,
+    distribute, sublicense, and/or sell copies of the Software, and to
+    permit persons to whom the Software is furnished to do so, subject to
+    the following conditions:
+    The above copyright notice and this permission notice shall be included
+    in all copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+    OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+    MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+    IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+    CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+    TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+    SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+}}}
+
+CONTENTS					*vinarise-contents*
+
+Introduction		|vinarise-introduction|
+Install			|vinarise-install|
+Interface		|vinarise-interface|
+  Commands		  |vinarise-commands|
+  Variables		  |vinarise-variables|
+Examples		|vinarise-examples|
+Create source		|vinarise-create-source|
+ToDo			|vinarise-todo|
+Bugs			|vinarise-bugs|
+Changelog		|vinarise-changelog|
+
+==============================================================================
+INTRODUCTION					*vinarise-introduction*
+
+==============================================================================
+USAGE						*vinarise-usage*
+
+==============================================================================
+INSTALL						*vinarise-install*
+
+==============================================================================
+INTERFACE					*vinarise-interface*
+
+------------------------------------------------------------------------------
+COMMANDS 					*vinarise-commands*
+
+:vinarise {file}					*:vinarise*
+		Enable vinarise.
+
+------------------------------------------------------------------------------
+VARIABLES 					*vinarise-variables*
+
+g:vinarise_					*g:vinarise_*
+		
+
+==============================================================================
+EXAMPLES					*vinarise-examples*
+>
+	
+	
+	
+>
+==============================================================================
+TODO						*vinarise-todo*
+
+==============================================================================
+BUGS						*vinarise-bugs*
+
+==============================================================================
+CHANGELOG					*vinarise-changelog*
+
+2010-08-09
+- Initial version.
+
+==============================================================================
+vim:tw=78:ts=8:ft=help:norl:noet:fen:fdl=0:fdm=marker:
