@@ -75,6 +75,9 @@ BUGS						*vinarise-bugs*
 ==============================================================================
 CHANGELOG					*vinarise-changelog*
 
+2010-08-11
+- Use vimproc.
+
 2010-08-09
 - Initial version.
 

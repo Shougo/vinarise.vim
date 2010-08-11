@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: vinarise.vim
 " AUTHOR:  Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 09 Aug 2010
+" Last Modified: 11 Aug 2010
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -25,16 +25,36 @@
 " Version: 0.1, for Vim 7.0
 "=============================================================================
 
+" Check vimproc."{{{
+try
+  let s:exists_vimproc_version = vimproc#version()
+catch
+  echoerr 'Please install vimproc Ver.4.1 or above.'
+  finish
+endtry
+if s:exists_vimproc_version < 401
+  echoerr 'Please install vimproc Ver.4.1 or above.'
+  finish
+endif"}}}
+
 " Variables  "{{{
 let s:vinarise_dicts = []
 "}}}
 
-function! vinarise#open()"{{{
+function! vinarise#open(filename)"{{{
+  if a:filename == ''
+    let l:filename = bufname('%')
+  else
+    let l:filename = a:filename
+  endif
+
+  let l:file = vimproc#fopen(l:filename, 'O_RDONLY', 0)
+  let l:output = l:file.read(1024)
+  call l:file.close()
+  new
+  call append(0, split(l:output, '\r\n\|\r\|\n'))
 endfunction"}}}
 
 " Misc.
-function! s:neocomplcache_enabled()  "{{{
-  return exists('neocomplcache#is_enabled') && neocomplcache#is_enabled()
-endfunction"}}}
 
 " vim: foldmethod=marker

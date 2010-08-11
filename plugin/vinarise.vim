@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: vinarise.vim
 " AUTHOR:  Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 09 Aug 2010
+" Last Modified: 11 Aug 2010
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -32,7 +32,7 @@ endif
 " Global options definition."{{{
 "}}}
 
-command! Vinarise call vinarise#open()
+command! -nargs=? -complete=file Vinarise call vinarise#open(<q-args>)
 
 let g:loaded_vinarise = 1
 
