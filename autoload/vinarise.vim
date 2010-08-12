@@ -37,6 +37,16 @@ if s:exists_vimproc_version < 401
   finish
 endif"}}}
 
+" Constants"{{{
+let s:FALSE = 0
+let s:TRUE = !s:FALSE
+
+if has('win16') || has('win32') || has('win64')  " on Microsoft Windows
+  let s:vinarise_BUFFER_NAME = '[vinarise]'
+else
+  let s:vinarise_BUFFER_NAME = '*vinarise*'
+endif
+"}}}
 " Variables  "{{{
 let s:vinarise_dicts = []
 "}}}
@@ -48,13 +58,79 @@ function! vinarise#open(filename)"{{{
     let l:filename = a:filename
   endif
 
-  let l:file = vimproc#fopen(l:filename, 'O_RDONLY', 0)
+  let l:file = vimproc#fopen(l:filename, 'O_RDONLY | O_BINARY', 0)
   let l:output = l:file.read(1024)
+  while !l:file.eof && len(l:output) < 1024
+    let l:output .= l:file.read(1024 - len(l:output))
+  endwhile
   call l:file.close()
-  new
-  call append(0, split(l:output, '\r\n\|\r\|\n'))
+
+  edit `=s:vinarise_BUFFER_NAME . ' - ' . l:filename`
+  call s:initialize_vinarise_buffer()
+  
+  let b:vinarise.lines = {}
+  let cnt = 0
+  let i = 0
+  let l:max = len(l:output)
+  while i < l:max
+    let b:vinarise.lines[cnt] = strpart(l:output, i, 16)
+    
+    let cnt += 1
+    let i += 16
+  endwhile
+
+  call s:print_lines()
 endfunction"}}}
 
 " Misc.
+function! s:initialize_vinarise_buffer()"{{{
+  " The current buffer is initialized.
+  let b:vinarise = {}
+
+  " Basic settings.
+  setlocal number
+  setlocal buftype=nofile
+  setlocal noswapfile
+  setlocal nomodifiable
+  setlocal nofoldenable
+  setlocal foldcolumn=0
+
+  " Autocommands.
+  augroup plugin-vinarise
+  augroup END
+
+  " User's initialization.
+  setfiletype vinarise
+
+  return
+endfunction"}}}
+
+function! s:print_lines()
+  setlocal modifiable
+  
+  let i = 0
+  let l:max = len(b:vinarise.lines)
+  while i < l:max
+    let l:line = b:vinarise.lines[i]
+    let l:hex_line = ''
+    let l:ascii_line = ''
+    
+    let j = 0
+    let l:max2 = len(l:line)
+    while j < l:max2
+      let l:num = char2nr(l:line[j])
+      let l:hex_line .= printf('%02x', l:num) . ' '
+      let l:ascii_line .= l:num < 32 || l:num > 127 ? '.' : l:line[j]
+
+      let j += 1
+    endwhile
+
+    call append('$', printf(' %07x0 : %-48s |  %s  ', i, l:hex_line, l:ascii_line))
+    
+    let i += 1
+  endwhile
+  
+  setlocal nomodifiable
+endfunction
 
 " vim: foldmethod=marker
