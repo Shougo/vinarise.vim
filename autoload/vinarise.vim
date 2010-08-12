@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: vinarise.vim
 " AUTHOR:  Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 11 Aug 2010
+" Last Modified: 12 Aug 2010
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -110,6 +110,7 @@ function! s:print_lines()
   
   let i = 0
   let l:max = len(b:vinarise.lines)
+  let l:lines = []
   while i < l:max
     let l:line = b:vinarise.lines[i]
     let l:hex_line = ''
@@ -125,10 +126,12 @@ function! s:print_lines()
       let j += 1
     endwhile
 
-    call append('$', printf(' %07x0 : %-48s |  %s  ', i, l:hex_line, l:ascii_line))
+    call add(l:lines, printf(' %07x0: %-48s |  %s  ', i, l:hex_line, l:ascii_line))
     
     let i += 1
   endwhile
+
+  call setline(1, l:lines)
   
   setlocal nomodifiable
 endfunction
