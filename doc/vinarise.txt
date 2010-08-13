@@ -59,8 +59,11 @@ COMMANDS 					*vinarise-commands*
 ------------------------------------------------------------------------------
 VARIABLES 					*vinarise-variables*
 
-g:vinarise_					*g:vinarise_*
+g:vinarise_enable_auto_detect			*g:vinarise_enable_auto_detect*
+		If this variable is 1, vinarise detects binary file
+		automatically.
 		
+		Default value is 0.
 
 ==============================================================================
 EXAMPLES					*vinarise-examples*
@@ -80,6 +83,7 @@ CHANGELOG					*vinarise-changelog*
 
 2010-08-13
 - Added :VinariseDump command.
+- Added g:vinarise_enable_auto_detect option.
 
 2010-08-12
 - Improved print.

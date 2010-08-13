@@ -29,15 +29,15 @@ let s:FALSE = 0
 let s:TRUE = !s:FALSE
 
 if has('win16') || has('win32') || has('win64')  " on Microsoft Windows
-  let s:vinarise_BUFFER_NAME = '[vinarise-dump]'
+  let s:dump_BUFFER_NAME = '[vinarise-dump]'
 else
-  let s:vinarise_BUFFER_NAME = '*vinarise-dump*'
+  let s:dump_BUFFER_NAME = '*vinarise-dump*'
 endif
 "}}}
 " Variables  "{{{
 "}}}
 
-function! vinarise#dump#open(filename)"{{{
+function! vinarise#dump#open(filename, is_overwrite)"{{{
   if !executable('objdump')
     echoerr 'objdump is not installed.'
     return
@@ -49,7 +49,11 @@ function! vinarise#dump#open(filename)"{{{
     let l:filename = a:filename
   endif
 
-  edit `=s:vinarise_BUFFER_NAME . ' - ' . l:filename`
+  if !a:is_overwrite
+    edit `=s:dump_BUFFER_NAME . ' - ' . l:filename`
+  endif
+  
+  silent % delete _
   call s:initialize_dump_buffer()
 
   setlocal modifiable

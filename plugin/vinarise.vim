@@ -30,10 +30,33 @@ if exists('g:loaded_vinarise')
 endif
 
 " Global options definition."{{{
+if !exists('g:vinarise_enable_auto_detect')
+  let g:vinarise_enable_auto_detect = 0
+endif
 "}}}
 
-command! -nargs=? -complete=file Vinarise call vinarise#open(<q-args>)
-command! -nargs=? -complete=file VinariseDump call vinarise#dump#open(<q-args>)
+command! -nargs=? -complete=file Vinarise call vinarise#open(<q-args>, 0)
+command! -nargs=? -complete=file VinariseDump call vinarise#dump#open(<q-args>, 0)
+
+if g:vinarise_enable_auto_detect
+  augroup vinarise
+    autocmd!
+    autocmd BufEnter * call s:browse_check(expand('<amatch>'))
+  augroup END
+endif
+
+function! s:browse_check(filename)
+  if a:filename != '' && &filetype != 'vinarise' && filereadable(a:filename)
+    let l:line = readfile(a:filename, 'b', 1)
+    if !empty(l:line)
+      if l:line[0] =~ '\%(^.ELF\|!<arch>\|^MZ\)'
+        silent! call vinarise#dump#open(a:filename, 1)
+      elseif l:line[0] =~ '[\x00-\x09\x10-\x1f]\{5,}'
+        silent! call vinarise#open(a:filename, 1)
+      endif
+    endif
+  endif
+endfunction
 
 let g:loaded_vinarise = 1
 

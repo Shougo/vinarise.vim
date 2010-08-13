@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: vinarise.vim
 " AUTHOR:  Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 12 Aug 2010
+" Last Modified: 13 Aug 2010
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -51,7 +51,7 @@ endif
 let s:vinarise_dicts = []
 "}}}
 
-function! vinarise#open(filename)"{{{
+function! vinarise#open(filename, is_overwrite)"{{{
   if a:filename == ''
     let l:filename = bufname('%')
   else
@@ -68,7 +68,11 @@ function! vinarise#open(filename)"{{{
   endwhile
   call l:file.close()
 
-  edit `=s:vinarise_BUFFER_NAME . ' - ' . l:filename`
+  if !a:is_overwrite
+    edit `=s:vinarise_BUFFER_NAME . ' - ' . l:filename`
+  endif
+  
+  silent % delete _
   call s:initialize_vinarise_buffer()
   
   let b:vinarise.lines = {}
