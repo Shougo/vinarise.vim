@@ -41,7 +41,7 @@ command! -nargs=? -complete=file VinariseDump call vinarise#dump#open(<q-args>, 
 if g:vinarise_enable_auto_detect
   augroup vinarise
     autocmd!
-    autocmd BufEnter * call s:browse_check(expand('<amatch>'))
+    autocmd BufReadPost,FileReadPost * call s:browse_check(expand('<amatch>'))
   augroup END
 endif
 
