@@ -60,8 +60,11 @@ function! vinarise#open(filename)"{{{
 
   let l:file = vimproc#fopen(l:filename, 'O_RDONLY | O_BINARY', 0)
   let l:output = l:file.read(1024)
-  while !l:file.eof && len(l:output) < 1024
-    let l:output .= l:file.read(1024 - len(l:output))
+  let l:max = 1024 - len(l:output)
+  while !l:file.eof && l:max > 0
+    let l:read = l:file.read(l:max)
+    let l:max -= len(l:read)
+    let l:output .= l:read
   endwhile
   call l:file.close()
 

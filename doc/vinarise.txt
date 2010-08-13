@@ -50,8 +50,11 @@ INTERFACE					*vinarise-interface*
 ------------------------------------------------------------------------------
 COMMANDS 					*vinarise-commands*
 
-:vinarise {file}					*:vinarise*
-		Enable vinarise.
+:Vinarise {file}				*:Vinarise*
+		Edit binary file.
+
+:VinariseDump {file}				*:VinariseDump*
+		View executable file with objdump.
 
 ------------------------------------------------------------------------------
 VARIABLES 					*vinarise-variables*
@@ -74,6 +77,9 @@ BUGS						*vinarise-bugs*
 
 ==============================================================================
 CHANGELOG					*vinarise-changelog*
+
+2010-08-13
+- Added :VinariseDump command.
 
 2010-08-12
 - Improved print.

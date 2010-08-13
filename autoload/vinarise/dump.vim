@@ -1,5 +1,5 @@
 "=============================================================================
-" FILE: vinarise.vim
+" FILE: vinarise/dump.vim
 " AUTHOR:  Shougo Matsushita <Shougo.Matsu@gmail.com>
 " Last Modified: 13 Aug 2010
 " License: MIT license  {{{
@@ -22,20 +22,54 @@
 "     TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 "     SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 " }}}
-" Version: 0.1, for Vim 7.0
 "=============================================================================
 
-if exists('g:loaded_vinarise')
-  finish
-endif
+" Constants"{{{
+let s:FALSE = 0
+let s:TRUE = !s:FALSE
 
-" Global options definition."{{{
+if has('win16') || has('win32') || has('win64')  " on Microsoft Windows
+  let s:vinarise_BUFFER_NAME = '[vinarise-dump]'
+else
+  let s:vinarise_BUFFER_NAME = '*vinarise-dump*'
+endif
+"}}}
+" Variables  "{{{
 "}}}
 
-command! -nargs=? -complete=file Vinarise call vinarise#open(<q-args>)
-command! -nargs=? -complete=file VinariseDump call vinarise#dump#open(<q-args>)
+function! vinarise#dump#open(filename)"{{{
+  if !executable('objdump')
+    echoerr 'objdump is not installed.'
+    return
+  endif
+  
+  if a:filename == ''
+    let l:filename = bufname('%')
+  else
+    let l:filename = a:filename
+  endif
 
-let g:loaded_vinarise = 1
+  edit `=s:vinarise_BUFFER_NAME . ' - ' . l:filename`
+  call s:initialize_dump_buffer()
 
-" __END__
+  setlocal modifiable
+  execute '%!objdump -DCslx "' . l:filename . '"'
+  setlocal nomodifiable
+  setlocal nomodified
+endfunction"}}}
+
+" Misc.
+function! s:initialize_dump_buffer()"{{{
+  " Basic settings.
+  setlocal buftype=nofile
+  setlocal noswapfile
+  setlocal nomodifiable
+  setlocal nofoldenable
+  setlocal foldcolumn=0
+  setlocal tabstop=8
+
+  " User's initialization.
+  setfiletype vinarise-dump
+endfunction"}}}
+
 " vim: foldmethod=marker
