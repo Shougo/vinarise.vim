@@ -35,8 +35,8 @@ else
 endif
 "}}}
 " Variables  "{{{
-if !exists('g:vinarise_objdump_name')
-  let g:vinarise_objdump_name = 'objdump'
+if !exists('g:vinarise_objdump_command')
+  let g:vinarise_objdump_command = 'objdump'
 endif
 "}}}
 
@@ -60,7 +60,7 @@ function! vinarise#dump#open(filename, is_overwrite)"{{{
   call s:initialize_dump_buffer()
 
   setlocal modifiable
-  execute '%!'.g:vinarise_objdump_name.' -DCslx "' . l:filename . '"'
+  execute '%!'.g:vinarise_objdump_command.' -DCslx "' . l:filename . '"'
   setlocal nomodifiable
   setlocal nomodified
 endfunction"}}}

@@ -65,7 +65,7 @@ g:vinarise_enable_auto_detect			*g:vinarise_enable_auto_detect*
 		
 		Default value is 0.
 
-g:vinarise_objdump_name				*g:vinarise_objdump_name*
+g:vinarise_objdump_command			*g:vinarise_objdump_command*
 		The command name of objdump.
 		
 		Default value is "objdump".
@@ -89,7 +89,7 @@ CHANGELOG					*vinarise-changelog*
 2010-08-13
 - Added :VinariseDump command.
 - Added g:vinarise_enable_auto_detect option.
-- Added g:vinarise_objdump_name option.
+- Added g:vinarise_objdump_command option.
 
 2010-08-12
 - Improved print.
