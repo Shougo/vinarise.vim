@@ -35,6 +35,9 @@ else
 endif
 "}}}
 " Variables  "{{{
+if exists('g:vinarise_objdump_name')
+  let g:vinarise_objdump_name = 'objdump'
+endif
 "}}}
 
 function! vinarise#dump#open(filename, is_overwrite)"{{{
@@ -57,7 +60,7 @@ function! vinarise#dump#open(filename, is_overwrite)"{{{
   call s:initialize_dump_buffer()
 
   setlocal modifiable
-  execute '%!objdump -DCslx "' . l:filename . '"'
+  execute '%!'.g:vinarise_objdump_name.' -DCslx "' . l:filename . '"'
   setlocal nomodifiable
   setlocal nomodified
 endfunction"}}}
@@ -73,7 +76,7 @@ function! s:initialize_dump_buffer()"{{{
   setlocal tabstop=8
 
   " User's initialization.
-  setfiletype vinarise-dump
+  setfiletype vinarise-dump-objdump
 endfunction"}}}
 
 " vim: foldmethod=marker
