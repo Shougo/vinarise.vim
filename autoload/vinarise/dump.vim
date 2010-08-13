@@ -29,13 +29,13 @@ let s:FALSE = 0
 let s:TRUE = !s:FALSE
 
 if has('win16') || has('win32') || has('win64')  " on Microsoft Windows
-  let s:dump_BUFFER_NAME = '[vinarise-dump]'
+  let s:dump_BUFFER_NAME = '[vinarise-dump-objdump]'
 else
-  let s:dump_BUFFER_NAME = '*vinarise-dump*'
+  let s:dump_BUFFER_NAME = '*vinarise-dump-objdump*'
 endif
 "}}}
 " Variables  "{{{
-if exists('g:vinarise_objdump_name')
+if !exists('g:vinarise_objdump_name')
   let g:vinarise_objdump_name = 'objdump'
 endif
 "}}}
