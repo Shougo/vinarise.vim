@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: syntax/vinarise-dump-objdump.vim
 " AUTHOR: Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 13 Aug 2010
+" Last Modified: 14 Aug 2010
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -28,52 +28,61 @@ if exists("b:current_syntax")
   finish
 endif
 
-syn case ignore
+syntax case ignore
 
 " Read the C syntax to start with
 runtime! syntax/c.vim
 unlet b:current_syntax
 
 " Match the labels and Assembly lines
-syn match       vdumpLabel                '^\x\+\s\+<.*>:$'
-syn match       vdumpAsm                  '^\s*\x\+:\s\+\x\+.*$' contains=vdumpAsmLabel,vdumpDecNumber,vdumpOctNumber,vdumpHexNumber,vdumpBinNumber,vdumpAddressNum,vdumpMachine,vdumpJumps,vdumpCalls,vdumpAlerts,vdumpXmmRegister,vdumpStackPointer,vdumpFramePointer,vdumpInstructionPtr,vdumpRegister,vdumpAsmSpecialComment,vdumpAsmComment,vdumpAsmInclude,vdumpAsmCond,vdumpAsmMacro,vdumpAsmDirective
+syntax match       vdumpLabel                '^\x\+\s\+<.*>:$'
+syntax match       vdumpAsm                  '^\s*\x\+:\s\+\x\+.*$' contains=vdumpAsmLabel,vdumpDecNumber,vdumpOctNumber,vdumpHexNumber,vdumpBinNumber,vdumpAddressNum,vdumpMachine,vdumpJumps,vdumpCalls,vdumpAlerts,vdumpXmmRegister,vdumpStackPointer,vdumpFramePointer,vdumpInstructionPtr,vdumpRegister,vdumpAsmSpecialComment,vdumpAsmComment,vdumpAsmInclude,vdumpAsmCond,vdumpAsmMacro,vdumpAsmDirective
 
-syn match vdumpAsmLabel            '^\s*\x\+:'
+syntax match vdumpDumpLine       '^\s\+\x\{6,}\s\+\x\+\s.*$' contains=vdumpDumpAddress,vdumpDumpAscii
+syntax match vdumpDumpAddress '^\s\+\x\{6,}' contained 
+syntax match vdumpDumpAscii '\s\{2,}.\{,16}$' contains=vdumpDumpDot contained 
+syntax match vdumpDumpDot '[.\r]' contained 
 
-syn match vdumpDecNumber		'0\+[1-7]\=[\t\n$,; ]'
-syn match vdumpDecNumber		'[1-9]\d*'
-syn match vdumpOctNumber		'0\o\+'
-syn match vdumpHexNumber		'0[xX]\x\+'
-syn match vdumpBinNumber		'0[bB][01]*'
-syn match vdumpMachine		'\s\+\zs\x\x\ze\s\+'
-syn match vdumpJumps			'\<j[a-z]\+\>'
-syn match vdumpJumps			'\<jmpq\>'
-syn match vdumpJumps			'\<retq\>'
-syn match vdumpJumps			'\<leaveq\>'
-syn match vdumpCalls			'\<callq\?\>'
-syn match vdumpAlerts		'\*\*\+\w\+'
+syntax match vdumpAsmLabel            '^\s*\x\+:'
 
-syn match vdumpXmmRegister		'\<xmm1\?\d\>'
-syn match vdumpStackPointer		'\<[er]sp\>'
-syn match vdumpFramePointer		'\<[er]bp\>'
-syn match vdumpInstructionPtr	'\<[er]ip\>'
-syn match vdumpRegister		'%\w\+'
+syntax match vdumpDecNumber		'0\+[1-7]\=[\t\n$,; ]'
+syntax match vdumpDecNumber		'[1-9]\d*'
+syntax match vdumpOctNumber		'0\o\+'
+syntax match vdumpHexNumber		'0[xX]\x\+'
+syntax match vdumpHexNumber		'\<\x\+\>'
+syntax match vdumpBinNumber		'0[bB][01]*'
+syntax match vdumpMachine		'\s\+\zs\x\x\ze\s\+'
+syntax match vdumpJumps			'\<j[a-z]\+\>'
+syntax match vdumpJumps			'\<jmpq\>'
+syntax match vdumpJumps			'\<retq\>'
+syntax match vdumpJumps			'\<leaveq\>'
+syntax match vdumpCalls			'\<callq\?\>'
+syntax match vdumpAlerts		'\*\*\+\w\+'
 
-syn match vdumpAsmSpecialComment	';\*\*\*.*'
-syn match vdumpAsmComment		';.*'hs=s+1
-syn match vdumpAsmComment		'#.*'hs=s+1
+syntax match vdumpXmmRegister		'\<xmm1\?\d\>'
+syntax match vdumpStackPointer		'\<[er]sp\>'
+syntax match vdumpFramePointer		'\<[er]bp\>'
+syntax match vdumpInstructionPtr	'\<[er]ip\>'
+syntax match vdumpRegister		'%\w\+'
 
-syn match vdumpAsmInclude		'\<\.include\>'
-syn match vdumpAsmCond		'\<\.if\>'
-syn match vdumpAsmCond		'\<\.else\>'
-syn match vdumpAsmCond		'\<\.endif\>'
-syn match vdumpAsmMacro		'\<\.macro\>'
-syn match vdumpAsmMacro		'\<\.endm\>'
+syntax match vdumpAsmSpecialComment	';\*\*\*.*'
+syntax match vdumpAsmComment		';.*'hs=s+1
+syntax match vdumpAsmComment		'#.*'hs=s+1
 
-syn match vdumpAsmDirective		'\<\.[a-z][a-z]\+\>'
+syntax match vdumpAsmInclude		'\<\.include\>'
+syntax match vdumpAsmCond		'\<\.if\>'
+syntax match vdumpAsmCond		'\<\.else\>'
+syntax match vdumpAsmCond		'\<\.endif\>'
+syntax match vdumpAsmMacro		'\<\.macro\>'
+syntax match vdumpAsmMacro		'\<\.endm\>'
+
+syntax match vdumpAsmDirective		'\<\.[a-z][a-z]\+\>'
 
 
-syn case match
+syntax case match
+
+highlight def link vdumpDumpAddress Type
+highlight def link vdumpDumpAscii Statement
 
 highlight def link vdumpAsmSection Special
 highlight def link vdumpAsmLabel Label
@@ -84,7 +93,7 @@ highlight def link vdumpAsmInclude Include
 highlight def link vdumpAsmCond PreCondit
 highlight def link vdumpAsmMacro Macro
 
-highlight def link vdumpHexNumber Type
+highlight def link vdumpHexNumber Number
 highlight def link vdumpDecNumber Number
 highlight def link vdumpOctNumber Number
 highlight def link vdumpBinNumber Number

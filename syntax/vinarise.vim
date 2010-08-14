@@ -30,7 +30,7 @@ elseif exists('b:current_syntax')
   finish
 endif
 
-syntax match vinariseAddress       '^\s*[0-9a-f]\+:' contains=vinariseSep
+syntax match vinariseAddress       '^\s*\x\+:' contains=vinariseSep
 syntax match vinariseSep contained ':'
 syntax match vinariseAsciiLine '|\s\+.\{,16}\s*$' contains=vinariseAscii,vinariseSep2
 syntax match vinariseAscii contained '\s\+.\{,16}' contains=vinariseDot
