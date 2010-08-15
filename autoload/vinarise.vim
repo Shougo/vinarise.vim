@@ -36,6 +36,12 @@ if s:exists_vimproc_version < 401
   echoerr 'Please install vimproc Ver.4.1 or above.'
   finish
 endif"}}}
+" Check Python."{{{
+if !has('python')
+  echoerr 'Vinarise requires python interface.'
+  finish
+endif
+"}}}
 
 " Constants"{{{
 let s:FALSE = 0
@@ -57,6 +63,15 @@ function! vinarise#open(filename, is_overwrite)"{{{
   else
     let l:filename = a:filename
   endif
+
+  python << EOF
+import mmap, os, vim
+
+with open(vim.eval("l:filename"), "r+") as f:
+  m = mmap.mmap(f.fileno(), 0)
+  vim.command('let l:output = "hoge"')
+
+EOF
 
   let l:file = vimproc#fopen(l:filename, 'O_RDONLY | O_BINARY', 0)
   let l:output = l:file.read(1024)

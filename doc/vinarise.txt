@@ -86,6 +86,9 @@ BUGS						*vinarise-bugs*
 ==============================================================================
 CHANGELOG					*vinarise-changelog*
 
+2010-08-15
+- Python interface test.
+
 2010-08-14
 - Improved syntax.
 
