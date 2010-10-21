@@ -86,6 +86,9 @@ BUGS						*vinarise-bugs*
 ==============================================================================
 CHANGELOG					*vinarise-changelog*
 
+2010-10-21
+- 80 column safe.
+
 2010-08-15
 - Python interface test.
 
