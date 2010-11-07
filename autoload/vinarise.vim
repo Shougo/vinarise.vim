@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: vinarise.vim
 " AUTHOR:  Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 13 Aug 2010
+" Last Modified: 21 Oct 2010
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -148,7 +148,7 @@ function! s:print_lines()
       let j += 1
     endwhile
 
-    call add(l:lines, printf(' %07x0: %-48s |  %s  ', i, l:hex_line, l:ascii_line))
+    call add(l:lines, printf('%07x0: %-48s|  %s  ', i, l:hex_line, l:ascii_line))
     
     let i += 1
   endwhile

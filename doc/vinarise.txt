@@ -89,6 +89,9 @@ CHANGELOG					*vinarise-changelog*
 2010-11-07
 - Improved modeline.
 
+2010-10-21
+- 80 column safe.
+
 2010-08-15
 - Python interface test.
 
