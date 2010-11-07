@@ -69,7 +69,7 @@ import mmap, os, vim
 
 with open(vim.eval("l:filename"), "r+") as f:
   m = mmap.mmap(f.fileno(), 0)
-  vim.command('let l:output = "hoge"')
+  "vim.command('let l:output = "hoge"')
 
 EOF
 
