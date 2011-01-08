@@ -84,8 +84,8 @@ with open(vim.eval("l:filename"), "r+") as f:
   # "vim.command('let l:output = "hoge"')
 
   pos = 0
-  print range(0, m.size() / 16)
-  for line_number in range(0, m.size() / 16):
+  max_lines = m.size() / 16
+  for line_number in range(0, max_lines if max_lines < 100 else 100):
     # Make new lines.
     hex_line = ""
     ascii_line = ""
