@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: vinarise.vim
 " AUTHOR:  Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 21 Oct 2010
+" Last Modified: 08 Jan 2011.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -22,7 +22,7 @@
 "     TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 "     SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 " }}}
-" Version: 0.1, for Vim 7.0
+" Version: 0.2, for Vim 7.0
 "=============================================================================
 
 " Check vimproc."{{{
@@ -64,44 +64,44 @@ function! vinarise#open(filename, is_overwrite)"{{{
     let l:filename = a:filename
   endif
 
-  python << EOF
-import mmap, os, vim
-
-with open(vim.eval("l:filename"), "r+") as f:
-  m = mmap.mmap(f.fileno(), 0)
-  "vim.command('let l:output = "hoge"')
-
-EOF
-
-  let l:file = vimproc#fopen(l:filename, 'O_RDONLY | O_BINARY', 0)
-  let l:output = l:file.read(1024)
-  let l:max = 1024 - len(l:output)
-  while !l:file.eof && l:max > 0
-    let l:read = l:file.read(l:max)
-    let l:max -= len(l:read)
-    let l:output .= l:read
-  endwhile
-  call l:file.close()
-
   if !a:is_overwrite
     edit `=s:vinarise_BUFFER_NAME . ' - ' . l:filename`
   endif
-  
+
   silent % delete _
   call s:initialize_vinarise_buffer()
-  
-  let b:vinarise.lines = {}
-  let cnt = 0
-  let i = 0
-  let l:max = len(l:output)
-  while i < l:max
-    let b:vinarise.lines[cnt] = strpart(l:output, i, 16)
-    
-    let cnt += 1
-    let i += 16
-  endwhile
 
-  call s:print_lines()
+  " Print lines.
+  setlocal modifiable
+
+  python << EOF
+import mmap, os, vim
+b = vim.current.buffer
+
+with open(vim.eval("l:filename"), "r+") as f:
+  # Open file by memory mapping.
+  m = mmap.mmap(f.fileno(), 0)
+  # "vim.command('let l:output = "hoge"')
+
+  pos = 0
+  print range(0, m.size() / 16)
+  for line_number in range(0, m.size() / 16):
+    # Make new lines.
+    hex_line = ""
+    ascii_line = ""
+
+    for char in m[pos : pos+16]:
+      num = ord(char)
+      hex_line += "{0:02x} ".format(num)
+      ascii_line += "." if num < 32 or num > 127 else char
+      pos += 1
+
+    # Add line.
+    b.append('{0:07x}0: {1:48s}|  {2}  '.format(line_number, hex_line, ascii_line))
+
+  # Delete first line.
+  del b[0]
+EOF
 endfunction"}}}
 
 " Misc.
@@ -126,36 +126,5 @@ function! s:initialize_vinarise_buffer()"{{{
 
   return
 endfunction"}}}
-
-function! s:print_lines()
-  setlocal modifiable
-  
-  let i = 0
-  let l:max = len(b:vinarise.lines)
-  let l:lines = []
-  while i < l:max
-    let l:line = b:vinarise.lines[i]
-    let l:hex_line = ''
-    let l:ascii_line = ''
-    
-    let j = 0
-    let l:max2 = len(l:line)
-    while j < l:max2
-      let l:num = char2nr(l:line[j])
-      let l:hex_line .= printf('%02x', l:num) . ' '
-      let l:ascii_line .= l:num < 32 || l:num > 127 ? '.' : l:line[j]
-
-      let j += 1
-    endwhile
-
-    call add(l:lines, printf('%07x0: %-48s|  %s  ', i, l:hex_line, l:ascii_line))
-    
-    let i += 1
-  endwhile
-
-  call setline(1, l:lines)
-  
-  setlocal nomodifiable
-endfunction
 
 " vim: foldmethod=marker
