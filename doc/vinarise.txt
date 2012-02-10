@@ -116,6 +116,9 @@ EXAMPLES					*vinarise-examples*
 ==============================================================================
 CHANGELOG					*vinarise-changelog*
 
+2012-02-11
+- Re implemented using Python interface.
+
 2012-02-10
 - Refactored.
 - Vitalized.

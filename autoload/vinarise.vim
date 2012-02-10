@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: vinarise.vim
 " AUTHOR:  Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 10 Feb 2012.
+" Last Modified: 11 Feb 2012.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -22,7 +22,7 @@
 "     TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 "     SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 " }}}
-" Version: 0.2, for Vim 7.0
+" Version: 0.3, for Vim 7.0
 "=============================================================================
 
 " Check vimproc."{{{
@@ -52,6 +52,11 @@ if has('win16') || has('win32') || has('win64')  " on Microsoft Windows
 else
   let s:vinarise_BUFFER_NAME = '*vinarise*'
 endif
+
+let s:loaded_vinarise = 0
+let s:plugin_path = escape(expand('<sfile>:p:h'), '\')
+
+let g:vinarise_var_prefix = 'vinarise_'
 "}}}
 " Variables  "{{{
 let s:vinarise_dicts = []
@@ -86,7 +91,10 @@ function! vinarise#open(filename, context)"{{{
     call vinarise#print_error(
           \ 'File "'.filename.'" is not found.')
     return
-  elseif getfsize(filename) < 0
+  endif
+
+  let filesize = getfsize(filename)
+  if filesize < 0
     call vinarise#print_error(
           \ 'File "'.filename.'" is too big. Vinarise is not supported.')
     return
@@ -102,48 +110,32 @@ function! vinarise#open(filename, context)"{{{
     edit `=s:vinarise_BUFFER_NAME . ' - ' . filename`
   endif
 
+  if !s:loaded_vinarise
+    execute 'pyfile' s:plugin_path.'/vinarise/vinarise.py'
+    let s:loaded_vinarise = 1
+  endif
+
   silent % delete _
-  call s:initialize_vinarise_buffer(filename)
+  call s:initialize_vinarise_buffer(filename, filesize)
 
   " Print lines.
   setlocal modifiable
 
-  python << EOF
-import mmap, os, vim
-b = vim.current.buffer
-
-with open(vim.eval("filename"), "r+") as f:
-  # Open file by memory mapping.
-  m = mmap.mmap(f.fileno(), 0)
-  # "vim.command('let output = "hoge"')
-
-  pos = 0
-  max_lines = m.size()/16 + 1
-  for line_number in range(0, max_lines if max_lines < 100 else 100):
-    # Make new lines.
-    hex_line = ""
-    ascii_line = ""
-
-    for char in m[pos : pos+16]:
-      num = ord(char)
-      hex_line += "{0:02x} ".format(num)
-      ascii_line += "." if num < 32 or num > 127 else char
-      pos += 1
-
-    # Add line.
-    b.append('{0:07x}0: {1:48s}|  {2:16s}  '.format(line_number, hex_line, ascii_line))
-
-  # Delete first line.
-  del b[0]
-EOF
+  call s:initialize_lines()
 
   setlocal nomodifiable
 endfunction"}}}
 
 " Misc.
-function! s:initialize_vinarise_buffer(filename)"{{{
+function! s:initialize_vinarise_buffer(filename, filesize)"{{{
   " The current buffer is initialized.
-  let b:vinarise = { 'filename' : a:filename }
+  let b:vinarise = {
+   \  'filename' : a:filename,
+   \  'python' : g:vinarise_var_prefix.bufnr('%'),
+   \  'filesize' : a:filesize,
+   \ }
+
+  execute 'python' b:vinarise.python.' = VinariseBuffer(vim.eval("a:filename"))'
 
   " Basic settings.
   setlocal number
@@ -162,9 +154,40 @@ function! s:initialize_vinarise_buffer(filename)"{{{
 
   " User's initialization.
   setfiletype vinarise
-
-  return
 endfunction"}}}
+function! s:initialize_lines()"{{{
+  let max_lines = b:vinarise.filesize/16 + 1
+  if max_lines < 100
+    let max_lines = 100
+  endif
+
+  let lines = []
+  for line_nr in range(0, max_lines)
+    let pos = 0
+
+    " Make new lines.
+    let hex_line = ''
+    let ascii_line = ''
+
+    for address in range(line_nr * 16, line_nr * 16+16)
+      if address >= b:vinarise.filesize
+        let hex_line .= '   '
+        let ascii_line .= ' '
+      else
+        execute 'python' 'vim.command("let num = " + str('. b:vinarise.python .'.get_byte(vim.eval("address"))))'
+        let char = nr2char(num)
+
+        let hex_line .= printf('%02x', num) . ' '
+        let ascii_line .= num < 32 || num > 127 ? '.' : char
+      endif
+    endfor
+
+    call add(lines, printf(' %07x0: %-48s |  %s  ', line_nr, hex_line, ascii_line))
+  endfor
+
+  call setline(1, lines)
+endfunction"}}}
+
 function! s:initialize_context(context)"{{{
   if !has_key(a:context, 'winwidth')
     let a:context.winwidth = 0
