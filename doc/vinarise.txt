@@ -83,6 +83,29 @@ g:vinarise_objdump_command			*g:vinarise_objdump_command*
 		
 		Default value is "objdump".
 
+------------------------------------------------------------------------------
+KEY MAPPINGS 					*vinarise-key-mappings*
+
+VINARISE BUFFER KEY MAPPINGS 			*vinarise-buffer-key-mappings*
+
+<Plug>(vinarise_edit_with_vim)			*<Plug>(vinarise_edit_with_vim)*
+		Edit current file by vim.
+
+<Plug>(vinarise_hide)				*<Plug>(vinarise_hide)*
+		Hide vinarise buffer.
+
+<Plug>(vinarise_exit)				*<Plug>(vinarise_exit)*
+		Exit vinarise buffer.
+
+Normal mode key mappings.
+
+Normal mode default key mappings.
+{lhs}			{rhs}
+--------		-----------------------------
+V			<Plug>(vinarise_edit_with_vim)
+q			<Plug>(vinarise_hide)
+Q			<Plug>(vinarise_exit)
+
 ==============================================================================
 EXAMPLES					*vinarise-examples*
 >
@@ -97,6 +120,7 @@ CHANGELOG					*vinarise-changelog*
 - Refactored.
 - Vitalized.
 - Added options.
+- Added mappings.
 
 2011-01-08
 - Use python interface(2.6 or above).

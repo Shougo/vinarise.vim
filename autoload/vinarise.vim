@@ -66,11 +66,26 @@ let s:vinarise_options = [
 function! vinarise#get_options()"{{{
   return copy(s:vinarise_options)
 endfunction"}}}
+function! vinarise#print_error(string)"{{{
+  echohl Error | echo a:string | echohl None
+endfunction"}}}
 function! vinarise#open(filename, context)"{{{
-  if a:filename == ''
-    let l:filename = bufname('%')
-  else
-    let l:filename = a:filename
+  let filename = a:filename
+  if filename == ''
+    let filename = bufname('%')
+    if &l:buftype =~ 'nofile'
+      call vinarise#print_error('Nofile buffer is detected. This operation is invalid.')
+      return
+    elseif &l:modified
+      call vinarise#print_error('Modified buffer is detected! This operation is invalid.')
+      return
+    endif
+  endif
+
+  if !filereadable(filename)
+    call vinarise#print_error(
+          \ 'File "'.filename.'" is not found.')
+    return
   endif
 
   let context = s:initialize_context(a:context)
@@ -80,11 +95,11 @@ function! vinarise#open(filename, context)"{{{
   endif
 
   if !context.overwrite
-    edit `=s:vinarise_BUFFER_NAME . ' - ' . l:filename`
+    edit `=s:vinarise_BUFFER_NAME . ' - ' . filename`
   endif
 
   silent % delete _
-  call s:initialize_vinarise_buffer()
+  call s:initialize_vinarise_buffer(filename)
 
   " Print lines.
   setlocal modifiable
@@ -93,10 +108,10 @@ function! vinarise#open(filename, context)"{{{
 import mmap, os, vim
 b = vim.current.buffer
 
-with open(vim.eval("l:filename"), "r+") as f:
+with open(vim.eval("filename"), "r+") as f:
   # Open file by memory mapping.
   m = mmap.mmap(f.fileno(), 0)
-  # "vim.command('let l:output = "hoge"')
+  # "vim.command('let output = "hoge"')
 
   pos = 0
   max_lines = m.size()/16 + 1
@@ -122,9 +137,9 @@ EOF
 endfunction"}}}
 
 " Misc.
-function! s:initialize_vinarise_buffer()"{{{
+function! s:initialize_vinarise_buffer(filename)"{{{
   " The current buffer is initialized.
-  let b:vinarise = {}
+  let b:vinarise = { 'filename' : a:filename }
 
   " Basic settings.
   setlocal number
@@ -138,6 +153,8 @@ function! s:initialize_vinarise_buffer()"{{{
   " Autocommands.
   augroup plugin-vinarise
   augroup END
+
+  call vinarise#mappings#define_default_mappings()
 
   " User's initialization.
   setfiletype vinarise
