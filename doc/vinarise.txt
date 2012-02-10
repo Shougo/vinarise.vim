@@ -121,6 +121,7 @@ CHANGELOG					*vinarise-changelog*
 - Vitalized.
 - Added options.
 - Added mappings.
+- Check file size.
 
 2011-01-08
 - Use python interface(2.6 or above).
