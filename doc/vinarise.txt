@@ -30,9 +30,6 @@ Interface		|vinarise-interface|
   Commands		  |vinarise-commands|
   Variables		  |vinarise-variables|
 Examples		|vinarise-examples|
-Create source		|vinarise-create-source|
-ToDo			|vinarise-todo|
-Bugs			|vinarise-bugs|
 Changelog		|vinarise-changelog|
 
 ==============================================================================
@@ -50,8 +47,24 @@ INTERFACE					*vinarise-interface*
 ------------------------------------------------------------------------------
 COMMANDS 					*vinarise-commands*
 
-:Vinarise {file}				*:Vinarise*
-		Edit binary file.
+:Vinarise [{options}...] [{path}]				*:Vinarise*
+		Edit {path} binary file.
+		If omit {path}, used current buffer file name.
+
+						*vinarise-options*
+		{options} are options for a vinarise buffer.  You may give the
+		following parameters for a option; you must escape with \ when
+		it contains spaces.
+
+						*vinarise-options-split*
+		-split
+		Split vinarise buffer window. |vinarise-options-split-command|
+		is used.
+
+						*vinarise-options-split-command*
+		-split-command={command-name}
+		Specify split command.
+		If omitted it, |:split| is used.
 
 :VinariseDump {file}				*:VinariseDump*
 		View executable file with objdump.
@@ -78,13 +91,12 @@ EXAMPLES					*vinarise-examples*
 	
 >
 ==============================================================================
-TODO						*vinarise-todo*
-
-==============================================================================
-BUGS						*vinarise-bugs*
-
-==============================================================================
 CHANGELOG					*vinarise-changelog*
+
+2012-02-10
+- Refactored.
+- Vitalized.
+- Added options.
 
 2011-01-08
 - Use python interface(2.6 or above).

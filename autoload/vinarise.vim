@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: vinarise.vim
 " AUTHOR:  Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 08 Jan 2011.
+" Last Modified: 10 Feb 2012.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -55,16 +55,31 @@ endif
 "}}}
 " Variables  "{{{
 let s:vinarise_dicts = []
+
+let s:vinarise_options = [
+      \ '-split', '-split-command',
+      \ '-winwidth=', '-winheight=',
+      \ '-overwrite'
+      \]
 "}}}
 
-function! vinarise#open(filename, is_overwrite)"{{{
+function! vinarise#get_options()"{{{
+  return copy(s:vinarise_options)
+endfunction"}}}
+function! vinarise#open(filename, context)"{{{
   if a:filename == ''
     let l:filename = bufname('%')
   else
     let l:filename = a:filename
   endif
 
-  if !a:is_overwrite
+  let context = s:initialize_context(a:context)
+
+  if context.split
+    execute context.split_command
+  endif
+
+  if !context.overwrite
     edit `=s:vinarise_BUFFER_NAME . ' - ' . l:filename`
   endif
 
@@ -113,6 +128,7 @@ function! s:initialize_vinarise_buffer()"{{{
 
   " Basic settings.
   setlocal number
+  setlocal nolist
   setlocal buftype=nofile
   setlocal noswapfile
   setlocal nomodifiable
@@ -127,6 +143,29 @@ function! s:initialize_vinarise_buffer()"{{{
   setfiletype vinarise
 
   return
+endfunction"}}}
+function! s:initialize_context(context)"{{{
+  if !has_key(a:context, 'winwidth')
+    let a:context.winwidth = 0
+  endif
+  if !has_key(a:context, 'winheight')
+    let a:context.winheight = 0
+  endif
+  if !has_key(a:context, 'split')
+    let a:context.split = 0
+  endif
+  if !has_key(a:context, 'split_command')
+    let a:context.split_command = 'split'
+  endif
+  if !has_key(a:context, 'overwrite')
+    let a:context.overwrite = 0
+  endif
+  if &l:modified && !&l:hidden
+    " Split automatically.
+    let a:context.split = 1
+  endif
+
+  return a:context
 endfunction"}}}
 
 " vim: foldmethod=marker

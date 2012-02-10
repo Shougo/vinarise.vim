@@ -35,7 +35,8 @@ if !exists('g:vinarise_enable_auto_detect')
 endif
 "}}}
 
-command! -nargs=? -complete=file Vinarise call vinarise#open(<q-args>, 0)
+command! -nargs=? -complete=file Vinarise
+      \ call s:call_vinarise({}, <q-args>)
 command! -nargs=? -complete=file VinariseDump call vinarise#dump#open(<q-args>, 0)
 
 if g:vinarise_enable_auto_detect
@@ -45,18 +46,42 @@ if g:vinarise_enable_auto_detect
   augroup END
 endif
 
-function! s:browse_check(filename)
+function! s:call_vinarise(default, args)"{{{
+  let args = []
+  let context = a:default
+  for arg in split(a:args, '\%(\\\@<!\s\)\+')
+    let arg = substitute(arg, '\\\( \)', '\1', 'g')
+
+    let matched_list = filter(copy(vinarise#get_options()),
+          \  'stridx(arg, v:val) == 0')
+    for option in matched_list
+      let key = substitute(substitute(option, '-', '_', 'g'),
+            \ '=$', '', '')[1:]
+      let context[key] = (option =~ '=$') ?
+            \ arg[len(option) :] : 1
+      break
+    endfor
+
+    if empty(matched_list)
+      call add(args, arg)
+    endif
+  endfor
+
+  call vinarise#open(join(args), context)
+endfunction"}}}
+
+function! s:browse_check(filename)"{{{
   if a:filename != '' && &filetype != 'vinarise' && filereadable(a:filename)
     let l:line = readfile(a:filename, 'b', 1)
     if !empty(l:line)
       if l:line[0] =~ '\%(^.ELF\|!<arch>\|^MZ\)'
-        silent! call vinarise#dump#open(a:filename, 1)
+        call vinarise#dump#open(a:filename, 1)
       elseif l:line[0] =~ '[\x00-\x09\x10-\x1f]\{5,}'
-        silent! call vinarise#open(a:filename, 1)
+        call s:call_vinarise({'overwrite' : 1}, a:filename)
       endif
     endif
   endif
-endfunction
+endfunction"}}}
 
 let g:loaded_vinarise = 1
 
