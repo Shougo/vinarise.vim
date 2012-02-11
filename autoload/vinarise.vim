@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: vinarise.vim
 " AUTHOR:  Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 11 Feb 2012.
+" Last Modified: 12 Feb 2012.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -182,6 +182,11 @@ endfunction"}}}
 
 " Misc.
 function! s:initialize_vinarise_buffer(filename, filesize)"{{{
+  if exists('b:vinarise')
+    " Close previous variable.
+    execute 'python' g:vinarise_var_prefix.bufnr('%').'.close()'.
+  endif
+
   try
     execute 'python' g:vinarise_var_prefix.bufnr('%')." = VinariseBuffer()"
     execute 'python' g:vinarise_var_prefix.bufnr('%').

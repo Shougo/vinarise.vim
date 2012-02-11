@@ -141,6 +141,7 @@ CHANGELOG					*vinarise-changelog*
 - Improved file open.
 - Check file is empty.
 - Fixed buflisted check.
+- Implemented close.
 
 2012-02-10
 - Refactored.

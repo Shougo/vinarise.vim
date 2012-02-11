@@ -12,7 +12,9 @@ class VinariseBuffer:
         else:
             self.mmap = mmap.mmap(self.file.fileno(), 0,
                     mmap.MAP_PRIVATE, mmap.PROT_READ | mmap.PROT_WRITE, mmap.ACCESS_COPY, 0)
-
+    def close(self):
+        self.file.close()
+        self.mmap.close()
 
     def get_byte(self, addr):
         return ord(self.mmap[int(addr)])
