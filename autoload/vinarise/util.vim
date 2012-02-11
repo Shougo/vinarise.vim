@@ -64,9 +64,6 @@ endfunction"}}}
 function! vinarise#util#substitute_path_separator(...)
   return call(s:V.substitute_path_separator, a:000)
 endfunction
-function! vinarise#util#is_win(...)
-  return call(s:V.is_windows, a:000)
-endfunction
 function! vinarise#util#escape_file_searching(...)
   return call(s:V.escape_file_searching, a:000)
 endfunction
