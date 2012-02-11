@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: util.vim
 " AUTHOR: Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 10 Feb 2012.
+" Last Modified: 11 Feb 2012.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -48,45 +48,6 @@ function! vinarise#util#strwidthpart_reverse(...)"{{{
   return call(s:V.strwidthpart_reverse, a:000)
 endfunction"}}}
 
-function! vinarise#util#alternate_buffer()"{{{
-  if bufnr('%') != bufnr('#') && s:buflisted(bufnr('#'))
-    buffer #
-    return
-  endif
-
-  let listed_buffer_len = len(filter(range(1, bufnr('$')),
-        \ 's:buflisted(v:val) && v:val != bufnr("%")'))
-  if listed_buffer_len <= 1
-    enew
-    return
-  endif
-
-  let cnt = 0
-  let pos = 1
-  let current = 0
-  while pos <= bufnr('$')
-    if s:buflisted(pos)
-      if pos == bufnr('%')
-        let current = cnt
-      endif
-
-      let cnt += 1
-    endif
-
-    let pos += 1
-  endwhile
-
-  if current > cnt / 2
-    bprevious
-  else
-    bnext
-  endif
-endfunction"}}}
-function! vinarise#util#delete_buffer(...)"{{{
-  let bufnr = get(a:000, 0, bufnr('%'))
-  call vinarise#util#alternate_buffer()
-  execute 'bdelete!' bufnr
-endfunction"}}}
 function! s:buflisted(bufnr)"{{{
   return exists('t:unite_buffer_dictionary') ?
         \ has_key(t:unite_buffer_dictionary, a:bufnr) && buflisted(a:bufnr) :
@@ -114,15 +75,14 @@ function! vinarise#util#alternate_buffer()"{{{
   endif
 
   let listed_buffer = filter(range(1, bufnr('$')),
-        \ 's:buflisted(v:val) && (v:val == bufnr("%")')
+        \ "s:buflisted(v:val) || v:val == bufnr('%')")
   let current = index(listed_buffer, bufnr('%'))
-  if current < 0 || len(listed_buffer) < 3
+  if current < 0 || len(listed_buffer) < 2
     enew
-    return
+  else
+    execute 'buffer' ((current < len(listed_buffer) / 2) ?
+          \ listed_buffer[current+1] : listed_buffer[current-1])
   endif
-
-  execute 'buffer' ((current < len(listed_buffer) / 2) ?
-        \ listed_buffer[current+1] : listed_buffer[current-1])
 endfunction"}}}
 function! vinarise#util#delete_buffer(...)"{{{
   let bufnr = get(a:000, 0, bufnr('%'))

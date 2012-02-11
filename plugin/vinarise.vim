@@ -71,15 +71,21 @@ function! s:call_vinarise(default, args)"{{{
 endfunction"}}}
 
 function! s:browse_check(filename)"{{{
-  if a:filename != '' && &filetype != 'vinarise' && filereadable(a:filename)
-    let l:line = readfile(a:filename, 'b', 1)
-    if !empty(l:line)
-      if l:line[0] =~ '\%(^.ELF\|!<arch>\|^MZ\)'
-        call vinarise#dump#open(a:filename, 1)
-      elseif l:line[0] =~ '[\x00-\x09\x10-\x1f]\{5,}'
-        call s:call_vinarise({'overwrite' : 1}, a:filename)
-      endif
-    endif
+  if a:filename == '' || &filetype ==# 'vinarise'
+        \ || !filereadable(a:filename)
+        \ || !g:vinarise_enable_auto_detect
+    return
+  endif
+
+  let lines = readfile(a:filename, 'b', 1)
+  if empty(lines)
+    return
+  endif
+
+  if lines[0] =~ '\%(^.ELF\|!<arch>\|^MZ\)'
+    call vinarise#dump#open(a:filename, 1)
+  elseif lines[0] =~ '[\x00-\x09\x10-\x1f]\{5,}'
+    call s:call_vinarise({'overwrite' : 1}, a:filename)
   endif
 endfunction"}}}
 

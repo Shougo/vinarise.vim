@@ -56,7 +56,14 @@ endfunction"}}}
 
 " VimShell key-mappings functions.
 function! s:edit_with_vim()"{{{
-  edit `=b:vinarise.filename`
+  let save_auto_detect = g:vinarise_enable_auto_detect
+  let g:vinarise_enable_auto_detect = 0
+
+  try
+    edit `=b:vinarise.filename`
+  finally
+    let g:vinarise_enable_auto_detect = save_auto_detect
+  endtry
 endfunction"}}}
 function! s:hide()"{{{
   " Switch buffer.
@@ -79,14 +86,14 @@ function! s:next_line()"{{{
   normal! j
 endfunction "}}}
 function! s:next_screen()"{{{
-  if line('.') == line('$')
+  if line('.') + 2 * winheight(0) > line('$')
     call vinarise#print_lines(winheight(0))
   endif
 
   execute "normal! \<C-f>"
 endfunction "}}}
 function! s:next_half_screen()"{{{
-  if line('.') == line('$')
+  if line('.') + winheight(0) > line('$')
     call vinarise#print_lines(winheight(0)/2)
   endif
 

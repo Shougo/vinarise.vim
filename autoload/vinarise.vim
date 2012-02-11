@@ -79,10 +79,12 @@ function! vinarise#open(filename, context)"{{{
   if filename == ''
     let filename = bufname('%')
     if &l:buftype =~ 'nofile'
-      call vinarise#print_error('Nofile buffer is detected. This operation is invalid.')
+      call vinarise#print_error(
+            \ 'Nofile buffer is detected. This operation is invalid.')
       return
     elseif &l:modified
-      call vinarise#print_error('Modified buffer is detected! This operation is invalid.')
+      call vinarise#print_error(
+            \ 'Modified buffer is detected! This operation is invalid.')
       return
     endif
   endif
@@ -137,7 +139,7 @@ function! vinarise#print_lines(line_num)"{{{
   let address = str2nr(base_address, 16)
 
   let max_lines = b:vinarise.filesize/16 + 1
-  if max_lines < address + a:line_num
+  if max_lines > address + a:line_num
     let max_lines = address + a:line_num
   endif
 
