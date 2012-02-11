@@ -137,6 +137,7 @@ CHANGELOG					*vinarise-changelog*
 - Added move mappings.
 - Improved auto detect behavior.
 - Added <Plug>(vinarise_print_current_position) mapping.
+- Improved syntax highlight.
 
 2012-02-10
 - Refactored.

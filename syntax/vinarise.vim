@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: syntax/vinarise.vim
 " AUTHOR: Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 12 Aug 2010
+" Last Modified: 11 Feb 2012.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -32,9 +32,9 @@ endif
 
 syntax match vinariseAddress       '^\s*\x\+:' contains=vinariseSep
 syntax match vinariseSep contained ':'
-syntax match vinariseAsciiLine '|\s\+.\{,16}\s*$' contains=vinariseAscii,vinariseSep2
-syntax match vinariseAscii contained '\s\+.\{,16}' contains=vinariseDot
+syntax match vinariseAsciiLine '|\s\+.*\s*$' contains=vinariseAscii,vinariseSep2
 syntax match vinariseSep2 contained '|'
+syntax match vinariseAscii contained '\s\+.*' contains=vinariseDot
 syntax match vinariseDot contained '[.\r]'
 
 highlight default link vinariseAddress Constant
@@ -43,3 +43,5 @@ highlight default link vinariseSep2 Identifier
 highlight default link vinariseAscii Statement
 
 let b:current_syntax = 'vinarise'
+
+" vim: foldmethod=marker
