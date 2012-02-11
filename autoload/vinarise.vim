@@ -101,7 +101,8 @@ function! vinarise#open(filename, context)"{{{
           \ 'File "'.filename.'" is too big. Vinarise is not supported.')
     return
   elseif vinarise#util#is_windows() && filesize == 0
-    call vinarise#print_error('File "'.filename.'" must not be empty in Windows.')
+    call vinarise#print_error(
+          \ 'File "'.filename.'" is empty. vinarise cannot open empty file in Windows.')
     return
   endif
 
