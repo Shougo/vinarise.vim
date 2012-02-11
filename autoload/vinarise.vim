@@ -100,6 +100,9 @@ function! vinarise#open(filename, context)"{{{
     call vinarise#print_error(
           \ 'File "'.filename.'" is too big. Vinarise is not supported.')
     return
+  elseif filesize == 0
+    call vinarise#print_error('File "'.filename.'" is empty.')
+    return
   endif
 
   let context = s:initialize_context(a:context)

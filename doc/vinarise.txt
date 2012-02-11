@@ -139,6 +139,7 @@ CHANGELOG					*vinarise-changelog*
 - Added <Plug>(vinarise_print_current_position) mapping.
 - Improved syntax highlight.
 - Improved file open.
+- Check file is empty.
 
 2012-02-10
 - Refactored.
