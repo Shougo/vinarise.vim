@@ -30,9 +30,10 @@ if exists('g:loaded_vinarise')
 endif
 
 " Global options definition."{{{
-if !exists('g:vinarise_enable_auto_detect')
-  let g:vinarise_enable_auto_detect = 0
-endif
+let g:vinarise_enable_auto_detect =
+      \ get(g:, 'vinarise_enable_auto_detect', 0)
+let g:vinarise_detect_large_file_size =
+      \ get(g:, 'vinarise_detect_large_file_size', 10000000)
 "}}}
 
 command! -nargs=? -complete=file Vinarise
@@ -70,22 +71,27 @@ function! s:call_vinarise(default, args)"{{{
   call vinarise#open(join(args), context)
 endfunction"}}}
 
-function! s:browse_check(filename)"{{{
-  if a:filename == '' || &filetype ==# 'vinarise'
-        \ || !filereadable(a:filename)
+function! s:browse_check(path)"{{{
+  let path = vinarise#util#expand(a:path)
+  if fnamemodify(path, ':t') ==# '~'
+    let path = vinarise#util#expand('~')
+  endif
+
+  if &filetype ==# 'vinarise' || !filereadable(path)
         \ || !g:vinarise_enable_auto_detect
     return
   endif
 
-  let lines = readfile(a:filename, 'b', 1)
+  let lines = readfile(path, 'b', 1)
   if empty(lines)
     return
   endif
 
   if lines[0] =~ '\%(^.ELF\|!<arch>\|^MZ\)'
-    call vinarise#dump#open(a:filename, 1)
+        \ || getfsize(path) > g:vinarise_detect_large_file_size
+    call vinarise#dump#open(path, 1)
   elseif lines[0] =~ '[\x00-\x09\x10-\x1f]\{5,}'
-    call s:call_vinarise({'overwrite' : 1}, a:filename)
+    call s:call_vinarise({'overwrite' : 1}, path)
   endif
 endfunction"}}}
 
