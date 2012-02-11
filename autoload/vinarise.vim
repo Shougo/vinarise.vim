@@ -125,6 +125,51 @@ function! vinarise#open(filename, context)"{{{
 
   setlocal nomodifiable
 endfunction"}}}
+function! vinarise#print_lines(line_num)"{{{
+  setlocal modifiable
+
+  " Get last address.
+  let base_address = matchstr(getline('$'), '\x\+\ze0')
+  if base_address == ''
+    let base_address = '0'
+  endif
+
+  let address = str2nr(base_address, 16)
+
+  let max_lines = b:vinarise.filesize/16 + 1
+  if max_lines < address + a:line_num
+    let max_lines = address + a:line_num
+  endif
+
+  let lines = []
+  for line_nr in range(address, max_lines)
+    let pos = 0
+
+    " Make new lines.
+    let hex_line = ''
+    let ascii_line = ''
+
+    for address in range(line_nr * 16, line_nr * 16+16)
+      if address >= b:vinarise.filesize
+        let hex_line .= '   '
+        let ascii_line .= ' '
+      else
+        execute 'python' 'vim.command("let num = " + str('.
+              \ b:vinarise.python .'.get_byte(vim.eval("address"))))'
+        let char = nr2char(num)
+
+        let hex_line .= printf('%02x', num) . ' '
+        let ascii_line .= num < 32 || num > 127 ? '.' : char
+      endif
+    endfor
+
+    call add(lines, printf(' %07x0: %-48s |  %s  ', line_nr, hex_line, ascii_line))
+  endfor
+
+  call setline('$', lines)
+  setlocal nomodifiable
+endfunction"}}}
+
 
 " Misc.
 function! s:initialize_vinarise_buffer(filename, filesize)"{{{
@@ -138,7 +183,6 @@ function! s:initialize_vinarise_buffer(filename, filesize)"{{{
   execute 'python' b:vinarise.python.' = VinariseBuffer(vim.eval("a:filename"))'
 
   " Basic settings.
-  setlocal number
   setlocal nolist
   setlocal buftype=nofile
   setlocal noswapfile
@@ -156,36 +200,7 @@ function! s:initialize_vinarise_buffer(filename, filesize)"{{{
   setfiletype vinarise
 endfunction"}}}
 function! s:initialize_lines()"{{{
-  let max_lines = b:vinarise.filesize/16 + 1
-  if max_lines < 100
-    let max_lines = 100
-  endif
-
-  let lines = []
-  for line_nr in range(0, max_lines)
-    let pos = 0
-
-    " Make new lines.
-    let hex_line = ''
-    let ascii_line = ''
-
-    for address in range(line_nr * 16, line_nr * 16+16)
-      if address >= b:vinarise.filesize
-        let hex_line .= '   '
-        let ascii_line .= ' '
-      else
-        execute 'python' 'vim.command("let num = " + str('. b:vinarise.python .'.get_byte(vim.eval("address"))))'
-        let char = nr2char(num)
-
-        let hex_line .= printf('%02x', num) . ' '
-        let ascii_line .= num < 32 || num > 127 ? '.' : char
-      endif
-    endfor
-
-    call add(lines, printf(' %07x0: %-48s |  %s  ', line_nr, hex_line, ascii_line))
-  endfor
-
-  call setline(1, lines)
+  call vinarise#print_lines(100)
 endfunction"}}}
 
 function! s:initialize_context(context)"{{{

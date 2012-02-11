@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: mappings.vim
 " AUTHOR: Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 10 Feb 2012.
+" Last Modified: 11 Feb 2012.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -33,6 +33,12 @@ function! vinarise#mappings#define_default_mappings()"{{{
         \ :<C-u>call <SID>hide()<CR>
   nnoremap <buffer><silent> <Plug>(vinarise_exit)
         \ :<C-u>call <SID>exit()<CR>
+  nnoremap <buffer><silent> <Plug>(vinarise_next_line)
+        \ :<C-u>call <SID>next_line()<CR>
+  nnoremap <buffer><silent> <Plug>(vinarise_next_screen)
+        \ :<C-u>call <SID>next_screen()<CR>
+  nnoremap <buffer><silent> <Plug>(vinarise_next_half_screen)
+        \ :<C-u>call <SID>next_half_screen()<CR>
   "}}}
 
   if exists('g:vimshell_no_default_keymappings') && g:vimshell_no_default_keymappings
@@ -43,6 +49,9 @@ function! vinarise#mappings#define_default_mappings()"{{{
   nmap <buffer> V <Plug>(vinarise_edit_with_vim)
   nmap <buffer> q <Plug>(vinarise_hide)
   nmap <buffer> Q <Plug>(vinarise_exit)
+  nmap <buffer>j         <Plug>(vinarise_next_line)
+  nmap <buffer><C-f>     <Plug>(vinarise_next_screen)
+  nmap <buffer><C-d>     <Plug>(vinarise_next_half_screen)
 endfunction"}}}
 
 " VimShell key-mappings functions.
@@ -61,5 +70,27 @@ function! s:exit()"{{{
   call vinarise#util#delete_buffer()
   call s:hide()
 endfunction"}}}
+
+function! s:next_line()"{{{
+  if line('.') == line('$')
+    call vinarise#print_lines(2)
+  endif
+
+  normal! j
+endfunction "}}}
+function! s:next_screen()"{{{
+  if line('.') == line('$')
+    call vinarise#print_lines(winheight(0))
+  endif
+
+  execute "normal! \<C-f>"
+endfunction "}}}
+function! s:next_half_screen()"{{{
+  if line('.') == line('$')
+    call vinarise#print_lines(winheight(0)/2)
+  endif
+
+  execute "normal! \<C-d>"
+endfunction "}}}
 
 " vim: foldmethod=marker

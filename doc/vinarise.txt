@@ -97,6 +97,15 @@ VINARISE BUFFER KEY MAPPINGS 			*vinarise-buffer-key-mappings*
 <Plug>(vinarise_exit)				*<Plug>(vinarise_exit)*
 		Exit vinarise buffer.
 
+<Plug>(vinarise_next_line)			*<Plug>(vinarise_next_line)*
+		Move to next line address in vinarise buffer.
+
+<Plug>(vinarise_next_screen)			*<Plug>(vinarise_next_screen)*
+		Move to next screen address in vinarise buffer.
+
+<Plug>(vinarise_next_half_screen)		*<Plug>(vinarise_next_half_screen)*
+		Move to next a harf of screen address in vinarise buffer.
+
 Normal mode key mappings.
 
 Normal mode default key mappings.
@@ -105,6 +114,9 @@ Normal mode default key mappings.
 V			<Plug>(vinarise_edit_with_vim)
 q			<Plug>(vinarise_hide)
 Q			<Plug>(vinarise_exit)
+j			<Plug>(vinarise_next_line)
+<C-f>			<Plug>(vinarise_next_screen)
+<C-d>			<Plug>(vinarise_next_half_screen)
 
 ==============================================================================
 EXAMPLES					*vinarise-examples*
@@ -118,6 +130,7 @@ CHANGELOG					*vinarise-changelog*
 
 2012-02-11
 - Re implemented using Python interface.
+- Added move mappings.
 
 2012-02-10
 - Refactored.
