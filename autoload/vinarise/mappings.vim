@@ -39,6 +39,8 @@ function! vinarise#mappings#define_default_mappings()"{{{
         \ :<C-u>call <SID>next_screen()<CR>
   nnoremap <buffer><silent> <Plug>(vinarise_next_half_screen)
         \ :<C-u>call <SID>next_half_screen()<CR>
+  nnoremap <buffer><silent> <Plug>(vinarise_print_current_position)
+        \ :<C-u>call <SID>print_current_position()<CR>
   "}}}
 
   if exists('g:vimshell_no_default_keymappings') && g:vimshell_no_default_keymappings
@@ -52,6 +54,7 @@ function! vinarise#mappings#define_default_mappings()"{{{
   nmap <buffer>j         <Plug>(vinarise_next_line)
   nmap <buffer><C-f>     <Plug>(vinarise_next_screen)
   nmap <buffer><C-d>     <Plug>(vinarise_next_half_screen)
+  nmap <buffer><C-g>     <Plug>(vinarise_print_current_position)
 endfunction"}}}
 
 " VimShell key-mappings functions.
@@ -76,6 +79,12 @@ endfunction"}}}
 function! s:exit()"{{{
   call vinarise#util#delete_buffer()
   call s:hide()
+endfunction"}}}
+function! s:print_current_position()"{{{
+  " Get current address.
+  let address = vinarise#parse_address(getline('.'))
+  echo printf('%8d / %8d byte (%3d%%)',
+        \ address, b:vinarise.filesize, (address*100)/b:vinarise.filesize)
 endfunction"}}}
 
 function! s:next_line()"{{{

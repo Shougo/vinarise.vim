@@ -106,6 +106,9 @@ VINARISE BUFFER KEY MAPPINGS 			*vinarise-buffer-key-mappings*
 <Plug>(vinarise_next_half_screen)		*<Plug>(vinarise_next_half_screen)*
 		Move to next a harf of screen address in vinarise buffer.
 
+<Plug>(vinarise_print_current_position)		*<Plug>(vinarise_print_current_position)*
+		Print current portion.
+
 Normal mode key mappings.
 
 Normal mode default key mappings.
@@ -117,6 +120,7 @@ Q			<Plug>(vinarise_exit)
 j			<Plug>(vinarise_next_line)
 <C-f>			<Plug>(vinarise_next_screen)
 <C-d>			<Plug>(vinarise_next_half_screen)
+<C-g>			<Plug>(vinarise_print_current_position)
 
 ==============================================================================
 EXAMPLES					*vinarise-examples*
@@ -132,6 +136,7 @@ CHANGELOG					*vinarise-changelog*
 - Re implemented using Python interface.
 - Added move mappings.
 - Improved auto detect behavior.
+- Added <Plug>(vinarise_print_current_position) mapping.
 
 2012-02-10
 - Refactored.

@@ -131,22 +131,15 @@ function! vinarise#print_lines(line_num)"{{{
   setlocal modifiable
 
   " Get last address.
-  let base_address = matchstr(getline('$'), '\x\+\ze0')
-  if base_address == ''
-    let base_address = '0'
-  endif
-
-  let address = str2nr(base_address, 16)
+  let line_address = vinarise#parse_address(getline('$')) / 16
 
   let max_lines = b:vinarise.filesize/16 + 1
-  if max_lines > address + a:line_num
-    let max_lines = address + a:line_num
+  if max_lines > line_address + a:line_num
+    let max_lines = line_address + a:line_num
   endif
 
   let lines = []
-  for line_nr in range(address, max_lines)
-    let pos = 0
-
+  for line_nr in range(line_address, max_lines)
     " Make new lines.
     let hex_line = ''
     let ascii_line = ''
@@ -165,11 +158,18 @@ function! vinarise#print_lines(line_num)"{{{
       endif
     endfor
 
-    call add(lines, printf(' %07x0: %-48s |  %s  ', line_nr, hex_line, ascii_line))
+    call add(lines, printf(' %07x0: %-48s |  %s  ',
+          \ line_nr, hex_line, ascii_line))
   endfor
 
   call setline('$', lines)
   setlocal nomodifiable
+endfunction"}}}
+function! vinarise#parse_address(string)"{{{
+  " Get last address.
+  let base_address = matchstr(a:string, '\x\+\ze0').'0'
+
+  return str2nr(base_address, 16)
 endfunction"}}}
 
 
