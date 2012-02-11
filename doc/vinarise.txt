@@ -140,6 +140,7 @@ CHANGELOG					*vinarise-changelog*
 - Improved syntax highlight.
 - Improved file open.
 - Check file is empty.
+- Fixed buflisted check.
 
 2012-02-10
 - Refactored.

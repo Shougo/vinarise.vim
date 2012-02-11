@@ -72,7 +72,7 @@ function! vinarise#util#escape_file_searching(...)
 endfunction
 
 function! vinarise#util#alternate_buffer()"{{{
-  if s:buflisted('#')
+  if s:buflisted(bufnr('#'))
     buffer #
     return
   endif

@@ -121,6 +121,8 @@ function! vinarise#open(filename, context)"{{{
     let s:loaded_vinarise = 1
   endif
 
+  setlocal modifiable
+
   silent % delete _
   call s:initialize_vinarise_buffer(filename, filesize)
   if !exists('b:vinarise')
@@ -128,8 +130,6 @@ function! vinarise#open(filename, context)"{{{
   endif
 
   " Print lines.
-  setlocal modifiable
-
   call s:initialize_lines()
 
   setlocal nomodifiable
