@@ -47,7 +47,7 @@ endif
 let s:FALSE = 0
 let s:TRUE = !s:FALSE
 
-if has('win16') || has('win32') || has('win64')  " on Microsoft Windows
+if vinarise#util#is_windows()
   let s:vinarise_BUFFER_NAME = '[vinarise]'
 else
   let s:vinarise_BUFFER_NAME = '*vinarise*'
@@ -119,6 +119,9 @@ function! vinarise#open(filename, context)"{{{
 
   silent % delete _
   call s:initialize_vinarise_buffer(filename, filesize)
+  if !exists('b:vinarise')
+    return
+  endif
 
   " Print lines.
   setlocal modifiable
@@ -175,14 +178,22 @@ endfunction"}}}
 
 " Misc.
 function! s:initialize_vinarise_buffer(filename, filesize)"{{{
-  " The current buffer is initialized.
+  try
+    execute 'python' g:vinarise_var_prefix.bufnr('%')." = VinariseBuffer()"
+    execute 'python' g:vinarise_var_prefix.bufnr('%').
+          \ ".open(vim.eval('iconv(a:filename, &encoding, &termencoding)'),".
+          \ "vim.eval('vinarise#util#is_windows()'))"
+  catch
+    call vinarise#print_error(v:exception)
+    call vinarise#print_error(v:throwpoint)
+    return
+  endtry
+
   let b:vinarise = {
    \  'filename' : a:filename,
    \  'python' : g:vinarise_var_prefix.bufnr('%'),
    \  'filesize' : a:filesize,
    \ }
-
-  execute 'python' b:vinarise.python.' = VinariseBuffer(vim.eval("a:filename"))'
 
   " Basic settings.
   setlocal nolist

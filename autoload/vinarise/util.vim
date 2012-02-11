@@ -47,6 +47,9 @@ endfunction"}}}
 function! vinarise#util#strwidthpart_reverse(...)"{{{
   return call(s:V.strwidthpart_reverse, a:000)
 endfunction"}}}
+function! vinarise#util#is_windows(...)
+  return call(s:V.is_windows, a:000)
+endfunction
 
 function! s:buflisted(bufnr)"{{{
   return exists('t:unite_buffer_dictionary') ?
