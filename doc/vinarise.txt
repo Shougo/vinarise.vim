@@ -73,8 +73,8 @@ COMMANDS 					*vinarise-commands*
 VARIABLES 					*vinarise-variables*
 
 g:vinarise_enable_auto_detect			*g:vinarise_enable_auto_detect*
-		If this variable is 1, vinarise detects binary file
-		automatically.
+		If this variable is 1, vinarise detects binary file or large
+		file automatically.
 		
 		Default value is 0.
 
@@ -141,6 +141,7 @@ CHANGELOG					*vinarise-changelog*
 
 2012-02-12
 - Added g:vinarise_detect_large_file_size option.
+- Implemented mapping max.
 
 2012-02-11
 - Re implemented using Python interface.

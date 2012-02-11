@@ -178,13 +178,16 @@ function! vinarise#parse_address(string)"{{{
 
   return str2nr(base_address, 16)
 endfunction"}}}
+function! vinarise#release_buffer(bufnr)"{{{
+  " Close previous variable.
+  execute 'python' g:vinarise_var_prefix.a:bufnr.'.close()'
+endfunction"}}}
 
 
 " Misc.
 function! s:initialize_vinarise_buffer(filename, filesize)"{{{
   if exists('b:vinarise')
-    " Close previous variable.
-    execute 'python' g:vinarise_var_prefix.bufnr('%').'.close()'.
+    call vinarise#release_buffer(bufnr('%'))
   endif
 
   try
@@ -214,6 +217,7 @@ function! s:initialize_vinarise_buffer(filename, filesize)"{{{
 
   " Autocommands.
   augroup plugin-vinarise
+    autocmd BufDelete <buffer> call vinarise#release_buffer(expand('<abuf>'))
   augroup END
 
   call vinarise#mappings#define_default_mappings()

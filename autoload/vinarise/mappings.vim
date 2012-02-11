@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: mappings.vim
 " AUTHOR: Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 11 Feb 2012.
+" Last Modified: 12 Feb 2012.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -78,7 +78,6 @@ function! s:hide()"{{{
 endfunction"}}}
 function! s:exit()"{{{
   call vinarise#util#delete_buffer()
-  call s:hide()
 endfunction"}}}
 function! s:print_current_position()"{{{
   " Get current address.
