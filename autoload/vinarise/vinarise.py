@@ -6,7 +6,7 @@ import os.path
 class VinariseBuffer:
     def open(self, path, is_windows):
         # init vars
-        self.file = open(path, 'r+')
+        self.file = open(path, 'rb')
         mmap_max = 0
 
         if is_windows:
