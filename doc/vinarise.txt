@@ -143,6 +143,7 @@ CHANGELOG					*vinarise-changelog*
 - Added g:vinarise_detect_large_file_size option.
 - Improved initialize context.
 - Fixed open mode.
+- Fixed python script.
 
 2012-02-11
 - Re implemented using Python interface.
