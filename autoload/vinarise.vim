@@ -237,7 +237,7 @@ function! s:initialize_context(context)"{{{
         \ 'split_command' : 'split',
         \ 'overwrite' : 0,
         \ }
-  let context = extend(default_context, context)
+  let context = extend(default_context, a:context)
 
   if &l:modified && !&l:hidden
     " Split automatically.
