@@ -88,9 +88,9 @@ function! s:browse_check(path)"{{{
   endif
 
   if lines[0] =~ '\%(^.ELF\|!<arch>\|^MZ\)'
-        \ || getfsize(path) > g:vinarise_detect_large_file_size
     call vinarise#dump#open(path, 1)
   elseif lines[0] =~ '[\x00-\x09\x10-\x1f]\{5,}'
+        \ || getfsize(path) > g:vinarise_detect_large_file_size
     call s:call_vinarise({'overwrite' : 1}, path)
   endif
 endfunction"}}}
