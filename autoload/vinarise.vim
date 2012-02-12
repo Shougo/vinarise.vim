@@ -230,27 +230,21 @@ function! s:initialize_lines()"{{{
 endfunction"}}}
 
 function! s:initialize_context(context)"{{{
-  if !has_key(a:context, 'winwidth')
-    let a:context.winwidth = 0
-  endif
-  if !has_key(a:context, 'winheight')
-    let a:context.winheight = 0
-  endif
-  if !has_key(a:context, 'split')
-    let a:context.split = 0
-  endif
-  if !has_key(a:context, 'split_command')
-    let a:context.split_command = 'split'
-  endif
-  if !has_key(a:context, 'overwrite')
-    let a:context.overwrite = 0
-  endif
+  let default_context = {
+        \ 'winwidth' : 0,
+        \ 'winheight' : 0,
+        \ 'split' : 0,
+        \ 'split_command' : 'split',
+        \ 'overwrite' : 0,
+        \ }
+  let context = extend(default_context, context)
+
   if &l:modified && !&l:hidden
     " Split automatically.
-    let a:context.split = 1
+    let context.split = 1
   endif
 
-  return a:context
+  return context
 endfunction"}}}
 
 " vim: foldmethod=marker
