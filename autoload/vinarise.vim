@@ -151,7 +151,7 @@ function! vinarise#print_lines(line_num)"{{{
     let hex_line = ''
     let ascii_line = ''
 
-    for address in range(line_nr * 16, line_nr * 16+16)
+    for address in range(line_nr * 16, line_nr * 16+15)
       if address >= b:vinarise.filesize
         let hex_line .= '   '
         let ascii_line .= ' '
