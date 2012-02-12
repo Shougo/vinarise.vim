@@ -14,7 +14,8 @@ class VinariseBuffer:
                     None, mmap.ACCESS_COPY, 0)
         else:
             self.mmap = mmap.mmap(self.file.fileno(), mmap_max,
-                    mmap.ACCESS_COPY, 0)
+                    mmap.MAP_PRIVATE , mmap.PROT_READ | mmap.PROT_WRITE, offset = 0)
+
     def close(self):
         self.file.close()
         self.mmap.close()
