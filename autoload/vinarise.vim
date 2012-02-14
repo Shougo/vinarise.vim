@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: vinarise.vim
 " AUTHOR:  Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 14 Feb 2012.
+" Last Modified: 15 Feb 2012.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -184,7 +184,7 @@ function! vinarise#parse_address(string, cur_text)"{{{
   let type = 'address'
   let address = str2nr(base_address, 16)
 
-  if a:cur_text =~ '^\s*\x\+\s*:[[:xdigit:][:space:]]\+$'
+  if a:cur_text =~ '^\s*\x\+\s*:[[:xdigit:][:space:]]\+\S$'
     " Check hex line.
     let offset = len(split(matchstr(a:cur_text,
           \ '^\s*\x\+\s*:\zs[[:xdigit:][:space:]]\+$'))) - 1
@@ -244,6 +244,7 @@ function! s:initialize_vinarise_buffer(filename, filesize)"{{{
 
   " Autocommands.
   augroup plugin-vinarise
+    autocmd CursorMoved <buffer> call s:match_ascii()
     autocmd BufDelete <buffer> call vinarise#release_buffer(expand('<abuf>'))
   augroup END
 
@@ -254,6 +255,18 @@ function! s:initialize_vinarise_buffer(filename, filesize)"{{{
 endfunction"}}}
 function! s:initialize_lines()"{{{
   call vinarise#print_lines(100)
+endfunction"}}}
+function! s:match_ascii()"{{{
+  let [type, address] = vinarise#parse_address(getline('.'),
+        \ vinarise#get_cur_text(getline('.'), col('.')))
+  if type != 'hex'
+    match
+    return
+  endif
+
+  let offset = address % 16
+
+  execute 'match' g:vinarise_cursor_ascii_highlight.' /\%'.line('.').'l\%'.(64+offset).'c/'
 endfunction"}}}
 
 function! s:initialize_context(context)"{{{

@@ -34,6 +34,8 @@ let g:vinarise_enable_auto_detect =
       \ get(g:, 'vinarise_enable_auto_detect', 0)
 let g:vinarise_detect_large_file_size =
       \ get(g:, 'vinarise_detect_large_file_size', 10000000)
+let g:vinarise_cursor_ascii_highlight =
+      \ get(g:, 'vinarise_cursor_ascii_highlight', 'Search')
 "}}}
 
 command! -nargs=? -complete=file Vinarise

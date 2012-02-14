@@ -85,6 +85,11 @@ g:vinarise_detect_large_file_size		*g:vinarise_detect_large_file_size*
 		
 		Default value is 10000000.
 
+g:vinarise_cursor_ascii_highlight		*g:vinarise_cursor_ascii_highlight*
+		This variable is cursor ascii character highlight.
+		
+		Default value is "Search".
+
 g:vinarise_objdump_command			*g:vinarise_objdump_command*
 		The command name of objdump.
 		
@@ -141,6 +146,7 @@ CHANGELOG					*vinarise-changelog*
 
 2012-02-14
 - Improved parse address.
+- Added g:vinarise_cursor_ascii_highlight option.
 
 2012-02-12
 - Added g:vinarise_detect_large_file_size option.
