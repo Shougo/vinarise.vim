@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: mappings.vim
 " AUTHOR: Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 12 Feb 2012.
+" Last Modified: 14 Feb 2012.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -81,9 +81,10 @@ function! s:exit()"{{{
 endfunction"}}}
 function! s:print_current_position()"{{{
   " Get current address.
-  let address = vinarise#parse_address(getline('.'))
-  echo printf('%8d / %8d byte (%3d%%)',
-        \ address, b:vinarise.filesize, (address*100)/b:vinarise.filesize)
+  let [type, address] = vinarise#parse_address(getline('.'),
+        \ vinarise#get_cur_text(getline('.'), col('.')))
+  echo printf('[%s] %8d / %8d byte (%3d%%)',
+        \ type, address, b:vinarise.filesize, (address*100)/b:vinarise.filesize)
 endfunction"}}}
 
 function! s:next_line()"{{{

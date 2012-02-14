@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: vinarise.vim
 " AUTHOR:  Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 12 Feb 2012.
+" Last Modified: 14 Feb 2012.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -134,49 +134,76 @@ function! vinarise#open(filename, context)"{{{
 
   setlocal nomodifiable
 endfunction"}}}
-function! vinarise#print_lines(line_num)"{{{
+function! vinarise#print_lines(lines)"{{{
   setlocal modifiable
 
   " Get last address.
-  let line_address = vinarise#parse_address(getline('$')) / 16
+  let [type, line_address] = vinarise#parse_address(getline('$'), '')
+  let line_address = line_address / 16
 
   let max_lines = b:vinarise.filesize/16 + 1
-  if max_lines > line_address + a:line_num
-    let max_lines = line_address + a:line_num
+  if max_lines > line_address + a:lines
+    let max_lines = line_address + a:lines
   endif
 
   let lines = []
   for line_nr in range(line_address, max_lines)
-    " Make new lines.
-    let hex_line = ''
-    let ascii_line = ''
-
-    for address in range(line_nr * 16, line_nr * 16+15)
-      if address >= b:vinarise.filesize
-        let hex_line .= '   '
-        let ascii_line .= ' '
-      else
-        execute 'python' 'vim.command("let num = " + str('.
-              \ b:vinarise.python .'.get_byte(vim.eval("address"))))'
-        let char = nr2char(num)
-
-        let hex_line .= printf('%02x', num) . ' '
-        let ascii_line .= num < 32 || num > 127 ? '.' : char
-      endif
-    endfor
-
-    call add(lines, printf(' %07x0: %-48s |  %s  ',
-          \ line_nr, hex_line, ascii_line))
+    call add(lines, vinarise#make_line(line_nr))
   endfor
 
   call setline('$', lines)
   setlocal nomodifiable
 endfunction"}}}
-function! vinarise#parse_address(string)"{{{
+function! vinarise#make_line(line_address)"{{{
+  " Make new lines.
+  let hex_line = ''
+  let ascii_line = ''
+
+  for address in range(a:line_address * 16, a:line_address * 16+15)
+    if address >= b:vinarise.filesize
+      let hex_line .= '   '
+      let ascii_line .= ' '
+    else
+      execute 'python' 'vim.command("let num = " + str('.
+            \ b:vinarise.python .'.get_byte(vim.eval("address"))))'
+      let char = nr2char(num)
+
+      let hex_line .= printf('%02x', num) . ' '
+      let ascii_line .= num < 32 || num > 127 ? '.' : char
+    endif
+  endfor
+
+  return printf(' %07x0: %-48s |  %s  ',
+        \ a:line_address, hex_line, ascii_line)
+endfunction"}}}
+function! vinarise#parse_address(string, cur_text)"{{{
   " Get last address.
   let base_address = matchstr(a:string, '\x\+\ze0').'0'
 
-  return str2nr(base_address, 16)
+  " Default.
+  let type = 'address'
+  let address = str2nr(base_address, 16)
+
+  if a:cur_text =~ '^\s*\x\+\s*:[[:xdigit:][:space:]]\+$'
+    " Check hex line.
+    let offset = len(split(matchstr(a:cur_text,
+          \ '^\s*\x\+\s*:\zs[[:xdigit:][:space:]]\+$'))) - 1
+    if 0 <= offset && offset < 16
+      let type = 'hex'
+      let address += offset
+    endif
+  elseif a:cur_text =~ '|  \zs.*$'
+    let offset = len(matchstr(a:cur_text, '|  \zs.*$')) - 1
+    if 0 <= offset && offset < 16
+      let type = 'ascii'
+      let address += offset
+    endif
+  endif
+
+  return [type, address]
+endfunction"}}}
+function! vinarise#get_cur_text(string, col)"{{{
+  return matchstr(a:string, '^.*\%' . a:col . 'c.')
 endfunction"}}}
 function! vinarise#release_buffer(bufnr)"{{{
   " Close previous variable.
