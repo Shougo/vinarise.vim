@@ -133,6 +133,7 @@ function! vinarise#open(filename, context)"{{{
   call s:initialize_lines()
 
   setlocal nomodifiable
+  setlocal nomodified
 endfunction"}}}
 function! vinarise#print_lines(lines)"{{{
   setlocal modifiable
@@ -209,7 +210,13 @@ function! vinarise#release_buffer(bufnr)"{{{
   " Close previous variable.
   execute 'python' g:vinarise_var_prefix.a:bufnr.'.close()'
 endfunction"}}}
-
+function! vinarise#write_buffer(filename)"{{{
+  " Write current buffer.
+  execute 'python' b:vinarise.python.'.write('
+          \ "vim.eval('a:filename'))"
+  setlocal nomodified
+  echo printf('"%s" %d bytes', a:filename, b:vinarise.filesize)
+endfunction"}}}
 
 " Misc.
 function! s:initialize_vinarise_buffer(filename, filesize)"{{{
@@ -232,12 +239,11 @@ function! s:initialize_vinarise_buffer(filename, filesize)"{{{
    \  'filename' : a:filename,
    \  'python' : g:vinarise_var_prefix.bufnr('%'),
    \  'filesize' : a:filesize,
-   \  'modified' : 0,
    \ }
 
   " Basic settings.
   setlocal nolist
-  setlocal buftype=nofile
+  setlocal buftype=acwrite
   setlocal noswapfile
   setlocal nomodifiable
   setlocal nofoldenable
@@ -247,6 +253,7 @@ function! s:initialize_vinarise_buffer(filename, filesize)"{{{
   augroup plugin-vinarise
     autocmd CursorMoved <buffer> call s:match_ascii()
     autocmd BufDelete <buffer> call vinarise#release_buffer(expand('<abuf>'))
+    autocmd BufWriteCmd <buffer> call vinarise#write_buffer(expand('<afile>'))
   augroup END
 
   call vinarise#mappings#define_default_mappings()

@@ -1,6 +1,6 @@
 *vinarise.txt*	Ultimate hex editing system with Vim.
 
-Version: 0.2
+Version: 0.3
 Author : Shougo <Shougo.Matsu@gmail.com>
 License: MIT license  {{{
     Permission is hereby granted, free of charge, to any person obtaining
@@ -151,6 +151,7 @@ CHANGELOG					*vinarise-changelog*
 2012-02-16
 - Added <Plug>(vinarise_change_current_address) mapping.
 - Check modified flag.
+- Implemented write.
 
 2012-02-14
 - Improved parse address.

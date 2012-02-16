@@ -72,7 +72,7 @@ function! s:edit_with_vim()"{{{
   endtry
 endfunction"}}}
 function! s:hide()"{{{
-  if b:vinarise.modified
+  if &l:modified
     let yes = input(
           \ 'Current vinarise buffer is modified! Hide anyway?: ', 'yes')
     redraw
@@ -89,7 +89,7 @@ function! s:hide()"{{{
   endif
 endfunction"}}}
 function! s:exit()"{{{
-  if b:vinarise.modified
+  if &l:modified
     let yes = input(
           \ 'Current vinarise buffer is modified! Exit anyway?: ')
     redraw
@@ -135,7 +135,7 @@ function! s:change_current_address()"{{{
 
   " Change current line.
   call setline('.', vinarise#make_line(address / 16))
-  let b:vinarise.modified = 1
+  setlocal modified
 
   setlocal nomodifiable
 endfunction"}}}

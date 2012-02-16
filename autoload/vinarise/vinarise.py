@@ -20,6 +20,11 @@ class VinariseBuffer:
         self.file.close()
         self.mmap.close()
 
+    def write(self, path):
+        write_file = open(path, 'wb')
+        write_file.write(self.mmap)
+        write_file.close()
+
     def get_byte(self, addr):
         return ord(self.mmap[int(addr)])
 
