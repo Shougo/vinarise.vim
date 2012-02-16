@@ -7,7 +7,10 @@ class VinariseBuffer:
     def open(self, path, is_windows):
         # init vars
         self.file = open(path, 'rb')
+        fsize = os.path.getsize(path)
         mmap_max = 0
+        if fsize > 1000000000:
+            mmap_max = 1000000000
 
         if int(is_windows):
             self.mmap = mmap.mmap(self.file.fileno(), mmap_max,

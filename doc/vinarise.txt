@@ -153,6 +153,7 @@ CHANGELOG					*vinarise-changelog*
 - Check modified flag.
 - Implemented write.
 - Improved opening file behavior.
+- Improved mapping max.
 
 2012-02-14
 - Improved parse address.

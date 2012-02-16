@@ -111,16 +111,17 @@ function! vinarise#open(filename, context)"{{{
     let s:loaded_vinarise = 1
   endif
 
-  try
+  " try
     execute 'python' g:vinarise_var_prefix.' = VinariseBuffer()'
     execute 'python' g:vinarise_var_prefix.
           \ ".open(vim.eval('iconv(filename, &encoding, &termencoding)'),".
           \ "vim.eval('vinarise#util#is_windows()'))"
-  catch
-    call vinarise#print_error(v:exception)
-    call vinarise#print_error(v:throwpoint)
-    return
-  endtry
+  " catch
+    " call vinarise#print_error(v:exception)
+    " call vinarise#print_error(v:throwpoint)
+    " call vinarise#print_error('file : "' . filename . '" Its filesize may be too large.')
+    " return
+  " endtry
 
   let context = s:initialize_context(a:context)
 
