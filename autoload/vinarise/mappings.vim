@@ -122,7 +122,9 @@ function! s:change_current_address()"{{{
   let value = input('Please input new value: '.
         \ printf('%x', old_value) . ' -> ')
   redraw
-  if value == '' || value !~ '^\x\x\?$'
+  if value == ''
+    return
+  elseif value !~ '^\x\x\?$'
     echo 'Invalid value.'
     return
   endif
