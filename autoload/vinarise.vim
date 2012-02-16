@@ -106,6 +106,22 @@ function! vinarise#open(filename, context)"{{{
     return
   endif
 
+  if !s:loaded_vinarise
+    execute 'pyfile' s:plugin_path.'/vinarise/vinarise.py'
+    let s:loaded_vinarise = 1
+  endif
+
+  try
+    execute 'python' g:vinarise_var_prefix.' = VinariseBuffer()'
+    execute 'python' g:vinarise_var_prefix.
+          \ ".open(vim.eval('iconv(filename, &encoding, &termencoding)'),".
+          \ "vim.eval('vinarise#util#is_windows()'))"
+  catch
+    call vinarise#print_error(v:exception)
+    call vinarise#print_error(v:throwpoint)
+    return
+  endtry
+
   let context = s:initialize_context(a:context)
 
   if context.split
@@ -116,18 +132,10 @@ function! vinarise#open(filename, context)"{{{
     edit `=s:vinarise_BUFFER_NAME . ' - ' . filename`
   endif
 
-  if !s:loaded_vinarise
-    execute 'pyfile' s:plugin_path.'/vinarise/vinarise.py'
-    let s:loaded_vinarise = 1
-  endif
-
   setlocal modifiable
 
   silent % delete _
   call s:initialize_vinarise_buffer(filename, filesize)
-  if !exists('b:vinarise')
-    return
-  endif
 
   " Print lines.
   call s:initialize_lines()
@@ -224,16 +232,7 @@ function! s:initialize_vinarise_buffer(filename, filesize)"{{{
     call vinarise#release_buffer(bufnr('%'))
   endif
 
-  try
-    execute 'python' g:vinarise_var_prefix.bufnr('%')." = VinariseBuffer()"
-    execute 'python' g:vinarise_var_prefix.bufnr('%').
-          \ ".open(vim.eval('iconv(a:filename, &encoding, &termencoding)'),".
-          \ "vim.eval('vinarise#util#is_windows()'))"
-  catch
-    call vinarise#print_error(v:exception)
-    call vinarise#print_error(v:throwpoint)
-    return
-  endtry
+  execute 'python' g:vinarise_var_prefix.bufnr('%').' = '.g:vinarise_var_prefix
 
   let b:vinarise = {
    \  'filename' : a:filename,

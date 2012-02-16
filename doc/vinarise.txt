@@ -152,6 +152,7 @@ CHANGELOG					*vinarise-changelog*
 - Added <Plug>(vinarise_change_current_address) mapping.
 - Check modified flag.
 - Implemented write.
+- Improved opening file behavior.
 
 2012-02-14
 - Improved parse address.
