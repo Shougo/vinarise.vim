@@ -121,6 +121,9 @@ VINARISE BUFFER KEY MAPPINGS 			*vinarise-buffer-key-mappings*
 <Plug>(vinarise_print_current_position)		*<Plug>(vinarise_print_current_position)*
 		Print current portion.
 
+<Plug>(vinarise_change_current_address)		*<Plug>(vinarise_change_current_address)*
+		Change value in current address.
+
 Normal mode key mappings.
 
 Normal mode default key mappings.
@@ -133,6 +136,7 @@ j			<Plug>(vinarise_next_line)
 <C-f>			<Plug>(vinarise_next_screen)
 <C-d>			<Plug>(vinarise_next_half_screen)
 <C-g>			<Plug>(vinarise_print_current_position)
+r			<Plug>(vinarise_change_current_address)
 
 ==============================================================================
 EXAMPLES					*vinarise-examples*
@@ -143,6 +147,10 @@ EXAMPLES					*vinarise-examples*
 >
 ==============================================================================
 CHANGELOG					*vinarise-changelog*
+
+2012-02-16
+- Added <Plug>(vinarise_change_current_address) mapping.
+- Check modified flag.
 
 2012-02-14
 - Improved parse address.

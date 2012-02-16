@@ -23,3 +23,6 @@ class VinariseBuffer:
     def get_byte(self, addr):
         return ord(self.mmap[int(addr)])
 
+    def set_byte(self, addr, value):
+        self.mmap[int(addr)] = chr(int(value))
+
