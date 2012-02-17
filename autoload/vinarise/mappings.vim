@@ -107,8 +107,11 @@ function! s:print_current_position()"{{{
   " Get current address.
   let [type, address] = vinarise#parse_address(getline('.'),
         \ vinarise#get_cur_text(getline('.'), col('.')))
+  execute 'python' 'vim.command("let percentage = " + str('.
+        \ b:vinarise.python .'.get_percentage(vim.eval("address"))))'
+
   echo printf('[%s] %8d / %8d byte (%3d%%)',
-        \ type, address, b:vinarise.filesize, (address*100)/b:vinarise.filesize)
+        \ type, address, b:vinarise.filesize, percentage)
 endfunction"}}}
 function! s:change_current_address()"{{{
   " Get current address.
@@ -179,7 +182,10 @@ function! s:move_to_input_address()"{{{
     let address = str2nr(address, 16)
   elseif address =~ '^\d\+%$'
     " Convert percentage.
-    let address = matchstr('^\d\+')
+    let percentage = address[: -2]
+    execute 'python' 'vim.command("let address = " + str('.
+          \ b:vinarise.python .
+          \ ".get_percentage_address(vim.eval('percentage'))))"
   endif
 
   if address !~ '^\d\+$'

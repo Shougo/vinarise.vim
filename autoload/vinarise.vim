@@ -96,11 +96,7 @@ function! vinarise#open(filename, context)"{{{
   endif
 
   let filesize = getfsize(filename)
-  if filesize < 0
-    call vinarise#print_error(
-          \ 'File "'.filename.'" is too big. Vinarise is not supported.')
-    return
-  elseif vinarise#util#is_windows() && filesize == 0
+  if vinarise#util#is_windows() && filesize == 0
     call vinarise#print_error(
           \ 'File "'.filename.'" is empty. vinarise cannot open empty file in Windows.')
     return
@@ -236,7 +232,8 @@ endfunction"}}}
 function! vinarise#set_cursor_address(address)"{{{
   let line_address = a:address / 16
   let hex_line = repeat(' \x\x', (a:address%16)+1)
-  let [lnum, col] = searchpos(printf('%07x0:%s', line_address, hex_line), 'cew')
+  let [lnum, col] = searchpos(
+        \ printf('%07x0:%s', line_address, hex_line), 'cew')
   call cursor(lnum, col-1)
 endfunction"}}}
 

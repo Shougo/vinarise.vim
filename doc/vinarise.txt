@@ -126,6 +126,7 @@ VINARISE BUFFER KEY MAPPINGS 			*vinarise-buffer-key-mappings*
 
 <Plug>(vinarise_move_to_input_address)		*<Plug>(vinarise_move_to_input_address)*
 		Move to input address. Hexadecimal and decimal are supported.
+		Note: If you input like "50%", move to 50% of filesize.
 
 Normal mode key mappings.
 
@@ -154,6 +155,7 @@ CHANGELOG					*vinarise-changelog*
 
 2012-02-17
 - Added <Plug>(vinarise_move_to_input_address) mapping.
+- Improved filesize.
 
 2012-02-16
 - Added <Plug>(vinarise_change_current_address) mapping.

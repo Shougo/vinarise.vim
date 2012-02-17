@@ -7,7 +7,8 @@ class VinariseBuffer:
     def open(self, path, is_windows):
         # init vars
         self.file = open(path, 'rb')
-        fsize = os.path.getsize(path)
+        self.path = path
+        fsize = os.path.getsize(self.path)
         mmap_max = 0
         if fsize > 1000000000:
             mmap_max = 1000000000
@@ -33,4 +34,10 @@ class VinariseBuffer:
 
     def set_byte(self, addr, value):
         self.mmap[int(addr)] = chr(int(value))
+
+    def get_percentage(self, address):
+        return (int(address)*100) / os.path.getsize(self.path)
+
+    def get_percentage_address(self, percent):
+        return (os.path.getsize(self.path) * int(percent)) / 100
 
