@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: mappings.vim
 " AUTHOR: Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 16 Feb 2012.
+" Last Modified: 17 Feb 2012.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -43,6 +43,8 @@ function! vinarise#mappings#define_default_mappings()"{{{
         \ :<C-u>call <SID>print_current_position()<CR>
   nnoremap <buffer><silent> <Plug>(vinarise_change_current_address)
         \ :<C-u>call <SID>change_current_address()<CR>
+  nnoremap <buffer><silent> <Plug>(vinarise_move_to_input_address)
+        \ :<C-u>call <SID>move_to_input_address()<CR>
   "}}}
 
   if exists('g:vimshell_no_default_keymappings') && g:vimshell_no_default_keymappings
@@ -58,6 +60,7 @@ function! vinarise#mappings#define_default_mappings()"{{{
   nmap <buffer> <C-d>     <Plug>(vinarise_next_half_screen)
   nmap <buffer> <C-g>     <Plug>(vinarise_print_current_position)
   nmap <buffer> r    <Plug>(vinarise_change_current_address)
+  nmap <buffer> G    <Plug>(vinarise_move_to_input_address)
 endfunction"}}}
 
 " VimShell key-mappings functions.
@@ -162,6 +165,39 @@ function! s:next_half_screen()"{{{
   endif
 
   execute "normal! \<C-d>"
+endfunction "}}}
+function! s:move_to_input_address()"{{{
+  let address = input(printf('Please input new address(max 0x%x) : ',
+        \ b:vinarise.filesize), '0x')
+  redraw
+  if address == ''
+    echo 'Canceled.'
+    return
+  endif
+  if address =~ '^0x\x\+$'
+    " Convert hex.
+    let address = str2nr(address, 16)
+  elseif address =~ '^\d\+%$'
+    " Convert percentage.
+    let address = matchstr('^\d\+')
+  endif
+
+  if address !~ '^\d\+$'
+    echo 'Invalid address.'
+    return
+  endif
+
+  setlocal modifiable
+  let modified_save = &l:modified
+
+  silent % delete _
+  call vinarise#print_lines(100, address)
+
+  let &l:modified = modified_save
+  setlocal nomodifiable
+
+  " Set cursor.
+  call vinarise#set_cursor_address(address)
 endfunction "}}}
 
 " vim: foldmethod=marker

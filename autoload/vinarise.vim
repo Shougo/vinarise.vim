@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: vinarise.vim
 " AUTHOR:  Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 16 Feb 2012.
+" Last Modified: 17 Feb 2012.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -141,15 +141,22 @@ function! vinarise#open(filename, context)"{{{
   " Print lines.
   call s:initialize_lines()
 
+  call vinarise#set_cursor_address(0)
+
   setlocal nomodifiable
   setlocal nomodified
 endfunction"}}}
-function! vinarise#print_lines(lines)"{{{
+function! vinarise#print_lines(lines, ...)"{{{
   setlocal modifiable
 
   " Get last address.
-  let [type, line_address] = vinarise#parse_address(getline('$'), '')
-  let line_address = line_address / 16
+  if a:0 >= 1
+    let address = a:1
+  else
+    let [type, address] = vinarise#parse_address(getline('$'), '')
+  endif
+
+  let line_address = address / 16
 
   let max_lines = b:vinarise.filesize/16 + 1
   if max_lines > line_address + a:lines
@@ -183,7 +190,7 @@ function! vinarise#make_line(line_address)"{{{
     endif
   endfor
 
-  return printf(' %07x0: %-48s |  %s  ',
+  return printf('%07x0: %-48s |  %s  ',
         \ a:line_address, hex_line, ascii_line)
 endfunction"}}}
 function! vinarise#parse_address(string, cur_text)"{{{
@@ -225,6 +232,12 @@ function! vinarise#write_buffer(filename)"{{{
           \ "vim.eval('a:filename'))"
   setlocal nomodified
   echo printf('"%s" %d bytes', a:filename, b:vinarise.filesize)
+endfunction"}}}
+function! vinarise#set_cursor_address(address)"{{{
+  let line_address = a:address / 16
+  let hex_line = repeat(' \x\x', (a:address%16)+1)
+  let [lnum, col] = searchpos(printf('%07x0:%s', line_address, hex_line), 'cew')
+  call cursor(lnum, col-1)
 endfunction"}}}
 
 " Misc.

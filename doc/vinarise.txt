@@ -124,6 +124,9 @@ VINARISE BUFFER KEY MAPPINGS 			*vinarise-buffer-key-mappings*
 <Plug>(vinarise_change_current_address)		*<Plug>(vinarise_change_current_address)*
 		Change value in current address.
 
+<Plug>(vinarise_move_to_input_address)		*<Plug>(vinarise_move_to_input_address)*
+		Move to input address. Hexadecimal and decimal are supported.
+
 Normal mode key mappings.
 
 Normal mode default key mappings.
@@ -137,6 +140,7 @@ j			<Plug>(vinarise_next_line)
 <C-d>			<Plug>(vinarise_next_half_screen)
 <C-g>			<Plug>(vinarise_print_current_position)
 r			<Plug>(vinarise_change_current_address)
+G			<Plug>(vinarise_move_to_input_address)
 
 ==============================================================================
 EXAMPLES					*vinarise-examples*
@@ -147,6 +151,9 @@ EXAMPLES					*vinarise-examples*
 >
 ==============================================================================
 CHANGELOG					*vinarise-changelog*
+
+2012-02-17
+- Added <Plug>(vinarise_move_to_input_address) mapping.
 
 2012-02-16
 - Added <Plug>(vinarise_change_current_address) mapping.
