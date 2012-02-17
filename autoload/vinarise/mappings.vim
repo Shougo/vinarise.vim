@@ -34,11 +34,17 @@ function! vinarise#mappings#define_default_mappings()"{{{
   nnoremap <buffer><silent> <Plug>(vinarise_exit)
         \ :<C-u>call <SID>exit()<CR>
   nnoremap <buffer><silent> <Plug>(vinarise_next_line)
-        \ :<C-u>call <SID>next_line()<CR>
+        \ :<C-u>call <SID>move_line(1)<CR>
+  nnoremap <buffer><silent> <Plug>(vinarise_prev_line)
+        \ :<C-u>call <SID>move_line(0)<CR>
   nnoremap <buffer><silent> <Plug>(vinarise_next_screen)
-        \ :<C-u>call <SID>next_screen()<CR>
+        \ :<C-u>call <SID>move_screen(1)<CR>
+  nnoremap <buffer><silent> <Plug>(vinarise_prev_screen)
+        \ :<C-u>call <SID>move_screen(0)<CR>
   nnoremap <buffer><silent> <Plug>(vinarise_next_half_screen)
-        \ :<C-u>call <SID>next_half_screen()<CR>
+        \ :<C-u>call <SID>move_half_screen(1)<CR>
+  nnoremap <buffer><silent> <Plug>(vinarise_prev_half_screen)
+        \ :<C-u>call <SID>move_half_screen(0)<CR>
   nnoremap <buffer><silent> <Plug>(vinarise_print_current_position)
         \ :<C-u>call <SID>print_current_position()<CR>
   nnoremap <buffer><silent> <Plug>(vinarise_change_current_address)
@@ -56,8 +62,11 @@ function! vinarise#mappings#define_default_mappings()"{{{
   nmap <buffer> q <Plug>(vinarise_hide)
   nmap <buffer> Q <Plug>(vinarise_exit)
   nmap <buffer> j         <Plug>(vinarise_next_line)
+  nmap <buffer> k         <Plug>(vinarise_prev_line)
   nmap <buffer> <C-f>     <Plug>(vinarise_next_screen)
+  nmap <buffer> <C-b>     <Plug>(vinarise_prev_screen)
   nmap <buffer> <C-d>     <Plug>(vinarise_next_half_screen)
+  nmap <buffer> <C-u>     <Plug>(vinarise_prev_half_screen)
   nmap <buffer> <C-g>     <Plug>(vinarise_print_current_position)
   nmap <buffer> r    <Plug>(vinarise_change_current_address)
   nmap <buffer> G    <Plug>(vinarise_move_to_input_address)
@@ -148,26 +157,44 @@ function! s:change_current_address()"{{{
   setlocal nomodifiable
 endfunction"}}}
 
-function! s:next_line()"{{{
-  if line('.') == line('$')
-    call vinarise#print_lines(2)
+function! s:move_line(is_next)"{{{
+  if a:is_next
+    if line('.') == line('$')
+      call vinarise#print_lines(2)
+    endif
+    normal! j
+  else
+    if !a:is_next && line('.') == 1
+      call vinarise#print_lines(-2)
+    endif
+    normal! k
   endif
-
-  normal! j
 endfunction "}}}
-function! s:next_screen()"{{{
-  if line('.') + 2 * winheight(0) > line('$')
-    call vinarise#print_lines(winheight(0))
+function! s:move_screen(is_next)"{{{
+  if a:is_next
+    if line('.') + 2 * winheight(0) > line('$')
+      call vinarise#print_lines(winheight(0))
+    endif
+    execute "normal! \<C-f>"
+  else
+    if line('.') < 2 * winheight(0)
+      call vinarise#print_lines(-winheight(0))
+    endif
+    execute "normal! \<C-b>"
   endif
-
-  execute "normal! \<C-f>"
 endfunction "}}}
-function! s:next_half_screen()"{{{
-  if line('.') + winheight(0) > line('$')
-    call vinarise#print_lines(winheight(0)/2)
+function! s:move_half_screen(is_next)"{{{
+  if a:is_next
+    if line('.') + winheight(0) > line('$')
+      call vinarise#print_lines(winheight(0)/2)
+    endif
+    execute "normal! \<C-d>"
+  else
+    if !a:is_next && line('.') < winheight(0)
+      call vinarise#print_lines(-winheight(0)/2)
+    endif
+    execute "normal! \<C-u>"
   endif
-
-  execute "normal! \<C-d>"
 endfunction "}}}
 function! s:move_to_input_address()"{{{
   let address = input(printf('Please input new address(max 0x%x) : ',

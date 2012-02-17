@@ -143,28 +143,45 @@ function! vinarise#open(filename, context)"{{{
   setlocal nomodified
 endfunction"}}}
 function! vinarise#print_lines(lines, ...)"{{{
-  setlocal modifiable
-
   " Get last address.
   if a:0 >= 1
     let address = a:1
   else
-    let [type, address] = vinarise#parse_address(getline('$'), '')
+    let [type, address] = vinarise#parse_address(
+          \ (a:lines < 0 ? getline(1) : getline('$')), '')
   endif
 
   let line_address = address / 16
 
-  let max_lines = b:vinarise.filesize/16 + 1
-  if max_lines > line_address + a:lines
+  if a:lines < 0
     let max_lines = line_address + a:lines
+    if max_lines < 0
+      let max_lines = 0
+    endif
+    let line_numbers = range(max_lines, line_address-1)
+  else
+    let max_lines = b:vinarise.filesize/16 + 1
+    if max_lines > line_address + a:lines
+      let max_lines = line_address + a:lines
+    endif
+    let line_numbers = range(line_address, max_lines)
   endif
 
   let lines = []
-  for line_nr in range(line_address, max_lines)
+  for line_nr in line_numbers
     call add(lines, vinarise#make_line(line_nr))
   endfor
 
-  call setline('$', lines)
+  setlocal modifiable
+  let modified_save = &l:modified
+
+  if a:lines < 0
+    call append(0, lines)
+  else
+    call setline('$', lines)
+  endif
+
+  let &l:modified = modified_save
   setlocal nomodifiable
 endfunction"}}}
 function! vinarise#make_line(line_address)"{{{

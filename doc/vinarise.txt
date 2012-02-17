@@ -112,11 +112,20 @@ VINARISE BUFFER KEY MAPPINGS 			*vinarise-buffer-key-mappings*
 <Plug>(vinarise_next_line)			*<Plug>(vinarise_next_line)*
 		Move to next line address in vinarise buffer.
 
+<Plug>(vinarise_prev_line)			*<Plug>(vinarise_prev_line)*
+		Move to previous line address in vinarise buffer.
+
 <Plug>(vinarise_next_screen)			*<Plug>(vinarise_next_screen)*
 		Move to next screen address in vinarise buffer.
 
+<Plug>(vinarise_prev_screen)			*<Plug>(vinarise_prev_screen)*
+		Move to previous screen address in vinarise buffer.
+
 <Plug>(vinarise_next_half_screen)		*<Plug>(vinarise_next_half_screen)*
 		Move to next a harf of screen address in vinarise buffer.
+
+<Plug>(vinarise_prev_half_screen)		*<Plug>(vinarise_prev_half_screen)*
+		Move to previous a harf of screen address in vinarise buffer.
 
 <Plug>(vinarise_print_current_position)		*<Plug>(vinarise_print_current_position)*
 		Print current portion.
@@ -137,8 +146,11 @@ V			<Plug>(vinarise_edit_with_vim)
 q			<Plug>(vinarise_hide)
 Q			<Plug>(vinarise_exit)
 j			<Plug>(vinarise_next_line)
+k			<Plug>(vinarise_prev_line)
 <C-f>			<Plug>(vinarise_next_screen)
+<C-b>			<Plug>(vinarise_prev_screen)
 <C-d>			<Plug>(vinarise_next_half_screen)
+<C-u>			<Plug>(vinarise_prev_half_screen)
 <C-g>			<Plug>(vinarise_print_current_position)
 r			<Plug>(vinarise_change_current_address)
 G			<Plug>(vinarise_move_to_input_address)
@@ -156,6 +168,7 @@ CHANGELOG					*vinarise-changelog*
 2012-02-17
 - Added <Plug>(vinarise_move_to_input_address) mapping.
 - Improved filesize.
+- Added some moving mappings.
 
 2012-02-16
 - Added <Plug>(vinarise_change_current_address) mapping.
