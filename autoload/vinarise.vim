@@ -161,8 +161,13 @@ function! vinarise#print_lines(lines, ...)"{{{
     let line_numbers = range(max_lines, line_address-1)
   else
     let max_lines = b:vinarise.filesize/16 + 1
+
     if max_lines > line_address + a:lines
       let max_lines = line_address + a:lines
+    endif
+    if max_lines - line_address < winheight(0)
+          \ && line('$') < winheight(0)
+      let line_address = max_lines - winheight(0) + 1
     endif
     let line_numbers = range(line_address, max_lines)
   endif
@@ -306,7 +311,8 @@ function! s:match_ascii()"{{{
 
   let offset = address % 16
 
-  execute 'match' g:vinarise_cursor_ascii_highlight.' /\%'.line('.').'l\%'.(64+offset).'c/'
+  execute 'match' g:vinarise_cursor_ascii_highlight.
+        \ ' /\%'.line('.').'l\%'.(63+offset).'c/'
 endfunction"}}}
 
 function! s:initialize_context(context)"{{{

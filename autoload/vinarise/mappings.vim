@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: mappings.vim
 " AUTHOR: Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 17 Feb 2012.
+" Last Modified: 20 Feb 2012.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -50,7 +50,9 @@ function! vinarise#mappings#define_default_mappings()"{{{
   nnoremap <buffer><silent> <Plug>(vinarise_change_current_address)
         \ :<C-u>call <SID>change_current_address()<CR>
   nnoremap <buffer><silent> <Plug>(vinarise_move_to_input_address)
-        \ :<C-u>call <SID>move_to_input_address()<CR>
+        \ :<C-u>call <SID>move_to_input_address('')<CR>
+  nnoremap <buffer><silent> <Plug>(vinarise_move_to_last_address)
+        \ :<C-u>call <SID>move_to_input_address('100%')<CR>
   "}}}
 
   if exists('g:vimshell_no_default_keymappings') && g:vimshell_no_default_keymappings
@@ -70,6 +72,7 @@ function! vinarise#mappings#define_default_mappings()"{{{
   nmap <buffer> <C-g>     <Plug>(vinarise_print_current_position)
   nmap <buffer> r    <Plug>(vinarise_change_current_address)
   nmap <buffer> G    <Plug>(vinarise_move_to_input_address)
+  nmap <buffer> gG    <Plug>(vinarise_move_to_last_address)
 endfunction"}}}
 
 " VimShell key-mappings functions.
@@ -196,9 +199,10 @@ function! s:move_half_screen(is_next)"{{{
     execute "normal! \<C-u>"
   endif
 endfunction "}}}
-function! s:move_to_input_address()"{{{
-  let address = input(printf('Please input new address(max 0x%x) : ',
-        \ b:vinarise.filesize), '0x')
+function! s:move_to_input_address(input)"{{{
+  let address = (a:input == '') ?
+        \ input(printf('Please input new address(max 0x%x) : ',
+        \     b:vinarise.filesize), '0x') : a:input
   redraw
   if address == ''
     echo 'Canceled.'
@@ -218,6 +222,10 @@ function! s:move_to_input_address()"{{{
   if address !~ '^\d\+$'
     echo 'Invalid address.'
     return
+  endif
+
+  if address >= b:vinarise.filesize
+    let address = b:vinarise.filesize - 1
   endif
 
   setlocal modifiable
