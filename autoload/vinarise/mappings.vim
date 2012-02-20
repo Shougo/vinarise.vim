@@ -51,6 +51,8 @@ function! vinarise#mappings#define_default_mappings()"{{{
         \ :<C-u>call <SID>change_current_address()<CR>
   nnoremap <buffer><silent> <Plug>(vinarise_move_to_input_address)
         \ :<C-u>call <SID>move_to_input_address('')<CR>
+  nnoremap <buffer><silent> <Plug>(vinarise_move_to_first_address)
+        \ :<C-u>call <SID>move_to_input_address('0%')<CR>
   nnoremap <buffer><silent> <Plug>(vinarise_move_to_last_address)
         \ :<C-u>call <SID>move_to_input_address('100%')<CR>
   "}}}
@@ -72,6 +74,7 @@ function! vinarise#mappings#define_default_mappings()"{{{
   nmap <buffer> <C-g>     <Plug>(vinarise_print_current_position)
   nmap <buffer> r    <Plug>(vinarise_change_current_address)
   nmap <buffer> G    <Plug>(vinarise_move_to_input_address)
+  nmap <buffer> gg    <Plug>(vinarise_move_to_first_address)
   nmap <buffer> gG    <Plug>(vinarise_move_to_last_address)
 endfunction"}}}
 
