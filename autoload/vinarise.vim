@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: vinarise.vim
 " AUTHOR:  Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 17 Feb 2012.
+" Last Modified: 20 Feb 2012.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -241,10 +241,15 @@ function! vinarise#release_buffer(bufnr)"{{{
 endfunction"}}}
 function! vinarise#write_buffer(filename)"{{{
   " Write current buffer.
+  let filename = a:filename
+  if getbufvar(bufnr(a:filename), '&filetype') ==# 'vinarise'
+    " Use vinarise original path.
+    let filename = getbufvar(bufnr(a:filename), 'vinarise').filename
+  endif
   execute 'python' b:vinarise.python.'.write('
-          \ "vim.eval('a:filename'))"
+          \ "vim.eval('filename'))"
   setlocal nomodified
-  echo printf('"%s" %d bytes', a:filename, b:vinarise.filesize)
+  echo printf('"%s" %d bytes', filename, b:vinarise.filesize)
 endfunction"}}}
 function! vinarise#set_cursor_address(address)"{{{
   let line_address = a:address / 16

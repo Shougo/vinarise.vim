@@ -8,6 +8,7 @@ class VinariseBuffer:
         # init vars
         self.file = open(path, 'rb')
         self.path = path
+        self.is_windows = is_windows
         fsize = os.path.getsize(self.path)
         mmap_max = 0
         if fsize > 1000000000:
@@ -18,16 +19,28 @@ class VinariseBuffer:
                     None, mmap.ACCESS_COPY, 0)
         else:
             self.mmap = mmap.mmap(self.file.fileno(), mmap_max,
-                    mmap.MAP_PRIVATE , mmap.PROT_READ | mmap.PROT_WRITE, offset = 0)
+                    access = mmap.ACCESS_COPY, offset = 0)
 
     def close(self):
         self.file.close()
         self.mmap.close()
 
     def write(self, path):
+        if path == self.path:
+            # Close current file temporary.
+            str = self.mmap[0:]
+            is_windows = self.is_windows
+            self.close()
+        else:
+            str = self.mmap
+
         write_file = open(path, 'wb')
-        write_file.write(self.mmap)
+        write_file.write(str)
         write_file.close()
+
+        if path == self.path:
+            # Re open file.
+            self.open(path, is_windows)
 
     def get_byte(self, addr):
         return ord(self.mmap[int(addr)])

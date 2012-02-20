@@ -165,6 +165,9 @@ EXAMPLES					*vinarise-examples*
 ==============================================================================
 CHANGELOG					*vinarise-changelog*
 
+2012-02-20
+- Fixed file write.
+
 2012-02-17
 - Added <Plug>(vinarise_move_to_input_address) mapping.
 - Improved filesize.
