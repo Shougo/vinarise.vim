@@ -327,6 +327,12 @@ function! s:initialize_vinarise_buffer(filename, filesize)"{{{
           \ ".rfind(vim.eval('a:address'), vim.eval('a:str'))))"
     return address
   endfunction"}}}
+  function! b:vinarise.find_regexp(address, str)"{{{
+    execute 'python' 'vim.command("let address = " + str('.
+          \ b:vinarise.python .
+          \ ".find_regexp(vim.eval('a:address'), vim.eval('a:str'))))"
+    return address
+  endfunction"}}}
 
   " Basic settings.
   setlocal nolist

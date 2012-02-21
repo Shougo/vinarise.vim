@@ -1,5 +1,6 @@
 import mmap
 import os
+import re
 import vim
 import os.path
 
@@ -59,4 +60,11 @@ class VinariseBuffer:
 
     def rfind(self, address, str):
         return self.mmap.rfind(str, 0, int(address))
+
+    def find_regexp(self, address, str):
+        m = re.search(str, self.mmap[int(address) :])
+        if m is None:
+            return -1
+        else:
+            return m.start()
 

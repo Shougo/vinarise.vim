@@ -71,6 +71,8 @@ function! vinarise#mappings#define_default_mappings()"{{{
         \ :<C-u>call <SID>search_buffer('string', 0, '')<CR>
   nnoremap <buffer><silent> <Plug>(vinarise_search_string_reverse)
         \ :<C-u>call <SID>search_buffer('string', 1, '')<CR>
+  nnoremap <buffer><silent> <Plug>(vinarise_search_regexp)
+        \ :<C-u>call <SID>search_buffer('regexp', 0, '')<CR>
   nnoremap <buffer><silent> <Plug>(vinarise_search_last_pattern)
         \ :<C-u>call <SID>search_buffer(
         \    b:vinarise.last_search_type, 0, b:vinarise.last_search_string)<CR>
@@ -109,6 +111,7 @@ function! vinarise#mappings#define_default_mappings()"{{{
   nmap <buffer> ?          <Plug>(vinarise_search_binary_reverse)
   nmap <buffer> g/         <Plug>(vinarise_search_string)
   nmap <buffer> g?         <Plug>(vinarise_search_string_reverse)
+  nmap <buffer> e/         <Plug>(vinarise_search_regexp)
   nmap <buffer> n          <Plug>(vinarise_search_last_pattern)
   nmap <buffer> N          <Plug>(vinarise_search_last_pattern_reverse)
 endfunction"}}}
@@ -330,6 +333,8 @@ function! s:search_buffer(type, is_reverse, string)"{{{
     endwhile
   elseif a:type ==# 'string'
     let string = input('Please input search string : ')
+  elseif a:type ==# 'regexp'
+    let string = input('Please input Python regexp : ')
   endif
 
   redraw
@@ -345,7 +350,9 @@ function! s:search_buffer(type, is_reverse, string)"{{{
   else
     let start += 1
   endif
-  if a:is_reverse
+  if a:type ==# 'regexp'
+    let address = b:vinarise.find_regexp(start, string)
+  elseif a:is_reverse
     let address = b:vinarise.rfind(start, string)
   else
     let address = b:vinarise.find(start, string)

@@ -220,6 +220,7 @@ CHANGELOG					*vinarise-changelog*
 - Added some moving mappings.
 - Improved Python API interface.
 - Implemented search API.
+- Added regexp search(incomplete).
 
 2012-02-20
 - Fixed file write.
