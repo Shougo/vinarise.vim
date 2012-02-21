@@ -66,5 +66,5 @@ class VinariseBuffer:
         if m is None:
             return -1
         else:
-            return m.start()
+            return m.start() + int(address)
 

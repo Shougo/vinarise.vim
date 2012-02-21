@@ -167,6 +167,9 @@ VINARISE BUFFER KEY MAPPINGS 			*vinarise-buffer-key-mappings*
 <Plug>(vinarise_search_string_reverse)		*<Plug>(vinarise_search_string_reverse)*
 		Search the string address in the binary file by reverse.
 
+<Plug>(vinarise_search_regexp)			*<Plug>(vinarise_search_regexp)*
+		Search the regexp pattern address in the binary file.
+
 <Plug>(vinarise_search_last_pattern)		*<Plug>(vinarise_search_last_pattern)*
 		Search the last pattern repeatedly in the binary file.
 
@@ -203,6 +206,7 @@ gG			<Plug>(vinarise_move_to_last_address)
 ?			<Plug>(vinarise_search_binary_reverse)
 g/			<Plug>(vinarise_search_string)
 g?			<Plug>(vinarise_search_string_reverse)
+e/			<Plug>(vinarise_search_regexp)
 n			<Plug>(vinarise_search_last_pattern)
 N			<Plug>(vinarise_search_last_pattern_reverse)
 
@@ -221,6 +225,7 @@ CHANGELOG					*vinarise-changelog*
 - Improved Python API interface.
 - Implemented search API.
 - Added regexp search(incomplete).
+- Added search regexp keymapping.
 
 2012-02-20
 - Fixed file write.

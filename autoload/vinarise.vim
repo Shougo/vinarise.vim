@@ -328,9 +328,15 @@ function! s:initialize_vinarise_buffer(filename, filesize)"{{{
     return address
   endfunction"}}}
   function! b:vinarise.find_regexp(address, str)"{{{
-    execute 'python' 'vim.command("let address = " + str('.
-          \ b:vinarise.python .
-          \ ".find_regexp(vim.eval('a:address'), vim.eval('a:str'))))"
+    try
+      execute 'python' 'vim.command("let address = " + str('.
+            \ b:vinarise.python .
+            \ ".find_regexp(vim.eval('a:address'), vim.eval('a:str'))))"
+    catch
+      call vinarise#print_error('Invalid regexp pattern!')
+      return -1
+    endtry
+
     return address
   endfunction"}}}
 
