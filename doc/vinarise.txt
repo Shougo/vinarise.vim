@@ -149,6 +149,12 @@ VINARISE BUFFER KEY MAPPINGS 			*vinarise-buffer-key-mappings*
 		Move to input address. Hexadecimal and decimal are supported.
 		Note: If you input like "50%", move to 50% of filesize.
 
+<Plug>(vinarise_move_by_input_offset)		*<Plug>(vinarise_move_by_input_offset)*
+		Move by input offset relative to current position.
+		Hexadecimal and decimal are supported.
+		Note: If you input like "50%", move by 50% of filesize
+		      relative to current position.
+
 <Plug>(vinarise_move_to_first_address)		*<Plug>(vinarise_move_to_first_address)*
 		Move to first address in the binary file.
 
@@ -200,6 +206,7 @@ k			<Plug>(vinarise_prev_line)
 <C-g>			<Plug>(vinarise_print_current_position)
 r			<Plug>(vinarise_change_current_address)
 G			<Plug>(vinarise_move_to_input_address)
+go			<Plug>(vinarise_move_by_input_offset)
 gg			<Plug>(vinarise_move_to_first_address)
 gG			<Plug>(vinarise_move_to_last_address)
 /			<Plug>(vinarise_search_binary)
