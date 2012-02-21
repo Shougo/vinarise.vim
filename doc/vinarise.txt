@@ -109,6 +109,18 @@ VINARISE BUFFER KEY MAPPINGS 			*vinarise-buffer-key-mappings*
 <Plug>(vinarise_exit)				*<Plug>(vinarise_exit)*
 		Exit vinarise buffer.
 
+<Plug>(vinarise_next_col)			*<Plug>(vinarise_next_col)*
+		Move to next col address in vinarise buffer.
+
+<Plug>(vinarise_prev_col)			*<Plug>(vinarise_prev_col)*
+		Move to previous col address in vinarise buffer.
+
+<Plug>(vinarise_move_to_line_first_address)	*<Plug>(vinarise_line_first_address)*
+		Move to first address in the current line.
+
+<Plug>(vinarise_move_to_line_last_address)	*<Plug>(vinarise_line_last_address)*
+		Move to last address in the current line.
+
 <Plug>(vinarise_next_line)			*<Plug>(vinarise_next_line)*
 		Move to next line address in vinarise buffer.
 
@@ -151,6 +163,13 @@ Normal mode default key mappings.
 V			<Plug>(vinarise_edit_with_vim)
 q			<Plug>(vinarise_hide)
 Q			<Plug>(vinarise_exit)
+l			<Plug>(vinarise_next_col)
+h			<Plug>(vinarise_next_col)
+gh			<Plug>(vinarise_line_first_address)
+0			<Plug>(vinarise_line_first_address)
+^			<Plug>(vinarise_line_first_address)
+gl			<Plug>(vinarise_line_last_address)
+$			<Plug>(vinarise_line_last_address)
 j			<Plug>(vinarise_next_line)
 k			<Plug>(vinarise_prev_line)
 <C-f>			<Plug>(vinarise_next_screen)
@@ -172,6 +191,9 @@ EXAMPLES					*vinarise-examples*
 >
 ==============================================================================
 CHANGELOG					*vinarise-changelog*
+
+2012-02-21
+- Added some moving mappings.
 
 2012-02-20
 - Fixed file write.

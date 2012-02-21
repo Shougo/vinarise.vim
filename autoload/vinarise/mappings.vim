@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: mappings.vim
 " AUTHOR: Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 20 Feb 2012.
+" Last Modified: 21 Feb 2012.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -33,6 +33,14 @@ function! vinarise#mappings#define_default_mappings()"{{{
         \ :<C-u>call <SID>hide()<CR>
   nnoremap <buffer><silent> <Plug>(vinarise_exit)
         \ :<C-u>call <SID>exit()<CR>
+  nnoremap <buffer><expr> <Plug>(vinarise_next_column)
+        \ <SID>move_col(1)
+  nnoremap <buffer><expr> <Plug>(vinarise_prev_column)
+        \ <SID>move_col(0)
+  nnoremap <buffer><silent> <Plug>(vinarise_line_first_address)
+        \ :<C-u>call <SID>move_line_address(1)<CR>
+  nnoremap <buffer><silent> <Plug>(vinarise_line_last_address)
+        \ :<C-u>call <SID>move_line_address(0)<CR>
   nnoremap <buffer><silent> <Plug>(vinarise_next_line)
         \ :<C-u>call <SID>move_line(1)<CR>
   nnoremap <buffer><silent> <Plug>(vinarise_prev_line)
@@ -65,6 +73,8 @@ function! vinarise#mappings#define_default_mappings()"{{{
   nmap <buffer> V <Plug>(vinarise_edit_with_vim)
   nmap <buffer> q <Plug>(vinarise_hide)
   nmap <buffer> Q <Plug>(vinarise_exit)
+  nmap <buffer> l         <Plug>(vinarise_next_column)
+  nmap <buffer> h         <Plug>(vinarise_prev_column)
   nmap <buffer> j         <Plug>(vinarise_next_line)
   nmap <buffer> k         <Plug>(vinarise_prev_line)
   nmap <buffer> <C-f>     <Plug>(vinarise_next_screen)
@@ -76,6 +86,11 @@ function! vinarise#mappings#define_default_mappings()"{{{
   nmap <buffer> G    <Plug>(vinarise_move_to_input_address)
   nmap <buffer> gg    <Plug>(vinarise_move_to_first_address)
   nmap <buffer> gG    <Plug>(vinarise_move_to_last_address)
+  nmap <buffer> 0          <Plug>(vinarise_line_first_address)
+  nmap <buffer> ^          <Plug>(vinarise_line_first_address)
+  nmap <buffer> gh         <Plug>(vinarise_line_first_address)
+  nmap <buffer> $          <Plug>(vinarise_line_last_address)
+  nmap <buffer> gl         <Plug>(vinarise_line_last_address)
 endfunction"}}}
 
 " VimShell key-mappings functions.
@@ -163,6 +178,26 @@ function! s:change_current_address()"{{{
   setlocal nomodifiable
 endfunction"}}}
 
+function! s:move_col(is_next)"{{{
+  let [type, address] = vinarise#parse_address(getline('.'),
+        \ vinarise#get_cur_text(getline('.'), col('.')))
+  if a:is_next
+    if type ==# 'hex'
+      return (address % 16 == 15) ?
+            \ 'w3l' : 'w'
+    else
+      return (type ==# 'ascii' && address % 16 == 15) ?
+            \ '' : 'l'
+    endif
+  else
+    if type ==# 'hex'
+      return (address % 16 == 0) ? '' : 'b'
+    else
+      return (type ==# 'ascii' && address % 16 == 0) ?
+            \ 'b4h' : 'h'
+    endif
+  endif
+endfunction "}}}
 function! s:move_line(is_next)"{{{
   if a:is_next
     if line('.') == line('$')
@@ -175,6 +210,16 @@ function! s:move_line(is_next)"{{{
     endif
     normal! k
   endif
+endfunction "}}}
+function! s:move_line_address(is_first)"{{{
+  let [type, address] = vinarise#parse_address(getline('.'),
+        \ vinarise#get_cur_text(getline('.'), col('.')))
+  let address = address / 16 * 16
+  if !a:is_first
+    let address += 15
+  endif
+
+  call vinarise#set_cursor_address(address)
 endfunction "}}}
 function! s:move_screen(is_next)"{{{
   if a:is_next
