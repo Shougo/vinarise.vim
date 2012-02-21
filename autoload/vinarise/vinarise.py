@@ -54,3 +54,9 @@ class VinariseBuffer:
     def get_percentage_address(self, percent):
         return (os.path.getsize(self.path) * int(percent)) / 100
 
+    def find(address, str):
+        return self.mmap.find(str, address)
+
+    def rfind(address, str):
+        return self.mmap.rfind(str, 0, address)
+

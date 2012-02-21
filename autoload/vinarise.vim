@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: vinarise.vim
 " AUTHOR:  Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 20 Feb 2012.
+" Last Modified: 21 Feb 2012.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -199,8 +199,7 @@ function! vinarise#make_line(line_address)"{{{
       let hex_line .= '   '
       let ascii_line .= ' '
     else
-      execute 'python' 'vim.command("let num = " + str('.
-            \ b:vinarise.python .'.get_byte(vim.eval("address"))))'
+      let num = b:vinarise.get_byte(address)
       let char = nr2char(num)
 
       let hex_line .= printf('%02x', num) . ' '
@@ -242,7 +241,8 @@ function! vinarise#get_cur_text(string, col)"{{{
 endfunction"}}}
 function! vinarise#release_buffer(bufnr)"{{{
   " Close previous variable.
-  execute 'python' g:vinarise_var_prefix.a:bufnr.'.close()'
+  let vinarise = getbufvar(a:bufnr, 'vinarise')
+  call vinarise.close()
 endfunction"}}}
 function! vinarise#write_buffer(filename)"{{{
   " Write current buffer.
@@ -251,8 +251,9 @@ function! vinarise#write_buffer(filename)"{{{
     " Use vinarise original path.
     let filename = getbufvar(bufnr(a:filename), 'vinarise').filename
   endif
-  execute 'python' b:vinarise.python.'.write('
-          \ "vim.eval('filename'))"
+
+  call b:vinarise.write(filename)
+
   setlocal nomodified
   echo printf('"%s" %d bytes', filename, b:vinarise.filesize)
 endfunction"}}}
@@ -270,13 +271,48 @@ function! s:initialize_vinarise_buffer(filename, filesize)"{{{
     call vinarise#release_buffer(bufnr('%'))
   endif
 
-  execute 'python' g:vinarise_var_prefix.bufnr('%').' = '.g:vinarise_var_prefix
+  execute 'python' g:vinarise_var_prefix.bufnr('%').
+        \ ' = '.g:vinarise_var_prefix
 
   let b:vinarise = {
    \  'filename' : a:filename,
    \  'python' : g:vinarise_var_prefix.bufnr('%'),
    \  'filesize' : a:filesize,
    \ }
+
+  " Wrapper functions.
+  function! b:vinarise.open(filename)"{{{
+    execute 'python' self.python.
+          \ ".open(vim.eval('iconv(a:filename, &encoding, &termencoding)'),".
+          \ "vim.eval('vinarise#util#is_windows()'))"
+  endfunction"}}}
+  function! b:vinarise.close()"{{{
+    execute 'python' self.python.'.close()'
+  endfunction"}}}
+  function! b:vinarise.write(path)"{{{
+    execute 'python' self.python.'.write('
+          \ "vim.eval('a:path'))"
+  endfunction"}}}
+  function! b:vinarise.get_byte(address)"{{{
+    execute 'python' 'vim.command("let num = " + str('.
+          \ self.python .'.get_byte(vim.eval("a:address"))))'
+    return num
+  endfunction"}}}
+  function! b:vinarise.set_byte(address, value)"{{{
+    execute 'python' self.python .
+          \ '.set_byte(vim.eval("a:address"), vim.eval("a:value"))'
+  endfunction"}}}
+  function! b:vinarise.get_percentage(address)"{{{
+    execute 'python' 'vim.command("let percentage = " + str('.
+          \ b:vinarise.python .'.get_percentage(vim.eval("a:address"))))'
+    return percentage
+  endfunction"}}}
+  function! b:vinarise.get_percentage_address(percentage)"{{{
+    execute 'python' 'vim.command("let address = " + str('.
+          \ b:vinarise.python .
+          \ ".get_percentage_address(vim.eval('a:percentage'))))"
+    return address
+  endfunction"}}}
 
   " Basic settings.
   setlocal nolist

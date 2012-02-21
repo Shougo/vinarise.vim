@@ -194,6 +194,7 @@ CHANGELOG					*vinarise-changelog*
 
 2012-02-21
 - Added some moving mappings.
+- Improved Python API interface.
 
 2012-02-20
 - Fixed file write.

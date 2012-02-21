@@ -137,8 +137,7 @@ function! s:print_current_position()"{{{
   " Get current address.
   let [type, address] = vinarise#parse_address(getline('.'),
         \ vinarise#get_cur_text(getline('.'), col('.')))
-  execute 'python' 'vim.command("let percentage = " + str('.
-        \ b:vinarise.python .'.get_percentage(vim.eval("address"))))'
+  let percentage = b:vinarise.get_percentage(address)
 
   echo printf('[%s] %8d / %8d byte (%3d%%)',
         \ type, address, b:vinarise.filesize, percentage)
@@ -152,8 +151,7 @@ function! s:change_current_address()"{{{
     return
   endif
 
-  execute 'python' 'vim.command("let old_value = " + str('.
-        \ b:vinarise.python .'.get_byte(vim.eval("address"))))'
+  let old_value = b:vinarise.get_byte(address)
 
   let value = input('Please input new value: '.
         \ printf('%x', old_value) . ' -> ')
@@ -166,8 +164,7 @@ function! s:change_current_address()"{{{
   endif
   let value = str2nr(value, 16)
 
-  execute 'python' b:vinarise.python .
-        \ '.set_byte(vim.eval("address"), vim.eval("value"))'
+  call b:vinarise.set_byte(address, value)
 
   setlocal modifiable
 
@@ -262,9 +259,7 @@ function! s:move_to_input_address(input)"{{{
   elseif address =~ '^\d\+%$'
     " Convert percentage.
     let percentage = address[: -2]
-    execute 'python' 'vim.command("let address = " + str('.
-          \ b:vinarise.python .
-          \ ".get_percentage_address(vim.eval('percentage'))))"
+    let address = b:vinarise.get_percentage_address(percentage)
   endif
 
   if address !~ '^\d\+$'
