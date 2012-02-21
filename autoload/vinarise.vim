@@ -278,6 +278,8 @@ function! s:initialize_vinarise_buffer(filename, filesize)"{{{
    \  'filename' : a:filename,
    \  'python' : g:vinarise_var_prefix.bufnr('%'),
    \  'filesize' : a:filesize,
+   \  'last_search_string' : '',
+   \  'last_search_type' : 'binary',
    \ }
 
   " Wrapper functions.
@@ -313,6 +315,18 @@ function! s:initialize_vinarise_buffer(filename, filesize)"{{{
           \ ".get_percentage_address(vim.eval('a:percentage'))))"
     return address
   endfunction"}}}
+  function! b:vinarise.find(address, str)"{{{
+    execute 'python' 'vim.command("let address = " + str('.
+          \ b:vinarise.python .
+          \ ".find(vim.eval('a:address'), vim.eval('a:str'))))"
+    return address
+  endfunction"}}}
+  function! b:vinarise.rfind(address, str)"{{{
+    execute 'python' 'vim.command("let address = " + str('.
+          \ b:vinarise.python .
+          \ ".rfind(vim.eval('a:address'), vim.eval('a:str'))))"
+    return address
+  endfunction"}}}
 
   " Basic settings.
   setlocal nolist
@@ -335,7 +349,7 @@ function! s:initialize_vinarise_buffer(filename, filesize)"{{{
   setfiletype vinarise
 endfunction"}}}
 function! s:initialize_lines()"{{{
-  call vinarise#print_lines(100)
+  call vinarise#print_lines(winheight(0))
 endfunction"}}}
 function! s:match_ascii()"{{{
   let [type, address] = vinarise#parse_address(getline('.'),

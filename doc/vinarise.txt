@@ -155,6 +155,24 @@ VINARISE BUFFER KEY MAPPINGS 			*vinarise-buffer-key-mappings*
 <Plug>(vinarise_move_to_last_address)		*<Plug>(vinarise_move_to_last_address)*
 		Move to last address in the binary file.
 
+<Plug>(vinarise_search_binary)			*<Plug>(vinarise_search_binary)*
+		Search the binary address in the binary file.
+
+<Plug>(vinarise_search_binary_reverse)		*<Plug>(vinarise_search_binary_reverse)*
+		Search the binary address in the binary file by reverse.
+
+<Plug>(vinarise_search_string)			*<Plug>(vinarise_search_string)*
+		Search the string address in the binary file.
+
+<Plug>(vinarise_search_string_reverse)		*<Plug>(vinarise_search_string_reverse)*
+		Search the string address in the binary file by reverse.
+
+<Plug>(vinarise_search_last_pattern)		*<Plug>(vinarise_search_last_pattern)*
+		Search the last pattern repeatedly in the binary file.
+
+<Plug>(vinarise_search_last_pattern_reverse)	*<Plug>(vinarise_search_last_pattern_reverse)*
+		Search the last pattern repeatedly in the binary file by reverse.
+
 Normal mode key mappings.
 
 Normal mode default key mappings.
@@ -181,6 +199,12 @@ r			<Plug>(vinarise_change_current_address)
 G			<Plug>(vinarise_move_to_input_address)
 gg			<Plug>(vinarise_move_to_first_address)
 gG			<Plug>(vinarise_move_to_last_address)
+/			<Plug>(vinarise_search_binary)
+?			<Plug>(vinarise_search_binary_reverse)
+g/			<Plug>(vinarise_search_string)
+g?			<Plug>(vinarise_search_string_reverse)
+n			<Plug>(vinarise_search_last_pattern)
+N			<Plug>(vinarise_search_last_pattern_reverse)
 
 ==============================================================================
 EXAMPLES					*vinarise-examples*
@@ -195,6 +219,7 @@ CHANGELOG					*vinarise-changelog*
 2012-02-21
 - Added some moving mappings.
 - Improved Python API interface.
+- Implemented search API.
 
 2012-02-20
 - Fixed file write.

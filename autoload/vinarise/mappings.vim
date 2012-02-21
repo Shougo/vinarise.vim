@@ -63,6 +63,20 @@ function! vinarise#mappings#define_default_mappings()"{{{
         \ :<C-u>call <SID>move_to_input_address('0%')<CR>
   nnoremap <buffer><silent> <Plug>(vinarise_move_to_last_address)
         \ :<C-u>call <SID>move_to_input_address('100%')<CR>
+  nnoremap <buffer><silent> <Plug>(vinarise_search_binary)
+        \ :<C-u>call <SID>search_buffer('binary', 0, '')<CR>
+  nnoremap <buffer><silent> <Plug>(vinarise_search_binary_reverse)
+        \ :<C-u>call <SID>search_buffer('binary', 1, '')<CR>
+  nnoremap <buffer><silent> <Plug>(vinarise_search_string)
+        \ :<C-u>call <SID>search_buffer('string', 0, '')<CR>
+  nnoremap <buffer><silent> <Plug>(vinarise_search_string_reverse)
+        \ :<C-u>call <SID>search_buffer('string', 1, '')<CR>
+  nnoremap <buffer><silent> <Plug>(vinarise_search_last_pattern)
+        \ :<C-u>call <SID>search_buffer(
+        \    b:vinarise.last_search_type, 0, b:vinarise.last_search_string)<CR>
+  nnoremap <buffer><silent> <Plug>(vinarise_search_last_pattern_reverse)
+        \ :<C-u>call <SID>search_buffer(
+        \    b:vinarise.last_search_type, 1, b:vinarise.last_search_string)<CR>
   "}}}
 
   if exists('g:vimshell_no_default_keymappings') && g:vimshell_no_default_keymappings
@@ -91,6 +105,12 @@ function! vinarise#mappings#define_default_mappings()"{{{
   nmap <buffer> gh         <Plug>(vinarise_line_first_address)
   nmap <buffer> $          <Plug>(vinarise_line_last_address)
   nmap <buffer> gl         <Plug>(vinarise_line_last_address)
+  nmap <buffer> /          <Plug>(vinarise_search_binary)
+  nmap <buffer> ?          <Plug>(vinarise_search_binary_reverse)
+  nmap <buffer> g/         <Plug>(vinarise_search_string)
+  nmap <buffer> g?         <Plug>(vinarise_search_string_reverse)
+  nmap <buffer> n          <Plug>(vinarise_search_last_pattern)
+  nmap <buffer> N          <Plug>(vinarise_search_last_pattern_reverse)
 endfunction"}}}
 
 " VimShell key-mappings functions.
@@ -279,6 +299,74 @@ function! s:move_to_input_address(input)"{{{
 
   let &l:modified = modified_save
   setlocal nomodifiable
+
+  " Set cursor.
+  call vinarise#set_cursor_address(address)
+endfunction "}}}
+function! s:search_buffer(type, is_reverse, string)"{{{
+  if a:string != ''
+    let string = a:string
+  elseif a:type ==# 'binary'
+    let binary = input('Please input search binary : 0x')
+    redraw
+
+    if binary !~ '^\x\+$'
+      echo 'Invalid input.'
+      return
+    endif
+
+    if len(binary) % 2 != 0
+      " Add prefix "0".
+      let binary = '0' . binary
+    endif
+
+    " Convert binary.
+    let string = ''
+    let i = 0
+    while i < len(binary)
+      let string .= nr2char(str2nr(binary[i : i+1], 16))
+
+      let i += 2
+    endwhile
+  elseif a:type ==# 'string'
+    let string = input('Please input search string : ')
+  endif
+
+  redraw
+  if string == ''
+    echo 'Canceled.'
+    return
+  endif
+
+  let [_, start] = vinarise#parse_address(getline('.'),
+        \ vinarise#get_cur_text(getline('.'), col('.')))
+  if a:is_reverse
+    let start -= 1
+  else
+    let start += 1
+  endif
+  if a:is_reverse
+    let address = b:vinarise.rfind(start, string)
+  else
+    let address = b:vinarise.find(start, string)
+  endif
+
+  if address < 0
+    echo 'Pattern not found.'
+    return
+  endif
+
+  setlocal modifiable
+  let modified_save = &l:modified
+
+  silent % delete _
+  call vinarise#print_lines(winheight(0), address)
+
+  let &l:modified = modified_save
+  setlocal nomodifiable
+
+  let b:vinarise.last_search_string = string
+  let b:vinarise.last_search_type = a:type
 
   " Set cursor.
   call vinarise#set_cursor_address(address)
