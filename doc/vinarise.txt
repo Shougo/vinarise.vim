@@ -163,9 +163,11 @@ VINARISE BUFFER KEY MAPPINGS 			*vinarise-buffer-key-mappings*
 
 <Plug>(vinarise_search_binary)			*<Plug>(vinarise_search_binary)*
 		Search the binary address in the binary file.
+		Hexadecimal and decimal are supported.
 
 <Plug>(vinarise_search_binary_reverse)		*<Plug>(vinarise_search_binary_reverse)*
 		Search the binary address in the binary file by reverse.
+		Hexadecimal and decimal are supported.
 
 <Plug>(vinarise_search_string)			*<Plug>(vinarise_search_string)*
 		Search the string address in the binary file.
@@ -230,6 +232,7 @@ CHANGELOG					*vinarise-changelog*
 2012-02-22
 - Fixed print_lines errors.
 - Fixed find regexp.
+- Improved <Plug>(vinarise_search_binary) behavior.
 
 2012-02-21
 - Added some moving mappings.

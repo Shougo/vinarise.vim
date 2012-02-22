@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: mappings.vim
 " AUTHOR: Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 21 Feb 2012.
+" Last Modified: 22 Feb 2012.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -342,10 +342,15 @@ function! s:search_buffer(type, is_reverse, string)"{{{
   if a:string != ''
     let string = a:string
   elseif a:type ==# 'binary'
-    let binary = input('Please input search binary : 0x')
+    let binary = input('Please input search binary : ', '0x')
     redraw
 
-    if binary !~ '^\x\+$'
+    if binary =~ '^0x\x\+$'
+      " Convert hex offset.
+      let binary = str2nr(binary, 16)
+    endif
+
+    if binary !~ '^\d\+$'
       echo 'Invalid input.'
       return
     endif
@@ -359,7 +364,8 @@ function! s:search_buffer(type, is_reverse, string)"{{{
     let string = ''
     let i = 0
     while i < len(binary)
-      let string .= nr2char(str2nr(binary[i : i+1], 16))
+      let string .= nr2char(
+            \ str2nr(binary[i : i+1], 10))
 
       let i += 2
     endwhile
