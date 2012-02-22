@@ -229,6 +229,7 @@ CHANGELOG					*vinarise-changelog*
 
 2012-02-22
 - Fixed print_lines errors.
+- Fixed find regexp.
 
 2012-02-21
 - Added some moving mappings.
