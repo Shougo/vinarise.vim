@@ -59,6 +59,8 @@ function! vinarise#mappings#define_default_mappings()"{{{
         \ :<C-u>call <SID>change_current_address()<CR>
   nnoremap <buffer><silent> <Plug>(vinarise_move_to_input_address)
         \ :<C-u>call <SID>move_to_input_address('')<CR>
+  nnoremap <buffer><silent> <Plug>(vinarise_move_by_input_offset)
+        \ :<C-u>call <SID>move_by_input_offset('')<CR>
   nnoremap <buffer><silent> <Plug>(vinarise_move_to_first_address)
         \ :<C-u>call <SID>move_to_input_address('0%')<CR>
   nnoremap <buffer><silent> <Plug>(vinarise_move_to_last_address)
@@ -100,6 +102,7 @@ function! vinarise#mappings#define_default_mappings()"{{{
   nmap <buffer> <C-g>     <Plug>(vinarise_print_current_position)
   nmap <buffer> r    <Plug>(vinarise_change_current_address)
   nmap <buffer> G    <Plug>(vinarise_move_to_input_address)
+  nmap <buffer> go    <Plug>(vinarise_move_by_input_offset)
   nmap <buffer> gg    <Plug>(vinarise_move_to_first_address)
   nmap <buffer> gG    <Plug>(vinarise_move_to_last_address)
   nmap <buffer> 0          <Plug>(vinarise_line_first_address)
@@ -266,6 +269,35 @@ function! s:move_half_screen(is_next)"{{{
     endif
     execute "normal! \<C-u>"
   endif
+endfunction "}}}
+function! s:move_by_input_offset(input)"{{{
+  " Get current address.
+  let [type, address] = vinarise#parse_address(getline('.'),
+        \ vinarise#get_cur_text(getline('.'), col('.')))
+  let rest = max([0, b:vinarise.filesize - address - 1])
+  let offset = (a:input == '') ?
+        \ input(printf('Please input offset(min -0x%x, max 0x%x) : ',
+        \ address, rest), '') : a:input
+  redraw
+  if offset == ''
+    echo 'Canceled.'
+    return
+  endif
+  if offset =~ '^\-\?0x\x\+$'
+    " Convert hex offset.
+    let offset = str2nr(offset, 16)
+    let address = max([0, min([address + rest, address + offset])])
+  elseif offset =~ '^\-\?\d\+%$'
+    " Convert percentage offset.
+    let offset = offset[ :-2]
+    let current = b:vinarise.get_percentage(address)
+    let percentage = max([0, min([100, current + offset])])
+    let address = b:vinarise.get_percentage_address(percentage)
+  else
+    echo 'Invalid offset.'
+    return
+  endif
+  call s:move_to_input_address(printf("0x%x", address))
 endfunction "}}}
 function! s:move_to_input_address(input)"{{{
   let address = (a:input == '') ?
