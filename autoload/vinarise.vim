@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: vinarise.vim
 " AUTHOR:  Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 21 Feb 2012.
+" Last Modified: 22 Feb 2012.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -167,7 +167,11 @@ function! vinarise#print_lines(lines, ...)"{{{
     endif
     if max_lines - line_address < winheight(0)
           \ && line('$') < winheight(0)
+          \ && line_address != max_lines
       let line_address = max_lines - winheight(0) + 1
+    endif
+    if line_address < 0
+      let line_address = 0
     endif
     let line_numbers = range(line_address, max_lines)
   endif
