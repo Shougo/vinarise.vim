@@ -89,7 +89,7 @@ function! s:bitmapview_open()
 
   call s:print_lines(winheight(0))
 
-  call s:set_cursor_address(0, getline('.'))
+  call s:set_cursor_address(0)
 endfunction
 function! s:define_default_mappings()"{{{
   " Plugin keymappings"{{{
@@ -149,7 +149,7 @@ endfunction"}}}
 
 function! s:parse_address(string, cur_text)"{{{
   " Get last address.
-  let base_address = matchstr(a:string, '\x\+\ze0').'0'
+  let base_address = matchstr(a:string, '^\x\+')
 
   " Default.
   let type = 'address'
@@ -157,9 +157,8 @@ function! s:parse_address(string, cur_text)"{{{
 
   if a:cur_text =~ '^\s*\x\+\s*:.\+$'
     " Check hex line.
-    let offset = len(split(matchstr(a:cur_text,
-          \ '^\s*\x\+\s*:.\+$'))) - 1
-    if 0 <= offset && offset < 16
+    let offset = len(matchstr(a:cur_text, '^\s*\x\+\s*: \zs.\+$')) - 1
+    if 0 <= offset && offset < b:bitmapview.width
       let type = 'bitmap'
       let address += offset
     endif
@@ -230,12 +229,12 @@ function! s:make_line(line_address)"{{{
           \ (num < 0x1f) ? '.' : (num < 0x7f) ? '+' :  '*'
   endfor
 
-  return printf('%07x0: %s', a:line_address, line)
+  return printf('%08x: %s', a:line_address * b:bitmapview.width, line)
 endfunction"}}}
-function! s:set_cursor_address(address, line)"{{{
-  let line_address = matchstr(a:line, '\x\+\ze0').'0'
+function! s:set_cursor_address(address)"{{{
+  let line_address = (a:address / b:bitmapview.width) * b:bitmapview.width
   let [lnum, col] = searchpos(
-        \ printf('%07x0: .\{%d}', line_address, a:address - line_address + 1), 'cew')
+        \ printf('%08x: .\{%d}', line_address, a:address - line_address + 1), 'cew')
   call cursor(lnum, col)
 endfunction"}}}
 
@@ -269,8 +268,8 @@ function! s:print_current_position()"{{{
         \ vinarise#get_cur_text(getline('.'), col('.')))
   let percentage = b:bitmapview.vinarise.get_percentage(address)
 
-  echo printf('[%s] %8d / %8d byte (%3d%%)',
-        \ type, address, b:bitmapview.vinarise.filesize, percentage)
+  echo printf('[%s] %8d / %8d (%3d%%)',
+        \ type, address, b:bitmapview.vinarise.filesize - 1, percentage)
 endfunction"}}}
 
 function! s:move_line(is_next)"{{{
@@ -378,7 +377,7 @@ function! s:move_to_input_address(input)"{{{
   setlocal nomodifiable
 
   " Set cursor.
-  call s:set_cursor_address(address, getline('.'))
+  call s:set_cursor_address(address)
 endfunction "}}}
 
 let &cpo = s:save_cpo

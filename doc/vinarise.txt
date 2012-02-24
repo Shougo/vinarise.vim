@@ -233,6 +233,7 @@ CHANGELOG					*vinarise-changelog*
 - Implemented bitmapview.
 - Fixed exit error.
 - Fixed width problem.
+- Fixed parse address.
 
 2012-02-22
 - Fixed print_lines errors.

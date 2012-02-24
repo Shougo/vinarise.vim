@@ -227,7 +227,7 @@ function! vinarise#make_line(line_address)"{{{
 endfunction"}}}
 function! vinarise#parse_address(string, cur_text)"{{{
   " Get last address.
-  let base_address = matchstr(a:string, '\x\+\ze0').'0'
+  let base_address = matchstr(a:string, '^\x\+')
 
   " Default.
   let type = 'address'
@@ -243,7 +243,7 @@ function! vinarise#parse_address(string, cur_text)"{{{
     endif
   elseif a:cur_text =~ '|  \zs.*$'
     let offset = len(matchstr(a:cur_text, '|  \zs.*$')) - 1
-    if 0 <= offset && offset < 16
+    if 0 <= offset && offset < b:vinarise.width
       let type = 'ascii'
       let address += offset
     endif
@@ -281,10 +281,10 @@ function! vinarise#write_buffer(filename)"{{{
   echo printf('"%s" %d bytes', filename, b:vinarise.filesize)
 endfunction"}}}
 function! vinarise#set_cursor_address(address)"{{{
-  let line_address = a:address / 16
-  let hex_line = repeat(' \x\x', (a:address % b:vinarise.width)+1)
+  let line_address = (a:address / b:vinarise.width) * b:vinarise.width
+  let hex_line = repeat(' \x\x', a:address - line_address + 1)
   let [lnum, col] = searchpos(
-        \ printf('%07x0:%s', line_address, hex_line), 'cew')
+        \ printf('%08x:%s', line_address, hex_line), 'cew')
   call cursor(lnum, col-1)
 endfunction"}}}
 function! vinarise#get_current_vinarise() "{{{

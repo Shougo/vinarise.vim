@@ -165,8 +165,8 @@ function! s:print_current_position()"{{{
         \ vinarise#get_cur_text(getline('.'), col('.')))
   let percentage = b:vinarise.get_percentage(address)
 
-  echo printf('[%s] %8d / %8d byte (%3d%%)',
-        \ type, address, b:vinarise.filesize, percentage)
+  echo printf('[%s] %8d / %8d (%3d%%)',
+        \ type, address, b:vinarise.filesize - 1, percentage)
 endfunction"}}}
 function! s:change_current_address()"{{{
   " Get current address.
