@@ -72,7 +72,7 @@ The commands of plugins				*:vinarise-sources-commands*
 :VinariseDump {file}				*:VinariseDump*
 		View executable file with objdump.
 
-:VinarisePluginViewBitmapView			*:VinariseDump*
+:VinarisePluginViewBitmapView			*:VinarisePluginBitmapView*
 		View the file with Bitmap View.
 		Note: This command is available in vinarise buffer.
 
