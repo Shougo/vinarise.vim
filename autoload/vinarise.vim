@@ -261,7 +261,7 @@ function! vinarise#release_buffer(bufnr)"{{{
   " Plugins finalization.
   for plugin in values(s:vinarise_plugins)
     if has_key(plugin, 'finalize')
-      call plugin.initialize(vinarise, vinarise.context)
+      call plugin.finalize(vinarise, vinarise.context)
     endif
   endfor
 
@@ -400,9 +400,10 @@ function! s:initialize_vinarise_buffer(context, filename, filesize)"{{{
 
   " Autocommands.
   augroup plugin-vinarise
-    autocmd CursorMoved <buffer> call s:match_ascii()
-    autocmd BufDelete <buffer> call vinarise#release_buffer(expand('<abuf>'))
-    autocmd BufWriteCmd <buffer> call vinarise#write_buffer(expand('<afile>'))
+    autocmd CursorMoved <buffer>
+          \ call s:match_ascii()
+    autocmd BufWriteCmd <buffer>
+          \ call vinarise#write_buffer(expand('<afile>'))
   augroup END
 
   call vinarise#mappings#define_default_mappings()

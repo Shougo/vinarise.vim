@@ -156,6 +156,7 @@ function! s:exit()"{{{
     endif
   endif
 
+  call vinarise#release_buffer(bufnr('%'))
   call vinarise#util#delete_buffer()
 endfunction"}}}
 function! s:print_current_position()"{{{
