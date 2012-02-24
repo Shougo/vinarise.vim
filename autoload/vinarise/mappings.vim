@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: mappings.vim
 " AUTHOR: Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 22 Feb 2012.
+" Last Modified: 24 Feb 2012.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -83,7 +83,7 @@ function! vinarise#mappings#define_default_mappings()"{{{
         \    b:vinarise.last_search_type, 1, b:vinarise.last_search_string)<CR>
   "}}}
 
-  if exists('g:vimshell_no_default_keymappings') && g:vimshell_no_default_keymappings
+  if exists('g:vinarise_no_default_keymappings') && g:vinarise_no_default_keymappings
     return
   endif
 
@@ -119,7 +119,6 @@ function! vinarise#mappings#define_default_mappings()"{{{
   nmap <buffer> N          <Plug>(vinarise_search_last_pattern_reverse)
 endfunction"}}}
 
-" VimShell key-mappings functions.
 function! s:edit_with_vim()"{{{
   let save_auto_detect = g:vinarise_enable_auto_detect
   let g:vinarise_enable_auto_detect = 0

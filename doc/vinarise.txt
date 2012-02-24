@@ -229,6 +229,9 @@ EXAMPLES					*vinarise-examples*
 ==============================================================================
 CHANGELOG					*vinarise-changelog*
 
+2012-02-24
+- Implemented bitmapview.
+
 2012-02-22
 - Fixed print_lines errors.
 - Fixed find regexp.
