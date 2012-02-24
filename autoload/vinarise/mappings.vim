@@ -57,14 +57,14 @@ function! vinarise#mappings#define_default_mappings()"{{{
         \ :<C-u>call <SID>print_current_position()<CR>
   nnoremap <buffer><silent> <Plug>(vinarise_change_current_address)
         \ :<C-u>call <SID>change_current_address()<CR>
-  nnoremap <buffer><silent> <Plug>(vinarise_move_to_input_address)
-        \ :<C-u>call <SID>move_to_input_address('')<CR>
+  nnoremap <buffer><silent> <Plug>(vinarise_move_by_input_address)
+        \ :<C-u>call <SID>move_by_input_address('')<CR>
   nnoremap <buffer><silent> <Plug>(vinarise_move_by_input_offset)
         \ :<C-u>call <SID>move_by_input_offset('')<CR>
   nnoremap <buffer><silent> <Plug>(vinarise_move_to_first_address)
-        \ :<C-u>call <SID>move_to_input_address('0%')<CR>
+        \ :<C-u>call <SID>move_by_input_address('0%')<CR>
   nnoremap <buffer><silent> <Plug>(vinarise_move_to_last_address)
-        \ :<C-u>call <SID>move_to_input_address('100%')<CR>
+        \ :<C-u>call <SID>move_by_input_address('100%')<CR>
   nnoremap <buffer><silent> <Plug>(vinarise_search_binary)
         \ :<C-u>call <SID>search_buffer('binary', 0, '')<CR>
   nnoremap <buffer><silent> <Plug>(vinarise_search_binary_reverse)
@@ -101,7 +101,7 @@ function! vinarise#mappings#define_default_mappings()"{{{
   nmap <buffer> <C-u>     <Plug>(vinarise_prev_half_screen)
   nmap <buffer> <C-g>     <Plug>(vinarise_print_current_position)
   nmap <buffer> r    <Plug>(vinarise_change_current_address)
-  nmap <buffer> gG    <Plug>(vinarise_move_to_input_address)
+  nmap <buffer> gG    <Plug>(vinarise_move_by_input_address)
   nmap <buffer> go    <Plug>(vinarise_move_by_input_offset)
   nmap <buffer> gg    <Plug>(vinarise_move_to_first_address)
   nmap <buffer> G     <Plug>(vinarise_move_to_last_address)
@@ -119,6 +119,24 @@ function! vinarise#mappings#define_default_mappings()"{{{
   nmap <buffer> N          <Plug>(vinarise_search_last_pattern_reverse)
 endfunction"}}}
 
+function! vinarise#mappings#move_to_address(address)"{{{
+  let address = a:address
+  if address >= b:vinarise.filesize
+    let address = b:vinarise.filesize - 1
+  endif
+
+  setlocal modifiable
+  let modified_save = &l:modified
+
+  silent % delete _
+  call vinarise#print_lines(100, address)
+
+  let &l:modified = modified_save
+  setlocal nomodifiable
+
+  " Set cursor.
+  call vinarise#set_cursor_address(address)
+endfunction "}}}
 function! s:edit_with_vim()"{{{
   let save_auto_detect = g:vinarise_enable_auto_detect
   let g:vinarise_enable_auto_detect = 0
@@ -280,10 +298,12 @@ function! s:move_by_input_offset(input)"{{{
         \ input(printf('Please input offset(min -0x%x, max 0x%x) : ',
         \ address, rest), '') : a:input
   redraw
+
   if offset == ''
     echo 'Canceled.'
     return
   endif
+
   if offset =~ '^\-\?0x\x\+$'
     " Convert hex offset.
     let offset = str2nr(offset, 16)
@@ -298,9 +318,10 @@ function! s:move_by_input_offset(input)"{{{
     echo 'Invalid offset.'
     return
   endif
-  call s:move_to_input_address(printf("0x%x", address))
+
+  call s:move_by_input_address(printf("0x%x", address))
 endfunction "}}}
-function! s:move_to_input_address(input)"{{{
+function! s:move_by_input_address(input)"{{{
   let address = (a:input == '') ?
         \ input(printf('Please input new address(max 0x%x) : ',
         \     b:vinarise.filesize), '0x') : a:input
@@ -323,21 +344,7 @@ function! s:move_to_input_address(input)"{{{
     return
   endif
 
-  if address >= b:vinarise.filesize
-    let address = b:vinarise.filesize - 1
-  endif
-
-  setlocal modifiable
-  let modified_save = &l:modified
-
-  silent % delete _
-  call vinarise#print_lines(100, address)
-
-  let &l:modified = modified_save
-  setlocal nomodifiable
-
-  " Set cursor.
-  call vinarise#set_cursor_address(address)
+  call vinarise#mappings#move_to_address(address)
 endfunction "}}}
 function! s:search_buffer(type, is_reverse, string)"{{{
   if a:string != ''

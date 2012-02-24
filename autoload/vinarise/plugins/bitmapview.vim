@@ -47,12 +47,11 @@ let s:plugin = {
 
 function! s:plugin.initialize(vinarise, context)"{{{
   command! VinarisePluginBitmapView call s:bitmapview_open()
-
 endfunction"}}}
 function! s:plugin.finalize(vinarise, context)"{{{
 endfunction"}}}
 
-function! s:bitmapview_open()
+function! s:bitmapview_open()"{{{
   let vinarise = vinarise#get_current_vinarise()
 
   let prefix = vimfiler#util#is_windows() ?
@@ -62,11 +61,6 @@ function! s:bitmapview_open()
 
   let b:bitmapview = {}
   let b:bitmapview.vinarise = vinarise
-
-  if has('gui_running')
-    call s:change_windowsize()
-  endif
-
   let b:bitmapview.width = (winwidth(0) - 10) / 16 * 16
 
   setlocal nolist
@@ -79,8 +73,11 @@ function! s:bitmapview_open()
 
   " Autocommands.
   augroup plugin-vinarise
-    autocmd BufWinLeave <buffer> call s:finalize(expand('<abuf>'))
+    autocmd BufWinEnter <buffer> call s:change_windowsize()
+    autocmd BufWinLeave <buffer> call s:restore_windowsize()
   augroup END
+
+  call s:change_windowsize()
 
   call s:define_default_mappings()
 
@@ -90,9 +87,12 @@ function! s:bitmapview_open()
   call s:print_lines(winheight(0))
 
   call s:set_cursor_address(0)
-endfunction
+endfunction"}}}
+
 function! s:define_default_mappings()"{{{
   " Plugin keymappings"{{{
+  nnoremap <buffer><silent> <Plug>(vinarise_bitmapview_move_to_current_address)
+        \ :<C-u>call <SID>move_to_current_address()<CR>
   nnoremap <buffer><silent> <Plug>(vinarise_bitmapview_exit)
         \ :<C-u>call <SID>exit()<CR>
   nnoremap <buffer><silent> <Plug>(vinarise_bitmapview_next_line)
@@ -109,14 +109,14 @@ function! s:define_default_mappings()"{{{
         \ :<C-u>call <SID>move_half_screen(0)<CR>
   nnoremap <buffer><silent> <Plug>(vinarise_bitmapview_print_current_position)
         \ :<C-u>call <SID>print_current_position()<CR>
-  nnoremap <buffer><silent> <Plug>(vinarise_bitmapview_move_to_input_address)
-        \ :<C-u>call <SID>move_to_input_address('')<CR>
+  nnoremap <buffer><silent> <Plug>(vinarise_bitmapview_move_by_input_address)
+        \ :<C-u>call <SID>move_by_input_address('')<CR>
   nnoremap <buffer><silent> <Plug>(vinarise_bitmapview_move_by_input_offset)
         \ :<C-u>call <SID>move_by_input_offset('')<CR>
   nnoremap <buffer><silent> <Plug>(vinarise_bitmapview_move_to_first_address)
-        \ :<C-u>call <SID>move_to_input_address('0%')<CR>
+        \ :<C-u>call <SID>move_by_input_address('0%')<CR>
   nnoremap <buffer><silent> <Plug>(vinarise_bitmapview_move_to_last_address)
-        \ :<C-u>call <SID>move_to_input_address('100%')<CR>
+        \ :<C-u>call <SID>move_by_input_address('100%')<CR>
   "}}}
 
   if exists('g:vimshell_no_default_keymappings') && g:vimshell_no_default_keymappings
@@ -124,6 +124,7 @@ function! s:define_default_mappings()"{{{
   endif
 
   " Normal mode key-mappings.
+  nmap <buffer> <CR>      <Plug>(vinarise_bitmapview_move_to_current_address)
   nmap <buffer> q <Plug>(vinarise_bitmapview_exit)
   nmap <buffer> j         <Plug>(vinarise_bitmapview_next_line)
   nmap <buffer> k         <Plug>(vinarise_bitmapview_prev_line)
@@ -132,19 +133,10 @@ function! s:define_default_mappings()"{{{
   nmap <buffer> <C-d>     <Plug>(vinarise_bitmapview_next_half_screen)
   nmap <buffer> <C-u>     <Plug>(vinarise_bitmapview_prev_half_screen)
   nmap <buffer> <C-g>     <Plug>(vinarise_bitmapview_print_current_position)
-  nmap <buffer> gG     <Plug>(vinarise_bitmapview_move_to_input_address)
+  nmap <buffer> gG     <Plug>(vinarise_bitmapview_move_by_input_address)
   nmap <buffer> go    <Plug>(vinarise_bitmapview_move_by_input_offset)
   nmap <buffer> gg    <Plug>(vinarise_bitmapview_move_to_first_address)
   nmap <buffer> G    <Plug>(vinarise_bitmapview_move_to_last_address)
-endfunction"}}}
-
-function! s:finalize(bufnr)"{{{
-  if empty(s:save_gui)
-    return
-  endif
-
-  let [&guifont, &guifontwide, &lines, &columns] = s:save_gui
-  let s:save_gui = []
 endfunction"}}}
 
 function! s:parse_address(string, cur_text)"{{{
@@ -167,6 +159,24 @@ function! s:parse_address(string, cur_text)"{{{
   return [type, address]
 endfunction"}}}
 
+function! s:move_to_address(address)"{{{
+  let address = a:address
+  if address >= b:bitmapview.vinarise.filesize
+    let address = b:bitmapview.vinarise.filesize - 1
+  endif
+
+  setlocal modifiable
+  let modified_save = &l:modified
+
+  silent % delete _
+  call s:print_lines(100, address)
+
+  let &l:modified = modified_save
+  setlocal nomodifiable
+
+  " Set cursor.
+  call s:set_cursor_address(address)
+endfunction"}}}
 function! s:print_lines(lines, ...)"{{{
   " Get last address.
   if a:0 >= 1
@@ -239,6 +249,10 @@ function! s:set_cursor_address(address)"{{{
 endfunction"}}}
 
 function! s:change_windowsize()"{{{
+  if !has('gui_running')
+    return
+  endif
+
   let s:save_gui = [&guifont, &guifontwide, &lines, &columns]
 
   let old_fontsize = matchstr(&guifont, s:font_pattern)
@@ -250,6 +264,14 @@ function! s:change_windowsize()"{{{
   let &guifontwide = s:change_fontsize(&guifontwide, 8)
   let &columns = (&columns * old_fontsize) / 8
   let &lines = (&lines * old_fontsize) / 8
+endfunction"}}}
+function! s:restore_windowsize()"{{{
+  if empty(s:save_gui)
+    return
+  endif
+
+  let [&guifont, &guifontwide, &lines, &columns] = s:save_gui
+  let s:save_gui = []
 endfunction"}}}
 function! s:change_fontsize(font, size)
   return join(map(split(a:font, '\\\@<!,'),
@@ -270,6 +292,15 @@ function! s:print_current_position()"{{{
 
   echo printf('[%s] %8d / %8d (%3d%%)',
         \ type, address, b:bitmapview.vinarise.filesize - 1, percentage)
+endfunction"}}}
+function! s:move_to_current_address()"{{{
+  " Get current address.
+  let [type, address] = s:parse_address(getline('.'),
+        \ vinarise#get_cur_text(getline('.'), col('.')))
+
+  execute 'buffer' b:bitmapview.vinarise.bufnr
+
+  call vinarise#mappings#move_to_address(address)
 endfunction"}}}
 
 function! s:move_line(is_next)"{{{
@@ -338,9 +369,9 @@ function! s:move_by_input_offset(input)"{{{
     echo 'Invalid offset.'
     return
   endif
-  call s:move_to_input_address(printf("0x%x", address))
+  call s:move_by_input_address(printf("0x%x", address))
 endfunction "}}}
-function! s:move_to_input_address(input)"{{{
+function! s:move_by_input_address(input)"{{{
   let address = (a:input == '') ?
         \ input(printf('Please input new address(max 0x%x) : ',
         \     b:bitmapview.vinarise.filesize), '0x') : a:input
@@ -362,22 +393,7 @@ function! s:move_to_input_address(input)"{{{
     echo 'Invalid address.'
     return
   endif
-
-  if address >= b:bitmapview.vinarise.filesize
-    let address = b:bitmapview.vinarise.filesize - 1
-  endif
-
-  setlocal modifiable
-  let modified_save = &l:modified
-
-  silent % delete _
-  call s:print_lines(100, address)
-
-  let &l:modified = modified_save
-  setlocal nomodifiable
-
-  " Set cursor.
-  call s:set_cursor_address(address)
+  call s:move_to_address(address)
 endfunction "}}}
 
 let &cpo = s:save_cpo

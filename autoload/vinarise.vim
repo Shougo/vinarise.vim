@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: vinarise.vim
 " AUTHOR:  Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 24 Feb 2012.
+" Last Modified: 25 Feb 2012.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -325,6 +325,7 @@ function! s:initialize_vinarise_buffer(context, filename, filesize)"{{{
    \  'last_search_string' : '',
    \  'last_search_type' : 'binary',
    \  'width' : 16,
+   \  'bufnr' : bufnr('%'),
    \ }
 
   " Wrapper functions.
