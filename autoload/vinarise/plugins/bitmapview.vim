@@ -177,7 +177,7 @@ function! s:print_lines(lines, ...)"{{{
           \ (a:lines < 0 ? getline(1) : getline('$')), '')
   endif
 
-  let line_address = address / 16
+  let line_address = address / b:bitmapview.width
 
   if a:lines < 0
     let max_lines = line_address + a:lines
@@ -186,7 +186,7 @@ function! s:print_lines(lines, ...)"{{{
     endif
     let line_numbers = range(max_lines, line_address-1)
   else
-    let max_lines = b:bitmapview.vinarise.filesize/16 + 1
+    let max_lines = b:bitmapview.vinarise.filesize / b:bitmapview.width
 
     if max_lines > line_address + a:lines
       let max_lines = line_address + a:lines
@@ -225,7 +225,7 @@ function! s:make_line(line_address)"{{{
 
   let i = 0
   for num in b:bitmapview.vinarise.get_bytes(
-        \ a:line_address * 16, b:bitmapview.width)
+        \ a:line_address * b:bitmapview.width, b:bitmapview.width)
     let line .= (num == 0) ?   ' ' :
           \ (num < 0x1f) ? '.' : (num < 0x7f) ? '+' :  '*'
   endfor
@@ -234,9 +234,8 @@ function! s:make_line(line_address)"{{{
 endfunction"}}}
 function! s:set_cursor_address(address, line)"{{{
   let line_address = matchstr(a:line, '\x\+\ze0').'0'
-  let pattern = repeat('.', a:address - line_address + 1)
   let [lnum, col] = searchpos(
-        \ printf('%07x0:%s', line_address, pattern), 'cew')
+        \ printf('%07x0: .\{%d}', line_address, a:address - line_address + 1), 'cew')
   call cursor(lnum, col)
 endfunction"}}}
 

@@ -195,7 +195,7 @@ function! s:change_current_address()"{{{
   setlocal modifiable
 
   " Change current line.
-  call setline('.', vinarise#make_line(address / 16))
+  call setline('.', vinarise#make_line(address / b:vinarise.width))
   setlocal modified
 
   setlocal nomodifiable
@@ -206,17 +206,18 @@ function! s:move_col(is_next)"{{{
         \ vinarise#get_cur_text(getline('.'), col('.')))
   if a:is_next
     if type ==# 'hex'
-      return (address % 16 == 15) ?
+      return (address % b:vinarise.width == (b:vinarise.width - 1)) ?
             \ 'w3l' : 'w'
     else
-      return (type ==# 'ascii' && address % 16 == 15) ?
+      return (type ==# 'ascii' &&
+            \ address % b:vinarise.width == (b:vinarise.width - 1)) ?
             \ '' : 'l'
     endif
   else
     if type ==# 'hex'
-      return (address % 16 == 0) ? '' : 'b'
+      return (address % b:vinarise.width == 0) ? '' : 'b'
     else
-      return (type ==# 'ascii' && address % 16 == 0) ?
+      return (type ==# 'ascii' && address % b:vinarise.width == 0) ?
             \ 'b4h' : 'h'
     endif
   endif
@@ -237,7 +238,7 @@ endfunction "}}}
 function! s:move_line_address(is_first)"{{{
   let [type, address] = vinarise#parse_address(getline('.'),
         \ vinarise#get_cur_text(getline('.'), col('.')))
-  let address = address / 16 * 16
+  let address = (address / b:vinarise.width) * b:vinarise.width
   if !a:is_first
     let address += 15
   endif

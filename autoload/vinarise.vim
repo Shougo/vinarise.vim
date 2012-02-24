@@ -160,7 +160,7 @@ function! vinarise#print_lines(lines, ...)"{{{
           \ (a:lines < 0 ? getline(1) : getline('$')), '')
   endif
 
-  let line_address = address / 16
+  let line_address = address / b:vinarise.width
 
   if a:lines < 0
     let max_lines = line_address + a:lines
@@ -169,14 +169,13 @@ function! vinarise#print_lines(lines, ...)"{{{
     endif
     let line_numbers = range(max_lines, line_address-1)
   else
-    let max_lines = b:vinarise.filesize/16 + 1
+    let max_lines = b:vinarise.filesize / b:vinarise.width
 
     if max_lines > line_address + a:lines
       let max_lines = line_address + a:lines
     endif
     if max_lines - line_address < winheight(0)
           \ && line('$') < winheight(0)
-          \ && line_address != max_lines
       let line_address = max_lines - winheight(0) + 1
     endif
     if line_address < 0
@@ -207,9 +206,10 @@ function! vinarise#make_line(line_address)"{{{
   let hex_line = ''
   let ascii_line = ''
 
-  let bytes = b:vinarise.get_bytes(a:line_address * 16, 15)
+  let bytes = b:vinarise.get_bytes(
+        \ a:line_address * b:vinarise.width, b:vinarise.width)
   let i = 0
-  for offset in range(0, 15)
+  for offset in range(0, b:vinarise.width - 1)
     if len(bytes) <= offset
       let hex_line .= '   '
       let ascii_line .= ' '
@@ -282,7 +282,7 @@ function! vinarise#write_buffer(filename)"{{{
 endfunction"}}}
 function! vinarise#set_cursor_address(address)"{{{
   let line_address = a:address / 16
-  let hex_line = repeat(' \x\x', (a:address%16)+1)
+  let hex_line = repeat(' \x\x', (a:address % b:vinarise.width)+1)
   let [lnum, col] = searchpos(
         \ printf('%07x0:%s', line_address, hex_line), 'cew')
   call cursor(lnum, col-1)
@@ -324,6 +324,7 @@ function! s:initialize_vinarise_buffer(context, filename, filesize)"{{{
    \  'filesize' : a:filesize,
    \  'last_search_string' : '',
    \  'last_search_type' : 'binary',
+   \  'width' : 16,
    \ }
 
   " Wrapper functions.
@@ -426,7 +427,7 @@ function! s:match_ascii()"{{{
     return
   endif
 
-  let offset = address % 16
+  let offset = address % b:vinarise.width
 
   execute 'match' g:vinarise_cursor_ascii_highlight.
         \ ' /\%'.line('.').'l\%'.(63+offset).'c/'
