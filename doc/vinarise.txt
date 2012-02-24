@@ -29,6 +29,7 @@ Install			|vinarise-install|
 Interface		|vinarise-interface|
   Commands		  |vinarise-commands|
   Variables		  |vinarise-variables|
+  Plugins		  |vinarise-plugins|
 Examples		|vinarise-examples|
 Changelog		|vinarise-changelog|
 
@@ -66,8 +67,14 @@ COMMANDS 					*vinarise-commands*
 		Specify split command.
 		If omitted it, |:split| is used.
 
+The commands of plugins				*:vinarise-sources-commands*
+
 :VinariseDump {file}				*:VinariseDump*
 		View executable file with objdump.
+
+:VinarisePluginViewBitmapView			*:VinariseDump*
+		View the file with Bitmap View.
+		Note: This command is available in vinarise buffer.
 
 ------------------------------------------------------------------------------
 VARIABLES 					*vinarise-variables*
@@ -94,6 +101,15 @@ g:vinarise_objdump_command			*g:vinarise_objdump_command*
 		The command name of objdump.
 		
 		Default value is "objdump".
+
+------------------------------------------------------------------------------
+PLUGINS 					*vinarise-plugins*
+
+						*vinarise-plugins-bitmapview*
+bitmapview	View the file with Bitmap View.
+		NULL(0x00), control character(0x01~0x1f), ascii
+		character(0x20~0x7f), escaped character(0x80~0xff) are
+		separated by color.
 
 ------------------------------------------------------------------------------
 KEY MAPPINGS 					*vinarise-key-mappings*
@@ -234,6 +250,7 @@ CHANGELOG					*vinarise-changelog*
 - Fixed exit error.
 - Fixed width problem.
 - Fixed parse address.
+- Updated documentation.
 
 2012-02-22
 - Fixed print_lines errors.
