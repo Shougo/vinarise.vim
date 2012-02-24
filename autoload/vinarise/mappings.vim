@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: mappings.vim
 " AUTHOR: Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 24 Feb 2012.
+" Last Modified: 25 Feb 2012.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -101,10 +101,10 @@ function! vinarise#mappings#define_default_mappings()"{{{
   nmap <buffer> <C-u>     <Plug>(vinarise_prev_half_screen)
   nmap <buffer> <C-g>     <Plug>(vinarise_print_current_position)
   nmap <buffer> r    <Plug>(vinarise_change_current_address)
-  nmap <buffer> G    <Plug>(vinarise_move_to_input_address)
+  nmap <buffer> gG    <Plug>(vinarise_move_to_input_address)
   nmap <buffer> go    <Plug>(vinarise_move_by_input_offset)
   nmap <buffer> gg    <Plug>(vinarise_move_to_first_address)
-  nmap <buffer> gG    <Plug>(vinarise_move_to_last_address)
+  nmap <buffer> G     <Plug>(vinarise_move_to_last_address)
   nmap <buffer> 0          <Plug>(vinarise_line_first_address)
   nmap <buffer> ^          <Plug>(vinarise_line_first_address)
   nmap <buffer> gh         <Plug>(vinarise_line_first_address)

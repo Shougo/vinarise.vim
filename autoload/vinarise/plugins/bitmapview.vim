@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: bitmapview.vim
 " AUTHOR:  Shougo Matsushita <Shougo.Matsu at gmail.com>
-" Last Modified: 24 Feb 2012.
+" Last Modified: 25 Feb 2012.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -132,10 +132,10 @@ function! s:define_default_mappings()"{{{
   nmap <buffer> <C-d>     <Plug>(vinarise_bitmapview_next_half_screen)
   nmap <buffer> <C-u>     <Plug>(vinarise_bitmapview_prev_half_screen)
   nmap <buffer> <C-g>     <Plug>(vinarise_bitmapview_print_current_position)
-  nmap <buffer> G     <Plug>(vinarise_bitmapview_move_to_input_address)
+  nmap <buffer> gG     <Plug>(vinarise_bitmapview_move_to_input_address)
   nmap <buffer> go    <Plug>(vinarise_bitmapview_move_by_input_offset)
   nmap <buffer> gg    <Plug>(vinarise_bitmapview_move_to_first_address)
-  nmap <buffer> gG    <Plug>(vinarise_bitmapview_move_to_last_address)
+  nmap <buffer> G    <Plug>(vinarise_bitmapview_move_to_last_address)
 endfunction"}}}
 
 function! s:finalize(bufnr)"{{{

@@ -223,10 +223,10 @@ k			<Plug>(vinarise_prev_line)
 <C-u>			<Plug>(vinarise_prev_half_screen)
 <C-g>			<Plug>(vinarise_print_current_position)
 r			<Plug>(vinarise_change_current_address)
-G			<Plug>(vinarise_move_to_input_address)
+gG			<Plug>(vinarise_move_to_input_address)
 go			<Plug>(vinarise_move_by_input_offset)
 gg			<Plug>(vinarise_move_to_first_address)
-gG			<Plug>(vinarise_move_to_last_address)
+G			<Plug>(vinarise_move_to_last_address)
 /			<Plug>(vinarise_search_binary)
 ?			<Plug>(vinarise_search_binary_reverse)
 g/			<Plug>(vinarise_search_string)
@@ -244,6 +244,9 @@ EXAMPLES					*vinarise-examples*
 >
 ==============================================================================
 CHANGELOG					*vinarise-changelog*
+
+2012-02-25
+- Changed <Plug>(vinarise_move_to_last_address) default mapping.
 
 2012-02-24
 - Implemented bitmapview.
