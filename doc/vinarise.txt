@@ -248,6 +248,7 @@ CHANGELOG					*vinarise-changelog*
 2012-02-25
 - Changed <Plug>(vinarise_move_to_last_address) default mapping.
 - Improved bitmapview behavior.
+- Fixed moving address bug.
 
 2012-02-24
 - Implemented bitmapview.

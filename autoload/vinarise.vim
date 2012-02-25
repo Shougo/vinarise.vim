@@ -175,7 +175,7 @@ function! vinarise#print_lines(lines, ...)"{{{
       let max_lines = line_address + a:lines
     endif
     if max_lines - line_address < winheight(0)
-          \ && line('$') < winheight(0)
+          \ && line('$') == 1
       let line_address = max_lines - winheight(0) + 1
     endif
     if line_address < 0
