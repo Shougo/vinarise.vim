@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: bitmapview.vim
 " AUTHOR:  Shougo Matsushita <Shougo.Matsu at gmail.com>
-" Last Modified: 25 Feb 2012.
+" Last Modified: 26 Feb 2012.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -34,8 +34,8 @@ endfunction
 let s:save_gui = []
 
 let s:font_pattern =
-      \ unite#util#is_win() ||
-      \ unite#util#is_mac() ?  ':h\zs\d\+':
+      \ vinarise#util#is_windows() ||
+      \ vinarise#util#is_mac() ?  ':h\zs\d\+':
       \ has('gui_gtk') ?       '\s\+\zs\d\+$':
       \ has('X11') ?           '\v%([^-]*-){6}\zs\d+\ze%(-[^-]*){7}':
       \                        '*Unknown system*'

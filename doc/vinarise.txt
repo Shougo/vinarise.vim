@@ -245,6 +245,9 @@ EXAMPLES					*vinarise-examples*
 ==============================================================================
 CHANGELOG					*vinarise-changelog*
 
+2012-02-26
+- Fixed unite dependency.
+
 2012-02-25
 - Changed <Plug>(vinarise_move_to_last_address) default mapping.
 - Improved bitmapview behavior.

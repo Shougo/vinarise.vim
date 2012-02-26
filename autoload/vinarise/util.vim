@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: util.vim
 " AUTHOR: Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 11 Feb 2012.
+" Last Modified: 26 Feb 2012.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -47,9 +47,12 @@ endfunction"}}}
 function! vinarise#util#strwidthpart_reverse(...)"{{{
   return call(s:V.strwidthpart_reverse, a:000)
 endfunction"}}}
-function! vinarise#util#is_windows(...)
+function! vinarise#util#is_windows(...)"{{{
   return call(s:V.is_windows, a:000)
-endfunction
+endfunction"}}}
+function! vinarise#util#is_mac(...)"{{{
+  return call(s:V.is_mac, a:000)
+endfunction"}}}
 
 function! s:buflisted(bufnr)"{{{
   return exists('t:unite_buffer_dictionary') ?
