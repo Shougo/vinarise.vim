@@ -245,6 +245,9 @@ EXAMPLES					*vinarise-examples*
 ==============================================================================
 CHANGELOG					*vinarise-changelog*
 
+2012-03-05
+- Fixed vimproc independation.
+
 2012-02-26
 - Fixed unite dependency.
 

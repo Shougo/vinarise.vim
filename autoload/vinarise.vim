@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: vinarise.vim
 " AUTHOR:  Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 25 Feb 2012.
+" Last Modified: 03 Mar 2012.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -25,17 +25,6 @@
 " Version: 0.3, for Vim 7.0
 "=============================================================================
 
-" Check vimproc."{{{
-try
-  let s:exists_vimproc_version = vimproc#version()
-catch
-  echoerr 'Please install vimproc Ver.4.1 or above.'
-  finish
-endtry
-if s:exists_vimproc_version < 401
-  echoerr 'Please install vimproc Ver.4.1 or above.'
-  finish
-endif"}}}
 " Check Python."{{{
 if !has('python')
   echoerr 'Vinarise requires python interface.'
