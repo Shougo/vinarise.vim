@@ -41,8 +41,8 @@ endif
 "}}}
 
 function! vinarise#dump#open(filename, is_overwrite)"{{{
-  if !executable('objdump')
-    echoerr 'objdump is not installed.'
+  if !executable(g:vinarise_objdump_command)
+    echoerr g:vinarise_objdump_command . ' is not installed.'
     return
   endif
   
