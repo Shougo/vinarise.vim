@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: vinarise.vim
 " AUTHOR:  Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 03 Mar 2012.
+" Last Modified: 05 Mar 2012.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -199,7 +199,7 @@ function! vinarise#make_line(line_address)"{{{
         \ a:line_address * b:vinarise.width, b:vinarise.width)
   let i = 0
   for offset in range(0, b:vinarise.width - 1)
-    if len(bytes) <= offset
+    if offset >= len(bytes)
       let hex_line .= '   '
       let ascii_line .= ' '
     else
