@@ -248,6 +248,7 @@ CHANGELOG					*vinarise-changelog*
 2012-03-05
 - Fixed vimproc independation.
 - Fixed offset bug.
+- Implemented Vim version check.
 
 2012-02-26
 - Fixed unite dependency.

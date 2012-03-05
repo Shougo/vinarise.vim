@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: vinarise.vim
 " AUTHOR:  Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 16 Feb 2012.
+" Last Modified: 05 Mar 2012.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -25,6 +25,9 @@
 "=============================================================================
 
 if exists('g:loaded_vinarise')
+  finish
+elseif v:version < 702
+  echoerr 'vinarise does not work this version of Vim (' . v:version . ').'
   finish
 endif
 
