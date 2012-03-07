@@ -200,7 +200,7 @@ function! vinarise#make_line(line_address)"{{{
         \ a:line_address * b:vinarise.width, b:vinarise.width)
   let i = 0
   for offset in range(0, b:vinarise.width - 1)
-    if len(bytes) <= offset
+    if offset >= len(bytes)
       let hex_line .= '   '
       let ascii_line .= ' '
     else
