@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: vinarise.vim
 " AUTHOR:  Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 07 Mar 2012.
+" Last Modified: 17 Mar 2012.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -378,6 +378,30 @@ function! s:initialize_vinarise_buffer(context, filename, filesize)"{{{
       return -1
     endtry
 
+    return address
+  endfunction"}}}
+  function! b:vinarise.find_binary(address, binary)"{{{
+    execute 'python' 'vim.command("let address = " + str('.
+          \ self.python .
+          \ ".find_binary(vim.eval('a:address'), vim.eval('a:binary'))))"
+    return address
+  endfunction"}}}
+  function! b:vinarise.rfind_binary(address, binary)"{{{
+    execute 'python' 'vim.command("let address = " + str('.
+          \ self.python .
+          \ ".rfind_binary(vim.eval('a:address'), vim.eval('a:binary'))))"
+    return address
+  endfunction"}}}
+  function! b:vinarise.find_binary_not(address, binary)"{{{
+    execute 'python' 'vim.command("let address = " + str('.
+          \ self.python .
+          \ ".find_binary_not(vim.eval('a:address'), vim.eval('a:binary'))))"
+    return address
+  endfunction"}}}
+  function! b:vinarise.rfind_binary_not(address, binary)"{{{
+    execute 'python' 'vim.command("let address = " + str('.
+          \ self.python .
+          \ ".rfind_binary_not(vim.eval('a:address'), vim.eval('a:binary'))))"
     return address
   endfunction"}}}
 

@@ -10,9 +10,9 @@ class VinariseBuffer:
         self.file = open(path, 'rb')
         self.path = path
         self.is_windows = is_windows
-        fsize = os.path.getsize(self.path)
+        self.fsize = os.path.getsize(self.path)
         mmap_max = 0
-        if fsize > 1000000000:
+        if self.fsize > 1000000000:
             mmap_max = 1000000000
 
         if int(is_windows):
@@ -73,4 +73,42 @@ class VinariseBuffer:
             return -1
         else:
             return m.start()
+
+    def find_binary(self, address, binary):
+        addr = int(address)
+        bytes = [int(binary[i*2 : i*2+2], 16) for i in range(len(binary) / 2)]
+        while addr < self.fsize:
+            if self.get_byte(addr) == bytes[0] and bytes == self.get_bytes(addr, len(bytes)):
+                print bytes == self.get_bytes(addr, len(bytes))
+                print self.get_bytes(addr, len(bytes))
+                return addr
+            addr += 1
+        return -1
+
+    def rfind_binary(self, address, binary):
+        addr = int(address)
+        bytes = [int(binary[i*2 : i*2+2], 16) for i in range(len(binary) / 2)]
+        while addr < self.fsize:
+            if self.get_byte(addr) == bytes[0] and bytes == self.get_bytes(addr, len(bytes)):
+                return addr
+            addr -= 1
+        return -1
+
+    def find_binary_not(self, address, binary):
+        addr = int(address)
+        bytes = [int(binary[i*2 : i*2+2], 16) for i in range(len(binary) / 2)]
+        while addr < self.fsize:
+            if self.get_byte(addr) != bytes[0] and bytes != self.get_bytes(addr, len(bytes)):
+                return addr
+            addr += 1
+        return -1
+
+    def rfind_binary_not(self, address, binary):
+        addr = int(address)
+        bytes = [int(binary[i*2 : i*2+2], 16) for i in range(len(binary) / 2)]
+        while addr < self.fsize:
+            if self.get_byte(addr) != bytes[0] and bytes != self.get_bytes(addr, len(bytes)):
+                return addr
+            addr -= 1
+        return -1
 
