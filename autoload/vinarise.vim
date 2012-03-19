@@ -125,14 +125,16 @@ function! vinarise#open(filename, context)"{{{
   let filesize = getfsize(filename)
   if vinarise#util#is_windows() && filesize == 0
     call vinarise#print_error(
-          \ 'File "'.filename.'" is empty. vinarise cannot open empty file in Windows.')
+          \ 'File "'.filename.'" is empty. '.
+          \ 'vinarise cannot open empty file in Windows.')
     return
   endif
 
   let context = s:initialize_context(a:context)
-  if context.encoding !~ '^\%(latin1\)$'
+  if context.encoding !~
+        \ vinarise#multibyte#get_supported_encodings_pattern()
     call vinarise#print_error(
-          \ 'encoding type:"'.context.encoding.'" is not supported.')
+          \ 'encoding type: "'.context.encoding.'" is not supported.')
     return
   endif
 
@@ -162,19 +164,12 @@ function! vinarise#open(filename, context)"{{{
     edit `=s:vinarise_BUFFER_NAME . ' - ' . filename`
   endif
 
-  setlocal modifiable
-
-  silent % delete _
   call s:initialize_vinarise_buffer(context, filename, filesize)
 
   let s:current_vinarise = b:vinarise
 
-  " Print lines.
-  call vinarise#print_lines(winheight(0))
+  call vinarise#mappings#move_to_address(0)
 
-  call vinarise#set_cursor_address(0)
-
-  setlocal nomodifiable
   setlocal nomodified
 endfunction"}}}
 function! vinarise#print_lines(lines, ...)"{{{

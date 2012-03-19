@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: mappings.vim
 " AUTHOR: Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 18 Mar 2012.
+" Last Modified: 19 Mar 2012.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -81,9 +81,14 @@ function! vinarise#mappings#define_default_mappings()"{{{
   nnoremap <buffer><silent> <Plug>(vinarise_search_last_pattern_reverse)
         \ :<C-u>call <SID>search_buffer(
         \    b:vinarise.last_search_type, 1, b:vinarise.last_search_string)<CR>
+  nnoremap <buffer><silent> <Plug>(vinarise_change_encoding)
+        \ :<C-u>call <SID>change_encoding()<CR>
+  nnoremap <buffer><silent> <Plug>(vinarise_redraw)
+        \ :<C-u>call vinarise#mappings#redraw()<CR>
   "}}}
 
-  if exists('g:vinarise_no_default_keymappings') && g:vinarise_no_default_keymappings
+  if exists('g:vinarise_no_default_keymappings') &&
+        \ g:vinarise_no_default_keymappings
     return
   endif
 
@@ -117,6 +122,8 @@ function! vinarise#mappings#define_default_mappings()"{{{
   nmap <buffer> e/         <Plug>(vinarise_search_regexp)
   nmap <buffer> n          <Plug>(vinarise_search_last_pattern)
   nmap <buffer> N          <Plug>(vinarise_search_last_pattern_reverse)
+  nmap <buffer> E          <Plug>(vinarise_change_encoding)
+  nmap <buffer> <C-l>     <Plug>(vinarise_redraw)
 endfunction"}}}
 
 function! vinarise#mappings#move_to_address(address)"{{{
@@ -129,7 +136,12 @@ function! vinarise#mappings#move_to_address(address)"{{{
   let modified_save = &l:modified
 
   silent % delete _
-  call vinarise#print_lines(winheight(0), address)
+
+  let first_address = address - (winheight(0)/2) * b:vinarise.width
+  if first_address < 0
+    let first_address = 0
+  endif
+  call vinarise#print_lines(winheight(0), first_address)
 
   let &l:modified = modified_save
   setlocal nomodifiable
@@ -137,6 +149,14 @@ function! vinarise#mappings#move_to_address(address)"{{{
   " Set cursor.
   call vinarise#set_cursor_address(address)
 endfunction "}}}
+function! vinarise#mappings#redraw()"{{{
+  " Redraw vinarise buffer.
+
+  let [_, address] = vinarise#parse_address(getline('.'),
+        \ vinarise#get_cur_text(getline('.'), col('.')))
+  call vinarise#mappings#move_to_address(address)
+endfunction "}}}
+
 function! s:edit_with_vim()"{{{
   let save_auto_detect = g:vinarise_enable_auto_detect
   let g:vinarise_enable_auto_detect = 0
@@ -427,5 +447,27 @@ function! s:search_buffer(type, is_reverse, string)"{{{
   let b:vinarise.last_search_string = string
   let b:vinarise.last_search_type = a:type
 endfunction "}}}
+function! s:change_encoding()"{{{
+  let context = vinarise#get_current_vinarise().context
+  let encoding = input('Please input new encoding type: '.
+        \ context.encoding . ' -> ', '', 'customlist,vinarise#complete_encodings')
+  redraw
+
+  if encoding == ''
+    return
+  elseif encoding !~
+        \ vinarise#multibyte#get_supported_encodings_pattern()
+    call vinarise#print_error(
+          \ 'encoding type: "'.encoding.'" is not supported.')
+    return
+  endif
+
+  " Change encoding type.
+  let context.encoding = encoding
+
+  " Redraw vinarise buffer.
+  call vinarise#mappings#redraw()
+endfunction"}}}
+
 
 " vim: foldmethod=marker

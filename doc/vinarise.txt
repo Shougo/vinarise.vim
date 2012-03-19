@@ -207,6 +207,12 @@ VINARISE BUFFER KEY MAPPINGS 			*vinarise-buffer-key-mappings*
 <Plug>(vinarise_search_last_pattern_reverse)	*<Plug>(vinarise_search_last_pattern_reverse)*
 		Search the last pattern repeatedly in the binary file by reverse.
 
+<Plug>(vinarise_change_encoding)		*<Plug>(vinarise_change_encoding)*
+		Change vinarise buffer encoding.
+
+<Plug>(vinarise_redraw)				*<Plug>(vinarise_redraw)*
+		Redraw current vinarise buffer.
+
 Normal mode key mappings.
 
 Normal mode default key mappings.
@@ -241,6 +247,8 @@ g?			<Plug>(vinarise_search_string_reverse)
 e/			<Plug>(vinarise_search_regexp)
 n			<Plug>(vinarise_search_last_pattern)
 N			<Plug>(vinarise_search_last_pattern_reverse)
+E			<Plug>(vinarise_change_encoding)
+<C-l>			<Plug>(vinarise_redraw)
 
 ==============================================================================
 EXAMPLES					*vinarise-examples*
@@ -255,6 +263,7 @@ CHANGELOG					*vinarise-changelog*
 2012-03-19
 - Added encoding option.
 - Implemented completion.
+- Added <Plug>(vinarise_change_encoding) and <Plug>(vinarise_redraw) mappings.
 
 2012-03-18
 - Improved search patterns.

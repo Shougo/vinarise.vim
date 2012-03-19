@@ -24,6 +24,10 @@
 " }}}
 "=============================================================================
 
+function! vinarise#multibyte#get_supported_encodings_pattern()"{{{
+  " Ascii only.
+  return '^latin1$'
+endfunction"}}}
 function! vinarise#multibyte#make_ascii_line(line_address, bytes)"{{{
   " Make new lines.
   let ascii_line = ''
