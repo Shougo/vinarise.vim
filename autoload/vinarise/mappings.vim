@@ -373,7 +373,9 @@ function! s:search_buffer(type, is_reverse, string)"{{{
     let string = input('Please input search binary(! is not pattern) : ', '0x')
     redraw
   elseif a:type ==# 'string'
-    let string = input('Please input search string : ')
+    let string = iconv(
+          \ input('Please input search string : '), &encoding,
+          \   vinarise#get_current_vinarise().context.encoding)
     redraw
   elseif a:type ==# 'regexp'
     let string = input('Please input Python regexp : ')
