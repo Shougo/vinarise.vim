@@ -67,6 +67,12 @@ COMMANDS 					*vinarise-commands*
 		Specify split command.
 		If omitted it, |:split| is used.
 
+						*vinarise-options-encoding*
+		-encoding={encoding-name}
+		Specify file encoding type.
+		If omitted it, "latin1" is used.
+		Note: "latin1" is only supported in this version.
+
 The commands of plugins				*:vinarise-sources-commands*
 
 :VinariseDump {file}				*:VinariseDump*
@@ -245,6 +251,10 @@ EXAMPLES					*vinarise-examples*
 >
 ==============================================================================
 CHANGELOG					*vinarise-changelog*
+
+2012-03-19
+- Added encoding option.
+- Implemented completion.
 
 2012-03-18
 - Improved search patterns.

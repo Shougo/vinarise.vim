@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: util.vim
 " AUTHOR: Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 05 Mar 2012.
+" Last Modified: 19 Mar 2012.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -61,7 +61,8 @@ function! s:buflisted(bufnr)"{{{
 endfunction"}}}
 
 function! vinarise#util#expand(path)"{{{
-  return expand(escape(a:path, '*?[]"={}'), 1)
+  return vinarise#util#substitute_path_separator(
+        \ substitute(a:path, '^\~', expand('~'), ''))
 endfunction"}}}
 
 function! vinarise#util#substitute_path_separator(...)

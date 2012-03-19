@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: vinarise.vim
 " AUTHOR:  Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 17 Mar 2012.
+" Last Modified: 19 Mar 2012.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -53,13 +53,44 @@ let s:vinarise_dicts = []
 let s:vinarise_options = [
       \ '-split', '-split-command',
       \ '-winwidth=', '-winheight=',
-      \ '-overwrite'
+      \ '-overwrite', '-encoding='
       \]
 let s:current_vinarise = {}
 let s:use_current_vinarise = 0
 let s:vinarise_plugins = {}
 "}}}
 
+function! vinarise#complete(arglead, cmdline, cursorpos)"{{{
+  let ret = unite#parse_path(join(split(a:cmdline)[1:]))
+  let source_name = ret[0]
+  let source_args = ret[1:]
+
+  let _ = []
+
+  " Filename completion.
+  let _ += map(split(glob(a:arglead . '*'), '\n'),
+        \ "isdirectory(v:val) ? v:val.'/' : v:val")
+
+  " Option names completion.
+  let _ +=  copy(s:vinarise_options)
+
+  if a:arglead =~ '^-encoding='
+    " Encodings completion.
+    let _ += map(vinarise#complete_encodings(
+          \ matchstr(a:arglead, '^-encoding=\zs.*'), a:cmdline, a:cursorpos),
+          \ "'-encoding='.v:val")
+  endif
+
+  return sort(filter(_, 'stridx(v:val, a:arglead) == 0'))
+endfunction"}}}
+function! vinarise#complete_encodings(arglead, cmdline, cursorpos)"{{{
+  let encodings = &fileencodings
+  if encodings !~ '\<latin1\>'
+    let encodings .= ',latin1'
+  endif
+  return sort(filter(split(encodings, ','),
+        \ 'stridx(v:val, a:arglead) == 0'))
+endfunction"}}}
 function! vinarise#get_options()"{{{
   return copy(s:vinarise_options)
 endfunction"}}}
@@ -71,7 +102,7 @@ function! vinarise#open(filename, context)"{{{
     call s:load_plugins()
   endif
 
-  let filename = a:filename
+  let filename = vinarise#util#expand(a:filename)
   if filename == ''
     let filename = bufname('%')
     if &l:buftype =~ 'nofile'
@@ -98,6 +129,13 @@ function! vinarise#open(filename, context)"{{{
     return
   endif
 
+  let context = s:initialize_context(a:context)
+  if context.encoding !~ '^\%(latin1\)$'
+    call vinarise#print_error(
+          \ 'encoding type:"'.context.encoding.'" is not supported.')
+    return
+  endif
+
   if !s:loaded_vinarise
     execute 'pyfile' s:plugin_path.'/vinarise/vinarise.py'
     let s:loaded_vinarise = 1
@@ -115,8 +153,6 @@ function! vinarise#open(filename, context)"{{{
     " call vinarise#print_error('file : "' . filename . '" Its filesize may be too large.')
     " return
   " endtry
-
-  let context = s:initialize_context(a:context)
 
   if context.split
     execute context.split_command
@@ -192,24 +228,17 @@ function! vinarise#print_lines(lines, ...)"{{{
   setlocal nomodifiable
 endfunction"}}}
 function! vinarise#make_line(line_address)"{{{
-  " Make new lines.
-  let hex_line = ''
-  let ascii_line = ''
-
+  " Make new line.
   let bytes = b:vinarise.get_bytes(
         \ a:line_address * b:vinarise.width, b:vinarise.width)
-  let i = 0
-  for offset in range(0, b:vinarise.width - 1)
-    if offset >= len(bytes)
-      let hex_line .= '   '
-      let ascii_line .= ' '
-    else
-      let num = bytes[offset]
-      let char = nr2char(num)
 
-      let hex_line .= printf('%02x', num) . ' '
-      let ascii_line .= num < 32 || num > 127 ? '.' : char
-    endif
+  let ascii_line =
+        \ vinarise#multibyte#make_ascii_line(a:line_address, bytes)
+
+  let hex_line = ''
+  for offset in range(0, b:vinarise.width - 1)
+    let hex_line .= offset >= len(bytes) ?
+          \ '   ' : printf('%02x', bytes[offset]) . ' '
   endfor
 
   return printf('%07x0: %-48s |  %s  ',
@@ -455,6 +484,7 @@ function! s:initialize_context(context)"{{{
         \ 'split' : 0,
         \ 'split_command' : 'split',
         \ 'overwrite' : 0,
+        \ 'encoding' : 'latin1',
         \ }
   let context = extend(default_context, a:context)
 
