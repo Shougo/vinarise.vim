@@ -51,6 +51,11 @@ class VinariseBuffer:
             return []
         return [ord(x) for x in self.mmap[int(addr) : int(addr)+int(count)]]
 
+    def get_chars(self, addr, count):
+        if int(count) == 0:
+            return ""
+        return self.mmap[int(addr) : int(addr)+int(count)]
+
     def set_byte(self, addr, value):
         self.mmap[int(addr)] = chr(int(value))
 

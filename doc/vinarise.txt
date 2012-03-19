@@ -71,7 +71,9 @@ COMMANDS 					*vinarise-commands*
 		-encoding={encoding-name}
 		Specify file encoding type.
 		If omitted it, "latin1" is used.
-		Note: "latin1" is only supported in this version.
+		Note: "latin1" is only supported less than Vim 7.3.
+		Note: "latin1" or "utf-8" encodings are supported in this
+		version.
 
 The commands of plugins				*:vinarise-sources-commands*
 
@@ -264,6 +266,7 @@ CHANGELOG					*vinarise-changelog*
 - Added encoding option.
 - Implemented completion.
 - Added <Plug>(vinarise_change_encoding) and <Plug>(vinarise_redraw) mappings.
+- Supported UTF-8 encoding(imcomplete).
 
 2012-03-18
 - Improved search patterns.

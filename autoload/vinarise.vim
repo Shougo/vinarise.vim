@@ -361,9 +361,14 @@ function! s:initialize_vinarise_buffer(context, filename, filesize)"{{{
     return num
   endfunction"}}}
   function! b:vinarise.get_bytes(address, count)"{{{
-    execute 'python' 'vim.command("let num = " + str('.
+    execute 'python' 'vim.command("let bytes = " + str('.
           \ self.python .".get_bytes(vim.eval('a:address'), vim.eval('a:count'))))"
-    return num
+    return bytes
+  endfunction"}}}
+  function! b:vinarise.get_chars(address, count)"{{{
+    execute 'python' 'vim.command("let chars = ''" + str('.
+          \ self.python .".get_chars(vim.eval('a:address'), vim.eval('a:count'))) + \"'\")"
+    return chars
   endfunction"}}}
   function! b:vinarise.set_byte(address, value)"{{{
     execute 'python' self.python .
