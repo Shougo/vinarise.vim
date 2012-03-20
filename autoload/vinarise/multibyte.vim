@@ -43,7 +43,7 @@ endfunction"}}}
 
 function! s:make_latin1_line(line_address, bytes)"{{{
   " Make new line.
-  let ascii_line = '  '
+  let ascii_line = '   '
 
   for offset in range(0, b:vinarise.width - 1)
     if offset >= len(a:bytes)
@@ -61,7 +61,7 @@ endfunction"}}}
 function! s:make_utf8_line(line_address, bytes)"{{{
   let base_address = a:line_address * b:vinarise.width
   " Make new line.
-  let ascii_line = '  '
+  let ascii_line = '   '
 
   let offset = 0
   while offset < b:vinarise.width
@@ -93,7 +93,7 @@ function! s:make_utf8_line(line_address, bytes)"{{{
       let num = first_bytes[0]
       let sub_offset = index(prev_bytes, num) + 1
       if offset == 0
-        let ascii_line = repeat(' ', 2 - sub_offset)
+        let ascii_line = repeat(' ', 3 - sub_offset)
       endif
 
       let offset -= sub_offset

@@ -236,7 +236,7 @@ function! vinarise#make_line(line_address)"{{{
           \ '   ' : printf('%02x', bytes[offset]) . ' '
   endfor
 
-  return printf('%07x0: %-48s |%s',
+  return printf('%07x0: %-48s|%s',
         \ a:line_address, hex_line, ascii_line)
 endfunction"}}}
 function! vinarise#parse_address(string, cur_text)"{{{
