@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: vinarise.vim
 " AUTHOR:  Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 20 Mar 2012.
+" Last Modified: 21 Mar 2012.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -255,9 +255,17 @@ function! vinarise#parse_address(string, cur_text)"{{{
       let type = 'hex'
       let address += offset
     endif
-  elseif a:cur_text =~ '|  \zs.*$'
-    let offset = len(matchstr(a:cur_text, '|  \zs.*$')) - 1
-    if 0 <= offset && offset < b:vinarise.width
+  elseif a:cur_text =~ '\x\+\s\+|.*$'
+    let encoding = vinarise#get_current_vinarise().context.encoding
+    let chars = matchstr(a:cur_text, '\x\+\s\+|\zs.*\ze.$')
+    let offset = (encoding ==# 'latin1') ?
+          \ len(chars) - 4 + 1 :
+          \ strwidth(chars) - 4 + 1
+    if offset < 0
+      let offset = 0
+    endif
+
+    if offset < b:vinarise.width
       let type = 'ascii'
       let address += offset
     endif
@@ -312,7 +320,8 @@ function! s:load_plugins()"{{{
   let s:vinarise_plugins = {}
 
   for name in map(split(globpath(&runtimepath,
-        \ 'autoload/vinarise/plugins/*.vim'), '\n'), "fnamemodify(v:val, ':t:r')")
+        \ 'autoload/vinarise/plugins/*.vim'), '\n'),
+        \      "fnamemodify(v:val, ':t:r')")
 
     let define = vinarise#plugins#{name}#define()
     for dict in (type(define) == type([]) ? define : [define])

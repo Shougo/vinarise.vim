@@ -264,6 +264,7 @@ CHANGELOG					*vinarise-changelog*
 
 2012-03-20
 - Implemented UTF-8 encoding.
+- Fixed address parse.
 
 2012-03-19
 - Added encoding option.

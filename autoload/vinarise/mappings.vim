@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: mappings.vim
 " AUTHOR: Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 19 Mar 2012.
+" Last Modified: 20 Mar 2012.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -33,10 +33,10 @@ function! vinarise#mappings#define_default_mappings()"{{{
         \ :<C-u>call <SID>hide()<CR>
   nnoremap <buffer><silent> <Plug>(vinarise_exit)
         \ :<C-u>call <SID>exit()<CR>
-  nnoremap <buffer><expr> <Plug>(vinarise_next_column)
-        \ <SID>move_col(1)
-  nnoremap <buffer><expr> <Plug>(vinarise_prev_column)
-        \ <SID>move_col(0)
+  nnoremap <buffer><silent> <Plug>(vinarise_next_column)
+        \ :<C-u>call <SID>move_col(1)<CR>
+  nnoremap <buffer><silent> <Plug>(vinarise_prev_column)
+        \ :<C-u>call <SID>move_col(0)<CR>
   nnoremap <buffer><silent> <Plug>(vinarise_line_first_address)
         \ :<C-u>call <SID>move_line_address(1)<CR>
   nnoremap <buffer><silent> <Plug>(vinarise_line_last_address)
@@ -244,19 +244,26 @@ function! s:move_col(is_next)"{{{
         \ vinarise#get_cur_text(getline('.'), col('.')))
   if a:is_next
     if type ==# 'hex'
-      return (address % b:vinarise.width == (b:vinarise.width - 1)) ?
-            \ 'w3l' : 'w'
-    else
-      return (type ==# 'ascii' &&
-            \ address % b:vinarise.width == (b:vinarise.width - 1)) ?
-            \ '' : 'l'
+      if (address % b:vinarise.width) == (b:vinarise.width - 1)
+        silent call search('[^ |]', 'W')
+      else
+        normal! w
+      endif
+    elseif !(type ==# 'ascii' &&
+            \ address % b:vinarise.width == (b:vinarise.width - 1))
+      normal! l
     endif
   else
     if type ==# 'hex'
-      return (address % b:vinarise.width == 0) ? '' : 'b'
+      if address % b:vinarise.width != 0
+        normal! b
+      endif
     else
-      return (type ==# 'ascii' && address % b:vinarise.width == 0) ?
-            \ 'b4h' : 'h'
+      if type ==# 'ascii' && address % b:vinarise.width == 0
+        silent call search('[^ |]', 'bW')
+      else
+        normal! h
+      endif
     endif
   endif
 endfunction "}}}
