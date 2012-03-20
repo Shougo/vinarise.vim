@@ -67,6 +67,14 @@ COMMANDS 					*vinarise-commands*
 		Specify split command.
 		If omitted it, |:split| is used.
 
+						*vinarise-options-encoding*
+		-encoding={encoding-name}
+		Specify file encoding type.
+		If omitted it, "latin1" is used.
+		Note: "latin1" is only supported less than Vim 7.3.
+		Note: "latin1" or "utf-8" encodings are supported in this
+		version.
+
 The commands of plugins				*:vinarise-sources-commands*
 
 :VinariseDump {file}				*:VinariseDump*
@@ -201,6 +209,12 @@ VINARISE BUFFER KEY MAPPINGS 			*vinarise-buffer-key-mappings*
 <Plug>(vinarise_search_last_pattern_reverse)	*<Plug>(vinarise_search_last_pattern_reverse)*
 		Search the last pattern repeatedly in the binary file by reverse.
 
+<Plug>(vinarise_change_encoding)		*<Plug>(vinarise_change_encoding)*
+		Change vinarise buffer encoding.
+
+<Plug>(vinarise_redraw)				*<Plug>(vinarise_redraw)*
+		Redraw current vinarise buffer.
+
 Normal mode key mappings.
 
 Normal mode default key mappings.
@@ -235,6 +249,8 @@ g?			<Plug>(vinarise_search_string_reverse)
 e/			<Plug>(vinarise_search_regexp)
 n			<Plug>(vinarise_search_last_pattern)
 N			<Plug>(vinarise_search_last_pattern_reverse)
+E			<Plug>(vinarise_change_encoding)
+<C-l>			<Plug>(vinarise_redraw)
 
 ==============================================================================
 EXAMPLES					*vinarise-examples*
@@ -248,6 +264,14 @@ CHANGELOG					*vinarise-changelog*
 
 2012-03-20
 - Fixed :match.
+- Implemented UTF-8 encoding.
+- Fixed address parse.
+
+2012-03-19
+- Added encoding option.
+- Implemented completion.
+- Added <Plug>(vinarise_change_encoding) and <Plug>(vinarise_redraw) mappings.
+- Supported UTF-8 encoding(imcomplete).
 
 2012-03-18
 - Improved search patterns.

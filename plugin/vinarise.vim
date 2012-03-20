@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: vinarise.vim
 " AUTHOR:  Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 05 Mar 2012.
+" Last Modified: 19 Mar 2012.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -40,14 +40,16 @@ let g:vinarise_cursor_ascii_highlight =
       \ get(g:, 'vinarise_cursor_ascii_highlight', 'Search')
 "}}}
 
-command! -nargs=? -complete=file Vinarise
+command! -nargs=? -complete=customlist,vinarise#complete Vinarise
       \ call s:call_vinarise({}, <q-args>)
-command! -nargs=? -complete=file VinariseDump call vinarise#dump#open(<q-args>, 0)
+command! -nargs=? -complete=customlist,vinarise#complete VinariseDump
+      \ call vinarise#dump#open(<q-args>, 0)
 
 if g:vinarise_enable_auto_detect
   augroup vinarise
     autocmd!
-    autocmd BufReadPost,FileReadPost * call s:browse_check(expand('<amatch>'))
+    autocmd BufReadPost,FileReadPost *
+          \ call s:browse_check(expand('<amatch>'))
   augroup END
 endif
 

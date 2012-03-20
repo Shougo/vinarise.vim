@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: syntax/vinarise.vim
 " AUTHOR: Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 11 Feb 2012.
+" Last Modified: 20 Mar 2012.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -32,9 +32,9 @@ endif
 
 syntax match vinariseAddress       '^\s*\x\+:' contains=vinariseSep
 syntax match vinariseSep contained ':'
-syntax match vinariseAsciiLine '|\s\+.*\s*$' contains=vinariseAscii,vinariseSep2
+syntax match vinariseAsciiLine '|.*\s*$' contains=vinariseAscii,vinariseSep2
+syntax match vinariseAscii contained '.*' contains=vinariseDot
 syntax match vinariseSep2 contained '|'
-syntax match vinariseAscii contained '\s\+.*' contains=vinariseDot
 syntax match vinariseDot contained '[.\r]'
 
 highlight default link vinariseAddress Constant
