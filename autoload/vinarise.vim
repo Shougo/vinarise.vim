@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: vinarise.vim
 " AUTHOR:  Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 19 Mar 2012.
+" Last Modified: 20 Mar 2012.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -236,7 +236,7 @@ function! vinarise#make_line(line_address)"{{{
           \ '   ' : printf('%02x', bytes[offset]) . ' '
   endfor
 
-  return printf('%07x0: %-48s |  %s  ',
+  return printf('%07x0: %-48s |%s',
         \ a:line_address, hex_line, ascii_line)
 endfunction"}}}
 function! vinarise#parse_address(string, cur_text)"{{{

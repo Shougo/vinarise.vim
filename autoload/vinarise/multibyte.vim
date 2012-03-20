@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: multibyte.vim
 " AUTHOR: Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 19 Mar 2012.
+" Last Modified: 20 Mar 2012.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -43,7 +43,7 @@ endfunction"}}}
 
 function! s:make_latin1_line(line_address, bytes)"{{{
   " Make new line.
-  let ascii_line = ''
+  let ascii_line = '  '
 
   for offset in range(0, b:vinarise.width - 1)
     if offset >= len(a:bytes)
@@ -55,13 +55,13 @@ function! s:make_latin1_line(line_address, bytes)"{{{
     endif
   endfor
 
-  return ascii_line
+  return ascii_line . '  '
 endfunction"}}}
 
 function! s:make_utf8_line(line_address, bytes)"{{{
   let base_address = a:line_address * b:vinarise.width
   " Make new line.
-  let ascii_line = ''
+  let ascii_line = '  '
 
   let offset = 0
   while offset < b:vinarise.width
@@ -79,11 +79,27 @@ function! s:make_utf8_line(line_address, bytes)"{{{
       let offset += 1
       continue
     elseif num < 0xc0
-      " Search byte.
-      let ascii_line .= '.'
-      let offset += 1
-      continue
-    elseif num < 0xe0
+      " Search first byte.
+      let prev_bytes = reverse(b:vinarise.get_bytes(
+            \ max([base_address - 3, 0]), min([base_address, 3])))
+      let first_bytes = filter(copy(prev_bytes), 'v:val > 0xc0')
+      if empty(first_bytes)
+        " Skip.
+        let ascii_line .= '.'
+        let offset += 1
+        continue
+      endif
+
+      let num = first_bytes[0]
+      let sub_offset = index(prev_bytes, num) + 1
+      if offset == 0
+        let ascii_line = repeat(' ', 2 - sub_offset)
+      endif
+
+      let offset -= sub_offset
+    endif
+
+    if num < 0xe0
       " 2byte code.
       let add_offset = 2
     elseif num < 0xf0
@@ -96,11 +112,16 @@ function! s:make_utf8_line(line_address, bytes)"{{{
 
     let chars = iconv(b:vinarise.get_chars(
           \ base_address + offset, add_offset), 'utf-8', &encoding)
-    let ascii_line .= chars . repeat('.', add_offset - strwidth(chars))
+    let ascii_line .= chars
+    if strwidth(ascii_line) < b:vinarise.width + 2
+      let ascii_line .= repeat('.', add_offset - strwidth(chars))
+    endif
+
     let offset += add_offset
   endwhile
 
-  return ascii_line
+  return ascii_line . repeat(' ',
+        \ strwidth(ascii_line) - (b:vinarise.width + 4))
 endfunction"}}}
 
 " vim: foldmethod=marker
