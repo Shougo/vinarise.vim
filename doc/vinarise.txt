@@ -246,6 +246,9 @@ EXAMPLES					*vinarise-examples*
 ==============================================================================
 CHANGELOG					*vinarise-changelog*
 
+2012-03-20
+- Fixed :match.
+
 2012-03-18
 - Improved search patterns.
 

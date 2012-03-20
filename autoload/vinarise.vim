@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: vinarise.vim
 " AUTHOR:  Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 17 Mar 2012.
+" Last Modified: 20 Mar 2012.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -416,6 +416,8 @@ function! s:initialize_vinarise_buffer(context, filename, filesize)"{{{
 
   " Autocommands.
   augroup plugin-vinarise
+    autocmd BufLeave,BufWinLeave <buffer>
+          \ match
     autocmd CursorMoved <buffer>
           \ call s:match_ascii()
     autocmd BufWriteCmd <buffer>
