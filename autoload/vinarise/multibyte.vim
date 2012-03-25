@@ -85,7 +85,7 @@ function! s:make_utf8_line(line_address, bytes)"{{{
     elseif num < 0xc0
       " Search first byte.
       let prev_bytes = reverse(b:vinarise.get_bytes(
-            \ max([base_address - 3, 0]), min([base_address, 3])))
+            \ base_address + offset - 3, min([base_address, 3])))
       let first_bytes = filter(copy(prev_bytes), 'v:val > 0xc0')
       if empty(first_bytes)
         " Skip.
@@ -146,21 +146,30 @@ function! s:make_cp932_line(line_address, bytes)"{{{
       continue
     endif
 
-    " Search first byte.
-    let prev_bytes = b:vinarise.get_bytes(
-          \ base_address - 1, min([base_address, 1]))
-    let first_bytes = filter(copy(prev_bytes),
-          \ '(v:val >= 0x81 && v:val <= 0x9f) || (v:val >= 0xe0 && v:val <= 0xef)')
-    if !empty(first_bytes)
-      let num = first_bytes[0]
-      let sub_offset = 1
-      if offset == 0
-        let ascii_line = repeat(' ', 3 - sub_offset)
+    let num = a:bytes[offset]
+
+    if (num >= 0x40 && num <= 0x7e) || (num >= 0x80 && num <= 0xfc)
+      " Search first byte.
+      let prev_bytes = reverse(b:vinarise.get_bytes(
+            \ base_address + offset - 2, min([base_address, 2])))
+      let prev_byte = get(prev_bytes, 0)
+      let prepre_byte = get(prev_bytes, 1, 0)
+      if (prepre_byte >= 0x81 && prepre_byte <= 0x9f)
+            \  || (prepre_byte >= 0xe0 && prepre_byte <= 0xef)
+        " Cancel.
+        let prev_byte = 0
       endif
 
-      let offset -= sub_offset
-    else
-      let num = a:bytes[offset]
+      if (prev_byte >= 0x81 && prev_byte <= 0x9f)
+            \ || (prev_byte >= 0xe0 && prev_byte <= 0xef)
+        let sub_offset = 1
+        if offset == 0
+          let ascii_line = repeat(' ', 3 - sub_offset)
+        endif
+
+        let offset -= sub_offset
+        let num = prev_byte
+      endif
     endif
 
     if num < 0x80
