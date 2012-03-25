@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: vinarise.vim
 " AUTHOR:  Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 21 Mar 2012.
+" Last Modified: 25 Mar 2012.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -483,6 +483,13 @@ function! s:match_ascii()"{{{
   endif
 
   let offset = address % b:vinarise.width
+
+  let encoding = vinarise#get_current_vinarise().context.encoding
+
+  if encoding !=# 'latin1'
+    let offset = len(vinarise#util#truncate(
+          \ matchstr(getline('.'), '\x\+\s\+|\zs.*\ze.$'), offset + 3)) - 3
+  endif
 
   execute 'match' g:vinarise_cursor_ascii_highlight.
         \ ' /\%'.line('.').'l\%'.(63+offset).'c/'

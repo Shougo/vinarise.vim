@@ -262,6 +262,10 @@ EXAMPLES					*vinarise-examples*
 ==============================================================================
 CHANGELOG					*vinarise-changelog*
 
+2012-03-25
+- Supported Cp932 encoding(imcomplete).
+- Improved highlight cursor.
+
 2012-03-20
 - Fixed :match.
 - Implemented UTF-8 encoding.
