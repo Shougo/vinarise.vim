@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: vinarise.vim
 " AUTHOR:  Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 25 Mar 2012.
+" Last Modified: 26 Mar 2012.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -161,7 +161,7 @@ function! vinarise#open(filename, context)"{{{
   endif
 
   if !context.overwrite
-    edit `=s:vinarise_BUFFER_NAME . ' - ' . filename`
+    silent edit `=s:vinarise_BUFFER_NAME . ' - ' . filename`
   endif
 
   call s:initialize_vinarise_buffer(context, filename, filesize)
