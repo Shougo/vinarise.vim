@@ -131,7 +131,7 @@ function! vinarise#open(filename, context)"{{{
   endif
 
   let context = s:initialize_context(a:context)
-  if context.encoding !~
+  if context.encoding !~?
         \ vinarise#multibyte#get_supported_encodings_pattern()
     call vinarise#print_error(
           \ 'encoding type: "'.context.encoding.'" is not supported.')
@@ -383,28 +383,28 @@ function! s:initialize_vinarise_buffer(context, filename, filesize)"{{{
     return a:is_little_endian ?
           \ self.get_int16_le(a:address) : self.get_int16_be(a:address)
   endfunction"}}}
-  function! b:vinarise.get_int16_le(address, is_little_endian)"{{{
+  function! b:vinarise.get_int16_le(address)"{{{
     execute 'python' 'vim.command("let num = " + str('.
-          \ self.python .'.get_int16_le(vim.eval("a:address"), true)))'
+          \ self.python .'.get_int16_le(vim.eval("a:address"))))'
     return num
   endfunction"}}}
-  function! b:vinarise.get_int16_be(address, is_little_endian)"{{{
+  function! b:vinarise.get_int16_be(address)"{{{
     execute 'python' 'vim.command("let num = " + str('.
-          \ self.python .'.get_int16_be(vim.eval("a:address"), false)))'
+          \ self.python .'.get_int16_be(vim.eval("a:address"))))'
     return num
   endfunction"}}}
   function! b:vinarise.get_int32(address, is_little_endian)"{{{
     return a:is_little_endian ?
           \ self.get_int32_le(a:address) : self.get_int32_be(a:address)
   endfunction"}}}
-  function! b:vinarise.get_int32_le(address, is_little_endian)"{{{
+  function! b:vinarise.get_int32_le(address)"{{{
     execute 'python' 'vim.command("let num = " + str('.
-          \ self.python .'.get_int32_le(vim.eval("a:address"), true)))'
+          \ self.python .'.get_int32_le(vim.eval("a:address"))))'
     return num
   endfunction"}}}
-  function! b:vinarise.get_int32_be(address, is_little_endian)"{{{
+  function! b:vinarise.get_int32_be(address)"{{{
     execute 'python' 'vim.command("let num = " + str('.
-          \ self.python .'.get_int32_be(vim.eval("a:address"), false)))'
+          \ self.python .'.get_int32_be(vim.eval("a:address"))))'
     return num
   endfunction"}}}
   function! b:vinarise.get_chars(address, count)"{{{
