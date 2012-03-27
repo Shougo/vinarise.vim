@@ -51,6 +51,25 @@ class VinariseBuffer:
             return []
         return [ord(x) for x in self.mmap[int(addr) : int(addr)+int(count)]]
 
+    def get_int8(self, addr):
+        return self.get_byte(addr)
+
+    def get_int16_le(self, addr, is_little_endian):
+        bytes = self.get_bytes(addr, 2)
+        return bytes[0] + bytes[1] * 0x100
+
+    def get_int16_be(self, addr, is_little_endian):
+        bytes = self.get_bytes(addr, 2)
+        return bytes[1] + bytes[0] * 0x100
+
+    def get_int32_le(self, addr, is_little_endian):
+        bytes = self.get_bytes(addr, 4)
+        return bytes[0] +  bytes[1] * 0x100 + bytes[2] * 0x10000 + bytes[3] * 0x1000000
+
+    def get_int32_be(self, addr, is_little_endian):
+        bytes = self.get_bytes(addr, 4)
+        return bytes[3] +  bytes[2] * 0x100 + bytes[1] * 0x10000 + bytes[0] * 0x1000000
+
     def get_chars(self, addr, count):
         if int(count) == 0:
             return ""

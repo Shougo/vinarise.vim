@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: vinarise.vim
 " AUTHOR:  Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 26 Mar 2012.
+" Last Modified: 27 Mar 2012.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -373,6 +373,39 @@ function! s:initialize_vinarise_buffer(context, filename, filesize)"{{{
     execute 'python' 'vim.command("let bytes = " + str('.
           \ self.python .".get_bytes(vim.eval('a:address'), vim.eval('a:count'))))"
     return bytes
+  endfunction"}}}
+  function! b:vinarise.get_int8(address)"{{{
+    execute 'python' 'vim.command("let num = " + str('.
+          \ self.python .'.get_int8(vim.eval("a:address"))))'
+    return num
+  endfunction"}}}
+  function! b:vinarise.get_int16(address, is_little_endian)"{{{
+    return a:is_little_endian ?
+          \ self.get_int16_le(a:address) : self.get_int16_be(a:address)
+  endfunction"}}}
+  function! b:vinarise.get_int16_le(address, is_little_endian)"{{{
+    execute 'python' 'vim.command("let num = " + str('.
+          \ self.python .'.get_int16_le(vim.eval("a:address"), true)))'
+    return num
+  endfunction"}}}
+  function! b:vinarise.get_int16_be(address, is_little_endian)"{{{
+    execute 'python' 'vim.command("let num = " + str('.
+          \ self.python .'.get_int16_be(vim.eval("a:address"), false)))'
+    return num
+  endfunction"}}}
+  function! b:vinarise.get_int32(address, is_little_endian)"{{{
+    return a:is_little_endian ?
+          \ self.get_int32_le(a:address) : self.get_int32_be(a:address)
+  endfunction"}}}
+  function! b:vinarise.get_int32_le(address, is_little_endian)"{{{
+    execute 'python' 'vim.command("let num = " + str('.
+          \ self.python .'.get_int32_le(vim.eval("a:address"), true)))'
+    return num
+  endfunction"}}}
+  function! b:vinarise.get_int32_be(address, is_little_endian)"{{{
+    execute 'python' 'vim.command("let num = " + str('.
+          \ self.python .'.get_int32_be(vim.eval("a:address"), false)))'
+    return num
   endfunction"}}}
   function! b:vinarise.get_chars(address, count)"{{{
     execute 'python' 'vim.command("let chars = ''" + str('.

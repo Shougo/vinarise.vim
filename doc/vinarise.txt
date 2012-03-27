@@ -262,6 +262,9 @@ EXAMPLES					*vinarise-examples*
 ==============================================================================
 CHANGELOG					*vinarise-changelog*
 
+2012-03-27
+- Added wrapper functions.
+
 2012-03-26
 - Silent edit.
 
