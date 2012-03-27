@@ -265,6 +265,7 @@ CHANGELOG					*vinarise-changelog*
 2012-03-27
 - Added wrapper functions.
 - Supported UTF-16.
+- Improved get_chars().
 
 2012-03-26
 - Silent edit.

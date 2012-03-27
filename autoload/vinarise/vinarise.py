@@ -70,19 +70,10 @@ class VinariseBuffer:
         bytes = self.get_bytes(addr, 4)
         return bytes[3] +  bytes[2] * 0x100 + bytes[1] * 0x10000 + bytes[0] * 0x1000000
 
-    def get_chars(self, addr, count):
+    def get_chars(self, addr, count, from_enc, to_enc):
         if int(count) == 0:
             return ""
-        return self.mmap[int(addr) : int(addr)+int(count)]
-
-    def convert_utf16_chars(self, addr, count, is_little_endian, to_enc):
-        chars = self.get_chars(addr, count)
-        from_enc = 'utf-16'
-        if is_little_endian:
-            from_enc += 'le'
-        else:
-            from_enc += 'be'
-
+        chars = self.mmap[int(addr) : int(addr)+int(count)]
         return unicode(chars, from_enc).encode(to_enc, 'replace')
 
     def set_byte(self, addr, value):

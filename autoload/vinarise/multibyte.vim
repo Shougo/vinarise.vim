@@ -27,7 +27,7 @@
 function! vinarise#multibyte#get_supported_encodings_pattern()"{{{
   " Ascii only.
   return (v:version >= 703) ?
-        \'^\%(utf-\?8\|cp932\|latin1\|\%(utf-\?16\|ucs-\?2\)\%(le\|be\|bom\)\?\)$'
+        \'^\%(utf-8\|cp932\|latin1\|\%(utf-16\|ucs-2\)\%(le\|be\|bom\)\?\)$'
         \ : '^latin1$'
 endfunction"}}}
 function! vinarise#multibyte#make_ascii_line(line_address, bytes)"{{{
@@ -118,8 +118,8 @@ function! s:make_utf8_line(line_address, bytes)"{{{
       let add_offset = 4
     endif
 
-    let chars = iconv(b:vinarise.get_chars(
-          \ base_address + offset, add_offset), encoding, &encoding)
+    let chars = b:vinarise.get_chars(
+          \ base_address + offset, add_offset, encoding, &encoding)
     if chars =~ '?'
       " Failed convert.
       let chars = '.'
@@ -185,8 +185,8 @@ function! s:make_utf16_line(line_address, bytes, is_little_endian)"{{{
       let add_offset = 2
     endif
 
-    let chars = b:vinarise.convert_utf16_chars(
-          \ base_address + offset, add_offset, a:is_little_endian, &encoding)
+    let chars = b:vinarise.get_chars(
+          \ base_address + offset, add_offset, encoding, &encoding)
     if chars =~ '?'
       " Failed convert.
       let chars = '.'
@@ -262,8 +262,8 @@ function! s:make_cp932_line(line_address, bytes)"{{{
       continue
     endif
 
-    let chars = iconv(b:vinarise.get_chars(
-          \ base_address + offset, add_offset), encoding, &encoding)
+    let chars = b:vinarise.get_chars(
+          \ base_address + offset, add_offset, encoding, &encoding)
     if chars =~ '?'
       " Failed convert.
       let chars = '.'
