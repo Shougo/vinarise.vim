@@ -185,15 +185,8 @@ function! s:make_utf16_line(line_address, bytes, is_little_endian)"{{{
       let add_offset = 2
     endif
 
-    let chars = b:vinarise.get_chars(
-          \ base_address + offset, add_offset)
-    if a:is_little_endian
-      echomsg chars
-      let chars = chars[1] . chars[0]
-      echomsg chars
-    endif
-    let chars = iconv(chars, encoding, &encoding)
-    echomsg chars
+    let chars = b:vinarise.convert_utf16_chars(
+          \ base_address + offset, add_offset, a:is_little_endian, &encoding)
     if chars =~ '?'
       " Failed convert.
       let chars = '.'

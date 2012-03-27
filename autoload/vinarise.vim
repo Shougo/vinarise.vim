@@ -412,6 +412,13 @@ function! s:initialize_vinarise_buffer(context, filename, filesize)"{{{
           \ self.python .".get_chars(vim.eval('a:address'), vim.eval('a:count'))) + \"'\")"
     return chars
   endfunction"}}}
+  function! b:vinarise.convert_utf16_chars(address, count, is_little_endian, encoding)"{{{
+    execute 'python' 'vim.command("let chars = ''" + str('.
+          \ self.python .".convert_utf16_chars(vim.eval('a:address'),"
+          \ ."vim.eval('a:count'), vim.eval('a:is_little_endian'),"
+          \ ."vim.eval('a:encoding'))) + \"'\")"
+    return chars
+  endfunction"}}}
   function! b:vinarise.set_byte(address, value)"{{{
     execute 'python' self.python .
           \ '.set_byte(vim.eval("a:address"), vim.eval("a:value"))'
