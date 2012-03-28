@@ -57,6 +57,9 @@ function! vinarise#mappings#define_default_mappings()"{{{
         \ :<C-u>call <SID>print_current_position()<CR>
   nnoremap <buffer><silent> <Plug>(vinarise_change_current_address)
         \ :<C-u>call <SID>change_current_address()<CR>
+  nnoremap <buffer><silent>
+        \ <Plug>(vinarise_overwrite_from_current_address)
+        \ :<C-u>call <SID>overwrite_from_current_address()<CR>
   nnoremap <buffer><silent> <Plug>(vinarise_move_by_input_address)
         \ :<C-u>call <SID>move_by_input_address('')<CR>
   nnoremap <buffer><silent> <Plug>(vinarise_move_by_input_offset)
@@ -106,6 +109,7 @@ function! vinarise#mappings#define_default_mappings()"{{{
   nmap <buffer> <C-u>     <Plug>(vinarise_prev_half_screen)
   nmap <buffer> <C-g>     <Plug>(vinarise_print_current_position)
   nmap <buffer> r    <Plug>(vinarise_change_current_address)
+  nmap <buffer> R    <Plug>(vinarise_overwrite_from_current_address)
   nmap <buffer> gG    <Plug>(vinarise_move_by_input_address)
   nmap <buffer> go    <Plug>(vinarise_move_by_input_offset)
   nmap <buffer> gg    <Plug>(vinarise_move_to_first_address)
@@ -237,6 +241,45 @@ function! s:change_current_address()"{{{
   setlocal modified
 
   setlocal nomodifiable
+endfunction"}}}
+function! s:overwrite_from_current_address()"{{{
+  " Get current address.
+  let [type, address] = vinarise#parse_address(getline('.'),
+        \ vinarise#get_cur_text(getline('.'), col('.')))
+  if type == 'address'
+    " Invalid.
+    return
+  endif
+
+  let value = ''
+  while 1
+    echo printf('Please input new value from 0x%08x: ', address)
+    let value = input(' 0x', value)
+    redraw
+
+    if value == ''
+      return
+    elseif value !~ '^\x\+$'
+      call vinarise#print_error('The value must be hex.')
+    elseif len(value) % 2 != 0
+      call vinarise#print_error('The value length must be 2^n.')
+    else
+      break
+    endif
+  endwhile
+
+  " Set values.
+  let offset = 0
+  for value in map(split(
+        \ substitute(value, '\x\x\zs', ' ', 'g')), 'str2nr(v:val, 16)')
+    call b:vinarise.set_byte(address + offset, value)
+    let offset += 1
+  endfor
+
+  " Change from current line.
+  call vinarise#mappings#move_to_address(address)
+
+  setlocal modified
 endfunction"}}}
 
 function! s:move_col(is_next)"{{{
