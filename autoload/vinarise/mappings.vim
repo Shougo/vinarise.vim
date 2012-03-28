@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: mappings.vim
 " AUTHOR: Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 27 Mar 2012.
+" Last Modified: 28 Mar 2012.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -465,7 +465,7 @@ function! s:change_encoding()"{{{
   if encoding == ''
     return
   elseif encoding !~?
-        \ vinarise#multibyte#get_supported_encodings_pattern()
+        \ vinarise#multibyte#get_supported_encoding_pattern()
     call vinarise#print_error(
           \ 'encoding type: "'.encoding.'" is not supported.')
     return

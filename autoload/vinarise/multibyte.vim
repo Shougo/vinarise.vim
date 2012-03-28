@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: multibyte.vim
 " AUTHOR: Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 27 Mar 2012.
+" Last Modified: 28 Mar 2012.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -24,11 +24,15 @@
 " }}}
 "=============================================================================
 
-function! vinarise#multibyte#get_supported_encodings_pattern()"{{{
+function! vinarise#multibyte#get_supported_encoding_pattern()"{{{
   " Ascii only.
-  return (v:version >= 703) ?
-        \'^\%(utf-8\|cp932\|latin1\|\%(utf-16\|ucs-2\)\%(le\|be\|bom\)\?\)$'
-        \ : '^latin1$'
+  return '^\%('.join(vinarise#multibyte#get_supported_encoding_list(), '\|').'\)$'
+endfunction"}}}
+function! vinarise#multibyte#get_supported_encoding_list()"{{{
+  " Ascii only.
+  return (v:version < 703) ? ['latin1'] :
+        \ ['latin1', 'utf-8', 'cp932',
+        \  'utf-16le', 'utf-16be', 'ucs-2le', 'ucs-2be']
 endfunction"}}}
 function! vinarise#multibyte#make_ascii_line(line_address, bytes)"{{{
   let encoding = vinarise#get_current_vinarise().context.encoding

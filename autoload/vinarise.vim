@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: vinarise.vim
 " AUTHOR:  Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 27 Mar 2012.
+" Last Modified: 28 Mar 2012.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -84,11 +84,7 @@ function! vinarise#complete(arglead, cmdline, cursorpos)"{{{
   return sort(filter(_, 'stridx(v:val, a:arglead) == 0'))
 endfunction"}}}
 function! vinarise#complete_encodings(arglead, cmdline, cursorpos)"{{{
-  let encodings = &fileencodings
-  if encodings !~ '\<latin1\>'
-    let encodings .= ',latin1'
-  endif
-  return sort(filter(split(encodings, ','),
+  return sort(filter(vinarise#multibyte#get_supported_encoding_list(),
         \ 'stridx(v:val, a:arglead) == 0'))
 endfunction"}}}
 function! vinarise#get_options()"{{{
@@ -132,7 +128,7 @@ function! vinarise#open(filename, context)"{{{
 
   let context = s:initialize_context(a:context)
   if context.encoding !~?
-        \ vinarise#multibyte#get_supported_encodings_pattern()
+        \ vinarise#multibyte#get_supported_encoding_pattern()
     call vinarise#print_error(
           \ 'encoding type: "'.context.encoding.'" is not supported.')
     return
