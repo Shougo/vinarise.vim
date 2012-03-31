@@ -267,6 +267,9 @@ EXAMPLES					*vinarise-examples*
 ==============================================================================
 CHANGELOG					*vinarise-changelog*
 
+2012-03-31
+- Fixed for cmdwin.
+
 2012-03-28
 - Improved encoding completion.
 - Added <Plug>(vinarise_overwrite_from_current_address) mapping.

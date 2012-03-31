@@ -31,7 +31,7 @@ endfunction"}}}
 function! vinarise#multibyte#get_supported_encoding_list()"{{{
   " Ascii only.
   return (v:version < 703) ? ['latin1'] :
-        \ ['latin1', 'utf-8', 'cp932',
+        \ ['latin1', 'utf-8', 'cp932', 'euc-jp',
         \  'utf-16le', 'utf-16be', 'ucs-2le', 'ucs-2be']
 endfunction"}}}
 function! vinarise#multibyte#make_ascii_line(line_address, bytes)"{{{
@@ -42,10 +42,13 @@ function! vinarise#multibyte#make_ascii_line(line_address, bytes)"{{{
   elseif encoding ==? 'cp932'
     " Cp932(Shift_JIS).
     return s:make_cp932_line(a:line_address, a:bytes)
-  elseif encoding =~? '\%(utf-\?16\|ucs-\?2\)\%(le\|be\|bom\)\?'
+  elseif encoding ==? 'euc-jp'
+    " EUC-JP.
+    return s:make_euc_jp_line(a:line_address, a:bytes)
+  elseif encoding =~? '^\%(utf-16\|ucs-2\)'
     " UTF-16.
     return s:make_utf16_line(a:line_address, a:bytes,
-          \ encoding !~? '\%(utf-\?16\|ucs-\?2\)be$')
+          \ encoding !~? '^\%(utf-16\|ucs-2\)be$')
   else
     " Ascii.
     return s:make_latin1_line(a:line_address, a:bytes)
@@ -141,6 +144,73 @@ function! s:make_utf8_line(line_address, bytes)"{{{
 endfunction"}}}
 
 function! s:make_utf16_line(line_address, bytes, is_little_endian)"{{{
+  let encoding = vinarise#get_current_vinarise().context.encoding
+  let base_address = a:line_address * b:vinarise.width
+  " Make new line.
+  let ascii_line = '   '
+
+  let offset = 0
+  while offset < b:vinarise.width
+    if offset >= len(a:bytes)
+      let ascii_line .= ' '
+      let offset += 1
+      continue
+    endif
+
+    let num = b:vinarise.get_int16(
+          \ base_address + offset, a:is_little_endian)
+
+    if num < 0x80
+      " Ascii.
+      let ascii_line .= (num <= 0x1f) ?
+            \ '.' : nr2char(num)
+      if a:is_little_endian
+        let ascii_line .= ' '
+      else
+        let ascii_line = ' ' . ascii_line
+      endif
+      let offset += 2
+      continue
+    elseif 0xdc00 <= num && num <= 0xdcff
+          \ && base_address + offset > 2
+      let num = b:vinarise.get_int16(
+            \ base_address + offset - 2, a:is_little_endian)
+      let sub_offset = 2
+      if offset == 0
+        let ascii_line = repeat(' ', 3 - sub_offset)
+      endif
+
+      let offset -= sub_offset
+    endif
+
+    if 0xd800 <= num && num <= 0xd8ff
+      " Surrogate pair.
+      " 4byte code.
+      let add_offset = 4
+    else
+      " 2byte code.
+      let add_offset = 2
+    endif
+
+    let chars = b:vinarise.get_chars(
+          \ base_address + offset, add_offset, encoding, &encoding)
+    if chars =~ '?'
+      " Failed convert.
+      let chars = '.'
+    endif
+    let ascii_line .= chars
+    if strwidth(ascii_line) < b:vinarise.width + 2
+      let ascii_line .= repeat('.', add_offset - strwidth(chars))
+    endif
+
+    let offset += add_offset
+  endwhile
+
+  return ascii_line . repeat(' ',
+        \ strwidth(ascii_line) - (b:vinarise.width + 4))
+endfunction"}}}
+
+function! s:make_euc_jp_line(line_address, bytes, is_little_endian)"{{{
   let encoding = vinarise#get_current_vinarise().context.encoding
   let base_address = a:line_address * b:vinarise.width
   " Make new line.

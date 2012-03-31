@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: vinarise.vim
 " AUTHOR:  Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 28 Mar 2012.
+" Last Modified: 31 Mar 2012.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -94,6 +94,13 @@ function! vinarise#print_error(string)"{{{
   echohl Error | echo a:string | echohl None
 endfunction"}}}
 function! vinarise#open(filename, context)"{{{
+  if vinarise#util#is_cmdwin()
+    call vinarise#print_error(
+          \ '[vinarise] Command line buffer is detected!')
+    call vinarise#print_error(
+          \ '[vinarise] Please close command line buffer.')
+    return
+  endif
   if empty(s:vinarise_plugins)
     call s:load_plugins()
   endif
@@ -103,25 +110,25 @@ function! vinarise#open(filename, context)"{{{
     let filename = bufname('%')
     if &l:buftype =~ 'nofile'
       call vinarise#print_error(
-            \ 'Nofile buffer is detected. This operation is invalid.')
+            \ '[vinarise] Nofile buffer is detected. This operation is invalid.')
       return
     elseif &l:modified
       call vinarise#print_error(
-            \ 'Modified buffer is detected! This operation is invalid.')
+            \ '[vinarise] Modified buffer is detected! This operation is invalid.')
       return
     endif
   endif
 
   if !filereadable(filename)
     call vinarise#print_error(
-          \ 'File "'.filename.'" is not found.')
+          \ '[vinarise] File "'.filename.'" is not found.')
     return
   endif
 
   let filesize = getfsize(filename)
   if vinarise#util#is_windows() && filesize == 0
     call vinarise#print_error(
-          \ 'File "'.filename.'" is empty. '.
+          \ '[vinarise] File "'.filename.'" is empty. '.
           \ 'vinarise cannot open empty file in Windows.')
     return
   endif
@@ -130,7 +137,7 @@ function! vinarise#open(filename, context)"{{{
   if context.encoding !~?
         \ vinarise#multibyte#get_supported_encoding_pattern()
     call vinarise#print_error(
-          \ 'encoding type: "'.context.encoding.'" is not supported.')
+          \ '[vinarise] encoding type: "'.context.encoding.'" is not supported.')
     return
   endif
 
