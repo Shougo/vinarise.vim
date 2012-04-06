@@ -85,14 +85,16 @@ class VinariseBuffer:
     def get_percentage_address(self, percent):
         return ((os.path.getsize(self.path) - 1) * int(percent)) / 100
 
-    def find(self, address, str):
-        return self.mmap.find(str, int(address))
+    def find(self, address, str, from_enc, to_enc):
+        pattern = unicode(str, from_enc).encode(to_enc, 'replace')
+        return self.mmap.find(pattern, int(address))
 
-    def rfind(self, address, str):
-        return self.mmap.rfind(str, 0, int(address))
+    def rfind(self, address, str, from_enc, to_enc):
+        pattern = unicode(str, from_enc).encode(to_enc, 'replace')
+        return self.mmap.rfind(pattern, 0, int(address))
 
-    def find_regexp(self, address, str):
-        pattern = re.compile(str)
+    def find_regexp(self, address, str, from_enc, to_enc):
+        pattern = re.compile(unicode(str, from_enc).encode(to_enc, 'replace'))
         m = pattern.search(self.mmap, int(address))
         if m is None:
             return -1

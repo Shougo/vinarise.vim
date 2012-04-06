@@ -267,6 +267,9 @@ EXAMPLES					*vinarise-examples*
 ==============================================================================
 CHANGELOG					*vinarise-changelog*
 
+2012-04-05
+- Fixed search pattern.
+
 2012-03-31
 - Fixed for cmdwin.
 

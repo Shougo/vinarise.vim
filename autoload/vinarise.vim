@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: vinarise.vim
 " AUTHOR:  Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 31 Mar 2012.
+" Last Modified: 06 Apr 2012.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -432,23 +432,29 @@ function! s:initialize_vinarise_buffer(context, filename, filesize)"{{{
           \ ".get_percentage_address(vim.eval('a:percentage'))))"
     return address
   endfunction"}}}
-  function! b:vinarise.find(address, str)"{{{
+  function! b:vinarise.find(address, str, from, to)"{{{
     execute 'python' 'vim.command("let address = " + str('.
           \ self.python .
-          \ ".find(vim.eval('a:address'), vim.eval('a:str'))))"
+          \ ".find(vim.eval('a:address'), vim.eval('a:str'),"
+          \ ."vim.eval('a:from'),"
+          \ ."vim.eval('a:to'))))"
     return address
   endfunction"}}}
-  function! b:vinarise.rfind(address, str)"{{{
+  function! b:vinarise.rfind(address, str, from, to)"{{{
     execute 'python' 'vim.command("let address = " + str('.
           \ self.python .
-          \ ".rfind(vim.eval('a:address'), vim.eval('a:str'))))"
+          \ ".rfind(vim.eval('a:address'), vim.eval('a:str'),"
+          \ ."vim.eval('a:from'),"
+          \ ."vim.eval('a:to'))))"
     return address
   endfunction"}}}
-  function! b:vinarise.find_regexp(address, str)"{{{
+  function! b:vinarise.find_regexp(address, str, from, to)"{{{
     try
       execute 'python' 'vim.command("let address = " + str('.
             \ self.python .
-            \ ".find_regexp(vim.eval('a:address'), vim.eval('a:str'))))"
+            \ ".find_regexp(vim.eval('a:address'), vim.eval('a:str'),"
+            \ ."vim.eval('a:from'),"
+            \ ."vim.eval('a:to'))))"
     catch
       call vinarise#print_error('Invalid regexp pattern!')
       return -1

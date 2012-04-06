@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: mappings.vim
 " AUTHOR: Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 28 Mar 2012.
+" Last Modified: 06 Apr 2012.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -423,9 +423,7 @@ function! s:search_buffer(type, is_reverse, string)"{{{
     let string = input('Please input search binary(! is not pattern) : ', '0x')
     redraw
   elseif a:type ==# 'string'
-    let string = iconv(
-          \ input('Please input search string : '), &encoding,
-          \   vinarise#get_current_vinarise().context.encoding)
+    let string = input('Please input search string : ')
     redraw
   elseif a:type ==# 'regexp'
     let string = input('Please input Python regexp : ')
@@ -482,11 +480,17 @@ function! s:search_buffer(type, is_reverse, string)"{{{
             \ b:vinarise.find_binary(start, binary)
     endif
   elseif a:type ==# 'regexp'
-    let address = b:vinarise.find_regexp(start, string)
+    let address = b:vinarise.find_regexp(start, string,
+          \ &encoding,
+          \  vinarise#get_current_vinarise().context.encoding)
   else
     let address = a:is_reverse ?
-          \ b:vinarise.rfind(start, string) :
-          \ b:vinarise.find(start, string)
+          \ b:vinarise.rfind(start, string,
+          \  &encoding,
+          \  vinarise#get_current_vinarise().context.encoding) :
+          \ b:vinarise.find(start, string,
+          \  &encoding,
+          \  vinarise#get_current_vinarise().context.encoding)
   endif
 
   if address < 0
