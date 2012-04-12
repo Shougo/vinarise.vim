@@ -74,7 +74,7 @@ class VinariseBuffer:
         if int(count) == 0:
             return ""
         chars = self.mmap[int(addr) : int(addr)+int(count)]
-        return unicode(chars, from_enc).encode(to_enc, 'replace')
+        return unicode(chars, from_enc, 'replace').encode(to_enc, 'replace')
 
     def set_byte(self, addr, value):
         self.mmap[int(addr)] = chr(int(value))
@@ -86,15 +86,15 @@ class VinariseBuffer:
         return ((os.path.getsize(self.path) - 1) * int(percent)) / 100
 
     def find(self, address, str, from_enc, to_enc):
-        pattern = unicode(str, from_enc).encode(to_enc, 'replace')
+        pattern = unicode(str, from_enc, 'replace').encode(to_enc, 'replace')
         return self.mmap.find(pattern, int(address))
 
     def rfind(self, address, str, from_enc, to_enc):
-        pattern = unicode(str, from_enc).encode(to_enc, 'replace')
+        pattern = unicode(str, from_enc, 'replace').encode(to_enc, 'replace')
         return self.mmap.rfind(pattern, 0, int(address))
 
     def find_regexp(self, address, str, from_enc, to_enc):
-        pattern = re.compile(unicode(str, from_enc).encode(to_enc, 'replace'))
+        pattern = re.compile(unicode(str, from_enc, 'replace').encode(to_enc, 'replace'))
         m = pattern.search(self.mmap, int(address))
         if m is None:
             return -1

@@ -72,8 +72,9 @@ COMMANDS 					*vinarise-commands*
 		Specify file encoding type.
 		If omitted it, "latin1" is used.
 		Note: "latin1" is only supported less than Vim 7.3.
-		Note: "latin1" or "utf-8" encodings are supported in this
-		version.
+		Note: "latin1", "utf-8", "cp932", "euc-jp", "utf-16le",
+		"utf-16be", "ucs-2le" or "ucs-2be" encodings are supported in
+		this version.
 
 The commands of plugins				*:vinarise-sources-commands*
 
@@ -266,6 +267,9 @@ EXAMPLES					*vinarise-examples*
 >
 ==============================================================================
 CHANGELOG					*vinarise-changelog*
+
+2012-04-13
+- Supported euc-jp.
 
 2012-04-05
 - Fixed search pattern.
