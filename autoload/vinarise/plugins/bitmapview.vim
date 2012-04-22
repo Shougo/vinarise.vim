@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: bitmapview.vim
 " AUTHOR:  Shougo Matsushita <Shougo.Matsu at gmail.com>
-" Last Modified: 26 Feb 2012.
+" Last Modified: 22 Apr 2012.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -59,10 +59,6 @@ function! s:bitmapview_open()"{{{
   edit `=prefix . vinarise.filename`
   match
 
-  let b:bitmapview = {}
-  let b:bitmapview.vinarise = vinarise
-  let b:bitmapview.width = (winwidth(0) - 10) / 16 * 16
-
   setlocal nolist
   setlocal buftype=nofile
   setlocal noswapfile
@@ -73,11 +69,17 @@ function! s:bitmapview_open()"{{{
 
   " Autocommands.
   augroup plugin-vinarise
-    autocmd BufWinEnter <buffer> call s:change_windowsize()
-    autocmd BufWinLeave <buffer> call s:restore_windowsize()
+    autocmd BufWinEnter <buffer>
+          \ call s:change_windowsize()
+    autocmd BufWinLeave,BufUnload <buffer>
+          \ call s:restore_windowsize()
   augroup END
 
   call s:change_windowsize()
+
+  let b:bitmapview = {}
+  let b:bitmapview.vinarise = vinarise
+  let b:bitmapview.width = (winwidth(0) - 10) / 16 * 16
 
   call s:define_default_mappings()
 
@@ -253,24 +255,28 @@ function! s:change_windowsize()"{{{
     return
   endif
 
-  let s:save_gui = [&guifont, &guifontwide, &lines, &columns]
-
   let old_fontsize = matchstr(&guifont, s:font_pattern)
   if old_fontsize == '' || old_fontsize <= 8
     return
   endif
 
+  let s:save_gui = [&guifont, &guifontwide, &lines, &columns,
+        \ getwinposx(), getwinposy()]
+
   let &guifont = s:change_fontsize(&guifont, 8)
   let &guifontwide = s:change_fontsize(&guifontwide, 8)
-  let &columns = (&columns * old_fontsize) / 8
-  let &lines = (&lines * old_fontsize) / 8
+  let &lines = (s:save_gui[2] * old_fontsize) / 9
+  let &columns = (s:save_gui[3] * old_fontsize) / 9
 endfunction"}}}
 function! s:restore_windowsize()"{{{
   if empty(s:save_gui)
     return
   endif
 
-  let [&guifont, &guifontwide, &lines, &columns] = s:save_gui
+  let [&guifont, &guifontwide, &lines, &columns,
+        \ posx, posy] = s:save_gui
+  execute 'winpos' posx posy
+
   let s:save_gui = []
 endfunction"}}}
 function! s:change_fontsize(font, size)
