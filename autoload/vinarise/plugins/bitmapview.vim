@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: bitmapview.vim
 " AUTHOR:  Shougo Matsushita <Shougo.Matsu at gmail.com>
-" Last Modified: 22 Apr 2012.
+" Last Modified: 23 Apr 2012.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -54,7 +54,7 @@ endfunction"}}}
 function! s:bitmapview_open()"{{{
   let vinarise = vinarise#get_current_vinarise()
 
-  let prefix = vimfiler#util#is_windows() ?
+  let prefix = vinarise#util#is_windows() ?
         \ '[bitmapview] - ' : '*bitmapview* - '
   edit `=prefix . vinarise.filename`
   match

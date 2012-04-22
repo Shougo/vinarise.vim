@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: vinarise.vim
 " AUTHOR:  Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 06 Apr 2012.
+" Last Modified: 23 Apr 2012.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -61,10 +61,6 @@ let s:vinarise_plugins = {}
 "}}}
 
 function! vinarise#complete(arglead, cmdline, cursorpos)"{{{
-  let ret = unite#parse_path(join(split(a:cmdline)[1:]))
-  let source_name = ret[0]
-  let source_args = ret[1:]
-
   let _ = []
 
   " Filename completion.
