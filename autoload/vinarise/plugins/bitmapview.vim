@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: bitmapview.vim
 " AUTHOR:  Shougo Matsushita <Shougo.Matsu at gmail.com>
-" Last Modified: 23 Apr 2012.
+" Last Modified: 02 May 2012.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -251,7 +251,7 @@ function! s:set_cursor_address(address)"{{{
 endfunction"}}}
 
 function! s:change_windowsize()"{{{
-  if !has('gui_running')
+  if !has('gui_running') || !empty(s:save_gui)
     return
   endif
 
