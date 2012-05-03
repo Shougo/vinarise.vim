@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: vinarise.vim
 " AUTHOR:  Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 23 Apr 2012.
+" Last Modified: 03 May 2012.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -122,10 +122,10 @@ function! vinarise#open(filename, context)"{{{
   endif
 
   let filesize = getfsize(filename)
-  if vinarise#util#is_windows() && filesize == 0
+  if filesize == 0
     call vinarise#print_error(
           \ '[vinarise] File "'.filename.'" is empty. '.
-          \ 'vinarise cannot open empty file in Windows.')
+          \ 'vinarise cannot open empty file.')
     return
   endif
 
