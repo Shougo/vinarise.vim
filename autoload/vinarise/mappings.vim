@@ -287,7 +287,7 @@ function! s:move_col(is_next)"{{{
         \ vinarise#get_cur_text(getline('.'), col('.')))
   if a:is_next
     if type ==# 'hex'
-      if (address % b:vinarise.width) == (b:vinarise.width - 1)
+      if (address % b:vinarise.width) == (b:vinarise.width - 1) || (address == b:vinarise.get_percentage_address(100))
         " without following normal!, search() hits 2nd char of last hex. *QUICKHACK*
         silent normal! w
         silent call search('[^ |]', 'W')
