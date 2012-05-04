@@ -60,12 +60,15 @@ let s:use_current_vinarise = 0
 let s:vinarise_plugins = {}
 "}}}
 
+function! s:append_dir_delim(val)"{{{
+  return vinarise#util#is_windows() ? a:val.'\' : a:val.'/'
+endfunction"}}}
 function! vinarise#complete(arglead, cmdline, cursorpos)"{{{
   let _ = []
 
   " Filename completion.
   let _ += map(split(glob(a:arglead . '*'), '\n'),
-        \ "isdirectory(v:val) ? v:val.'/' : v:val")
+        \ "isdirectory(v:val) ? s:append_dir_delim(v:val) : v:val")
 
   " Option names completion.
   let _ +=  copy(s:vinarise_options)
@@ -160,7 +163,12 @@ function! vinarise#open(filename, context)"{{{
   endif
 
   if !context.overwrite
-    silent edit `=s:vinarise_BUFFER_NAME . ' - ' . filename`
+    " In Windows, filename may be contain ':' for drive letter.
+    " Using 'edit' command makes readonly to 1. (because of invalid
+    " filename?).
+    " But using 'file' command don't, so use 'file' command to change
+    " buffer-name, instead of 'edit'.
+    silent file `=s:vinarise_BUFFER_NAME . ' - ' . filename`
   endif
 
   call s:initialize_vinarise_buffer(context, filename, filesize)

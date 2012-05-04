@@ -287,7 +287,9 @@ function! s:move_col(is_next)"{{{
         \ vinarise#get_cur_text(getline('.'), col('.')))
   if a:is_next
     if type ==# 'hex'
-      if (address % b:vinarise.width) == (b:vinarise.width - 1)
+      if (address % b:vinarise.width) == (b:vinarise.width - 1) || (address == b:vinarise.get_percentage_address(100))
+        " without following normal!, search() hits 2nd char of last hex. *QUICKHACK*
+        silent normal! w
         silent call search('[^ |]', 'W')
       else
         normal! w
@@ -304,6 +306,8 @@ function! s:move_col(is_next)"{{{
     else
       if type ==# 'ascii' && address % b:vinarise.width == 0
         silent call search('[^ |]', 'bW')
+        " without following, cursor stays 2nd char of last hex. *QUICKHACK*
+        silent normal! b
       else
         normal! h
       endif
