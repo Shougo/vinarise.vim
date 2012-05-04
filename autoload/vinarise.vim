@@ -160,7 +160,12 @@ function! vinarise#open(filename, context)"{{{
   endif
 
   if !context.overwrite
-    silent edit `=s:vinarise_BUFFER_NAME . ' - ' . filename`
+    " In Windows, filename may be contain ':' for drive letter.
+    " Using 'edit' command makes readonly to 1. (because of invalid
+    " filename?).
+    " But using 'file' command don't, so use 'file' command to change
+    " buffer-name, instead of 'edit'.
+    silent file `=s:vinarise_BUFFER_NAME . ' - ' . filename`
   endif
 
   call s:initialize_vinarise_buffer(context, filename, filesize)
