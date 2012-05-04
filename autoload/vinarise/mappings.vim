@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: mappings.vim
 " AUTHOR: Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 06 Apr 2012.
+" Last Modified: 04 May 2012.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -288,7 +288,9 @@ function! s:move_col(is_next)"{{{
   if a:is_next
     if type ==# 'hex'
       if (address % b:vinarise.width) == (b:vinarise.width - 1)
-        silent call search('[^ |]', 'W')
+            \ || (address == b:vinarise.get_percentage_address(100))
+        silent call search('|', 'W')
+        call cursor(0, col('.') + 4)
       else
         normal! w
       endif
@@ -303,7 +305,8 @@ function! s:move_col(is_next)"{{{
       endif
     else
       if type ==# 'ascii' && address % b:vinarise.width == 0
-        silent call search('[^ |]', 'bW')
+        silent call search('|', 'bW')
+        call cursor(0, col('.') - 3)
       else
         normal! h
       endif

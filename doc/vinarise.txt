@@ -268,8 +268,11 @@ EXAMPLES					*vinarise-examples*
 ==============================================================================
 CHANGELOG					*vinarise-changelog*
 
-2012-05-03
+2012-05-04
 - Improved empty file behavior.
+- Improved cursor move.
+
+2012-05-03
 - Fixed for vim-fugitive ":Gstatus".
 
 2012-05-02
