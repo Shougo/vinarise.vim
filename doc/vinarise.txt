@@ -270,6 +270,7 @@ CHANGELOG					*vinarise-changelog*
 
 2012-05-03
 - Improved empty file behavior.
+- Fixed for vim-fugitive ":Gstatus".
 
 2012-05-02
 - Fixed change window size behavior in vinarise bitmapview.
