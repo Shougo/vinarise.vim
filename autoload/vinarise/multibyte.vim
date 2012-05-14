@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: multibyte.vim
 " AUTHOR: Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 13 Apr 2012.
+" Last Modified: 14 May 2012.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -64,7 +64,7 @@ function! s:make_latin1_line(line_address, bytes)"{{{
       let ascii_line .= ' '
     else
       let num = a:bytes[offset]
-      let ascii_line .= (num <= 0x1f || num >= 0x80) ?
+      let ascii_line .= (num <= 0x1f || num >= 0x7f) ?
             \ '.' : nr2char(num)
     endif
   endfor
@@ -89,7 +89,7 @@ function! s:make_utf8_line(line_address, bytes)"{{{
     let num = a:bytes[offset]
     if num < 0x80
       " Ascii.
-      let ascii_line .= (num <= 0x1f) ?
+      let ascii_line .= (num <= 0x1f || num == 0x7f) ?
             \ '.' : nr2char(num)
       let offset += 1
       continue
@@ -162,7 +162,7 @@ function! s:make_utf16_line(line_address, bytes, is_little_endian)"{{{
 
     if num < 0x80
       " Ascii.
-      let ascii_line .= (num <= 0x1f) ?
+      let ascii_line .= (num <= 0x1f || num == 0x7f) ?
             \ '.' : nr2char(num)
       if a:is_little_endian
         let ascii_line .= ' '
@@ -264,7 +264,7 @@ function! s:make_euc_jp_line(line_address, bytes)"{{{
 
     if num < 0x80
       " Ascii.
-      let ascii_line .= (num <= 0x1f) ?
+      let ascii_line .= (num <= 0x1f || num == 0x7f) ?
             \ '.' : nr2char(num)
       let offset += 1
       continue
@@ -344,7 +344,7 @@ function! s:make_cp932_line(line_address, bytes)"{{{
 
     if num < 0x80
       " Ascii.
-      let ascii_line .= (num <= 0x1f) ?
+      let ascii_line .= (num <= 0x1f || num == 0x7f) ?
             \ '.' : nr2char(num)
       let offset += 1
       continue
