@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: vinarise.vim
 " AUTHOR:  Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 03 May 2012.
+" Last Modified: 16 May 2012.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -66,6 +66,9 @@ function! vinarise#complete(arglead, cmdline, cursorpos)"{{{
   " Filename completion.
   let _ += map(split(glob(a:arglead . '*'), '\n'),
         \ "isdirectory(v:val) ? v:val.'/' : v:val")
+  let home_pattern = '^'.
+        \ vinarise#util#substitute_path_separator(expand('~')).'/'
+  call map(_, "escape(substitute(v:val, home_pattern, '\\~/', ''), ' \\')")
 
   " Option names completion.
   let _ +=  copy(s:vinarise_options)
