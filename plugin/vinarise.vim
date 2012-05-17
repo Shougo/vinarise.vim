@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: vinarise.vim
 " AUTHOR:  Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 04 May 2012.
+" Last Modified: 17 May 2012.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -83,7 +83,8 @@ function! s:browse_check(path)"{{{
     let path = vinarise#util#expand('~')
   endif
 
-  if &filetype ==# 'vinarise' || !filereadable(path)
+  if (&filetype ==# 'vinarise' && line('$') != 1)
+        \ || !filereadable(path)
         \ || !g:vinarise_enable_auto_detect
         \ || path =~# '/.git/index$'
     " Note: vim-fugitive opens ".git/index" binary file when executed
