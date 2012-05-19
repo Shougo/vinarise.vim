@@ -100,7 +100,7 @@ function! s:browse_check(path)"{{{
   if lines[0] =~ '\%(^.ELF\|!<arch>\|^MZ\)'
     call vinarise#dump#open(path, 1)
   elseif lines[0] =~ '[\x00-\x09\x10-\x1a\x1c-\x1f]\{5,}'
-        \ || (g:vinarise_detect_large_file_size >= 0 &&
+        \ || (g:vinarise_detect_large_file_size > 0 &&
         \        getfsize(path) > g:vinarise_detect_large_file_size)
     call s:call_vinarise({'overwrite' : 1}, path)
   endif
