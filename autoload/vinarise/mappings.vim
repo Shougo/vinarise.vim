@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: mappings.vim
 " AUTHOR: Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 04 May 2012.
+" Last Modified: 19 May 2012.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -88,6 +88,8 @@ function! vinarise#mappings#define_default_mappings()"{{{
         \ :<C-u>call <SID>change_encoding()<CR>
   nnoremap <buffer><silent> <Plug>(vinarise_redraw)
         \ :<C-u>call vinarise#mappings#redraw()<CR>
+  nnoremap <buffer><silent> <Plug>(vinarise_reload)
+        \ :<C-u>call <SID>reload()<CR>
   "}}}
 
   if exists('g:vinarise_no_default_keymappings') &&
@@ -127,7 +129,8 @@ function! vinarise#mappings#define_default_mappings()"{{{
   nmap <buffer> n          <Plug>(vinarise_search_last_pattern)
   nmap <buffer> N          <Plug>(vinarise_search_last_pattern_reverse)
   nmap <buffer> E          <Plug>(vinarise_change_encoding)
-  nmap <buffer> <C-l>     <Plug>(vinarise_redraw)
+  nmap <buffer> <C-l>      <Plug>(vinarise_redraw)
+  nmap <buffer> g<C-l>     <Plug>(vinarise_reload)
 endfunction"}}}
 
 function! vinarise#mappings#move_to_address(address)"{{{
@@ -527,6 +530,12 @@ function! s:change_encoding()"{{{
   " Redraw vinarise buffer.
   call vinarise#mappings#redraw()
 endfunction"}}}
+function! s:reload()"{{{
+  let vinarise = vinarise#get_current_vinarise()
+  let context = deepcopy(vinarise.context)
+  let filename = vinarise#get_current_vinarise().filename
 
+  call vinarise#open(filename, context)
+endfunction"}}}
 
 " vim: foldmethod=marker

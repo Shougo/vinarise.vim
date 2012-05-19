@@ -220,6 +220,9 @@ VINARISE BUFFER KEY MAPPINGS 			*vinarise-buffer-key-mappings*
 <Plug>(vinarise_redraw)				*<Plug>(vinarise_redraw)*
 		Redraw current vinarise buffer.
 
+<Plug>(vinarise_reload)				*<Plug>(vinarise_reload)*
+		Reload opening file.
+
 Normal mode key mappings.
 
 Normal mode default key mappings.
@@ -257,6 +260,7 @@ n			<Plug>(vinarise_search_last_pattern)
 N			<Plug>(vinarise_search_last_pattern_reverse)
 E			<Plug>(vinarise_change_encoding)
 <C-l>			<Plug>(vinarise_redraw)
+g<C-l>			<Plug>(vinarise_reload)
 
 ==============================================================================
 EXAMPLES					*vinarise-examples*
@@ -267,6 +271,9 @@ EXAMPLES					*vinarise-examples*
 >
 ==============================================================================
 CHANGELOG					*vinarise-changelog*
+
+2012-05-19
+- Added <Plug>(vinarise_reload) mapping.
 
 2012-05-17
 - Fixed auto detection error.
