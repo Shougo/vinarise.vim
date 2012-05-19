@@ -96,6 +96,8 @@ g:vinarise_enable_auto_detect			*g:vinarise_enable_auto_detect*
 
 g:vinarise_detect_large_file_size		*g:vinarise_detect_large_file_size*
 		This variable is |vinarise| detect large file size.
+		If this variable value is less equal than 0, will disable large
+		file detection.
 		Note: This variable is valid in |g:vinarise_enable_auto_detect|
 		is 1.
 		
@@ -274,6 +276,7 @@ CHANGELOG					*vinarise-changelog*
 
 2012-05-19
 - Added <Plug>(vinarise_reload) mapping.
+- Fixed g:vinarise_detect_large_file_size problem.
 
 2012-05-17
 - Fixed auto detection error.
