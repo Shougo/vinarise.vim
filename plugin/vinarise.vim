@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: vinarise.vim
 " AUTHOR:  Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 19 May 2012.
+" Last Modified: 27 May 2012.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -30,6 +30,9 @@ elseif v:version < 702
   echoerr 'vinarise does not work this version of Vim (' . v:version . ').'
   finish
 endif
+
+let s:save_cpo = &cpo
+set cpo&vim
 
 " Global options definition."{{{
 let g:vinarise_enable_auto_detect =
@@ -105,6 +108,9 @@ function! s:browse_check(path)"{{{
     call s:call_vinarise({'overwrite' : 1}, path)
   endif
 endfunction"}}}
+
+let &cpo = s:save_cpo
+unlet s:save_cpo
 
 let g:loaded_vinarise = 1
 

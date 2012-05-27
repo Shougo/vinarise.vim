@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: vinarise.vim
 " AUTHOR:  Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 16 May 2012.
+" Last Modified: 27 May 2012.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -31,6 +31,9 @@ if !has('python')
   finish
 endif
 "}}}
+
+let s:save_cpo = &cpo
+set cpo&vim
 
 " Constants"{{{
 let s:FALSE = 0
@@ -556,5 +559,8 @@ function! s:initialize_context(context)"{{{
 
   return context
 endfunction"}}}
+
+let &cpo = s:save_cpo
+unlet s:save_cpo
 
 " vim: foldmethod=marker
