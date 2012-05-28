@@ -106,8 +106,6 @@ class VinariseBuffer:
         bytes = [int(binary[i*2 : i*2+2], 16) for i in range(len(binary) / 2)]
         while addr < self.fsize:
             if self.get_byte(addr) == bytes[0] and bytes == self.get_bytes(addr, len(bytes)):
-                print bytes == self.get_bytes(addr, len(bytes))
-                print self.get_bytes(addr, len(bytes))
                 return addr
             addr += 1
         return -1

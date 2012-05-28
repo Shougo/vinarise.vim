@@ -274,6 +274,9 @@ EXAMPLES					*vinarise-examples*
 ==============================================================================
 CHANGELOG					*vinarise-changelog*
 
+2012-05-28
+- Deleted debug message.
+
 2012-05-27
 - Fixed for cpo.
 
