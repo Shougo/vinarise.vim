@@ -274,6 +274,9 @@ EXAMPLES					*vinarise-examples*
 ==============================================================================
 CHANGELOG					*vinarise-changelog*
 
+2012-05-30
+- Fixed filename completion.
+
 2012-05-28
 - Deleted debug message.
 
