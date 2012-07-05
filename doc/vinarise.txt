@@ -270,7 +270,7 @@ EXAMPLES					*vinarise-examples*
 	
 	
 	
->
+<
 ==============================================================================
 CHANGELOG					*vinarise-changelog*
 
