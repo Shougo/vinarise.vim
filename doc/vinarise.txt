@@ -267,9 +267,7 @@ g<C-l>			<Plug>(vinarise_reload)
 ==============================================================================
 EXAMPLES					*vinarise-examples*
 >
-	
-	
-	
+	let g:vinarise_enable_auto_detect = 1
 <
 ==============================================================================
 CHANGELOG					*vinarise-changelog*
