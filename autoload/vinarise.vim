@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: vinarise.vim
 " AUTHOR:  Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 30 May 2012.
+" Last Modified: 31 May 2012.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -66,14 +66,21 @@ let s:vinarise_plugins = {}
 function! vinarise#complete(arglead, cmdline, cursorpos)"{{{
   let _ = []
 
+  let args = split(join(split(a:cmdline)[1:]), '\\\@<!\s\+')
+  if empty(args)
+    let arglead = ''
+  else
+    let arglead = substitute(args[-1], '\\\(.\)', '\1', 'g')
+  endif
+
   " Filename completion.
   let _ += map(split(vinarise#util#substitute_path_separator(
-        \   glob(a:arglead . '*')), '\n'),
+        \   glob(arglead . '*')), '\n'),
         \   "isdirectory(v:val) ? v:val.'/' : v:val")
   let home_pattern = '^'.
         \ vinarise#util#substitute_path_separator(
         \  expand('~')).'/'
-  call map(_, "escape(substitute(v:val, home_pattern, '\\~/', ''), ' \\')")
+  call map(_, "substitute(v:val, home_pattern, '\\~/', '')")
 
   " Option names completion.
   let _ +=  copy(s:vinarise_options)
@@ -81,11 +88,17 @@ function! vinarise#complete(arglead, cmdline, cursorpos)"{{{
   if a:arglead =~ '^-encoding='
     " Encodings completion.
     let _ += map(vinarise#complete_encodings(
-          \ matchstr(a:arglead, '^-encoding=\zs.*'), a:cmdline, a:cursorpos),
+          \ matchstr(arglead, '^-encoding=\zs.*'), a:cmdline, a:cursorpos),
           \ "'-encoding='.v:val")
   endif
 
-  return sort(filter(_, 'stridx(v:val, a:arglead) == 0'))
+  call sort(filter(_, 'stridx(v:val, arglead) == 0'))
+  call map(_, "escape(v:val, ' \\')")
+  if !empty(args) && args[-1] !=# a:arglead
+    call map(_, "v:val[len(args[-1])-len(a:arglead) :]")
+  endif
+
+  return _
 endfunction"}}}
 function! vinarise#complete_encodings(arglead, cmdline, cursorpos)"{{{
   return sort(filter(vinarise#multibyte#get_supported_encoding_list(),
