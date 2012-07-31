@@ -272,6 +272,9 @@ EXAMPLES					*vinarise-examples*
 ==============================================================================
 CHANGELOG					*vinarise-changelog*
 
+2012-07-31
+- Updated vital.
+
 2012-07-05
 - Reduced vital.
 - Improved check cmdwin.
