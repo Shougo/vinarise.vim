@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: bitmapview.vim
 " AUTHOR:  Shougo Matsushita <Shougo.Matsu at gmail.com>
-" Last Modified: 02 May 2012.
+" Last Modified: 31 Jul 2012.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -31,6 +31,7 @@ function! vinarise#plugins#bitmapview#define()
   return s:plugin
 endfunction
 
+" Variables  "{{{
 let s:save_gui = []
 
 let s:font_pattern =
@@ -39,6 +40,12 @@ let s:font_pattern =
       \ has('gui_gtk') ?       '\s\+\zs\d\+$':
       \ has('X11') ?           '\v%([^-]*-){6}\zs\d+\ze%(-[^-]*){7}':
       \                        '*Unknown system*'
+
+let s:V = vital#of('vinarise')
+let s:BM = s:V.import('Vim.Buffer.Manager')
+let s:manager = s:BM.new()  " creates new manager
+call s:manager.config('opener', 'silent edit')
+"}}}
 
 let s:plugin = {
       \ 'name' : 'bitmapview',
@@ -56,7 +63,7 @@ function! s:bitmapview_open()"{{{
 
   let prefix = vinarise#util#is_windows() ?
         \ '[bitmapview] - ' : '*bitmapview* - '
-  edit `=prefix . vinarise.filename`
+  call s:manager.open(prefix . vinarise.filename)
   match
 
   setlocal nolist

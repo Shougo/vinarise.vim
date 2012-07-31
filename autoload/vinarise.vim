@@ -49,13 +49,13 @@ let s:loaded_vinarise = 0
 let s:plugin_path = escape(expand('<sfile>:p:h'), '\')
 
 let g:vinarise_var_prefix = 'vinarise_'
-
+"}}}
+" Variables  "{{{
 let s:V = vital#of('vinarise')
 let s:BM = s:V.import('Vim.Buffer.Manager')
 let s:manager = s:BM.new()  " creates new manager
 call s:manager.config('opener', 'silent edit')
-"}}}
-" Variables  "{{{
+
 let s:vinarise_dicts = []
 
 let s:vinarise_options = [
