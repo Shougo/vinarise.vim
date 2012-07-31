@@ -116,13 +116,6 @@ function! vinarise#print_error(string)"{{{
   echohl Error | echo a:string | echohl None
 endfunction"}}}
 function! vinarise#open(filename, context)"{{{
-  if vinarise#util#is_cmdwin()
-    call vinarise#print_error(
-          \ '[vinarise] Command line buffer is detected!')
-    call vinarise#print_error(
-          \ '[vinarise] Please close command line buffer.')
-    return
-  endif
   if empty(s:vinarise_plugins)
     call s:load_plugins()
   endif
@@ -186,8 +179,13 @@ function! vinarise#open(filename, context)"{{{
   endif
 
   if !context.overwrite
-    call s:manager.open(
+    let ret = s:manager.open(
           \ s:vinarise_BUFFER_NAME . ' - ' . filename)
+    if !ret.loaded
+      call vinarise#print_error(
+            \ '[vinarise] Failed to open Buffer.')
+      return
+    endif
   endif
 
   call s:initialize_vinarise_buffer(context, filename, filesize)

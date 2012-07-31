@@ -63,7 +63,12 @@ function! s:bitmapview_open()"{{{
 
   let prefix = vinarise#util#is_windows() ?
         \ '[bitmapview] - ' : '*bitmapview* - '
-  call s:manager.open(prefix . vinarise.filename)
+  let ret = s:manager.open(prefix . vinarise.filename)
+  if !ret.loaded
+    call vinarise#print_error(
+          \ '[vinarise] Failed to open Buffer.')
+    return
+  endif
   match
 
   setlocal nolist
