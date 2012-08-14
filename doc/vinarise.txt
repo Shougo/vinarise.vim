@@ -1,6 +1,6 @@
 *vinarise.txt*	Ultimate hex editing system with Vim.
 
-Version: 1.0
+Version: 1.1
 Author : Shougo <Shougo.Matsu@gmail.com>
 License: MIT license  {{{
     Permission is hereby granted, free of charge, to any person obtaining
@@ -271,6 +271,9 @@ EXAMPLES					*vinarise-examples*
 <
 ==============================================================================
 CHANGELOG					*vinarise-changelog*
+
+2012-08-14
+- Ver.1.1 development is started.
 
 ------------------------------------------------------------------------------
 ChangeLog vinarise 1.0:
