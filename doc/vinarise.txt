@@ -31,6 +31,7 @@ Interface		|vinarise-interface|
   Variables		  |vinarise-variables|
   Plugins		  |vinarise-plugins|
 Examples		|vinarise-examples|
+Unite sources		|vinarise-unite-sources|
 Changelog		|vinarise-changelog|
 
 ==============================================================================
@@ -270,6 +271,21 @@ EXAMPLES					*vinarise-examples*
 	let g:vinarise_enable_auto_detect = 1
 <
 ==============================================================================
+UNITE SOURCES					*vinarise-unite-sources*
+
+Here let me explain about a source for |unite| provided in vinarise.
+
+						*vinarise-unite-source-vinarise-analysis*
+vinarise/analysis
+		Candidates of vinarise structure analysis.
+
+Actions of source original.
+
+vinarise/analysis				*vinarise-unite-action-vinarise-analysis*
+	jump		Jump to the address
+	edit		Edit item
+
+==============================================================================
 CHANGELOG					*vinarise-changelog*
 
 2012-08-15
@@ -277,6 +293,7 @@ CHANGELOG					*vinarise-changelog*
 - Added vinarise/analysis source.
 - Implemented parser.
 - Improved candidates.
+- Fixed bitmap parser.
 
 2012-08-14
 - Ver.1.1 development is started.

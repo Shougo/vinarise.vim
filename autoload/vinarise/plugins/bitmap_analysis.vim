@@ -61,7 +61,7 @@ function! s:analyzer.parse(vinarise, context)"{{{
   let file_header = { 'name' : 'BITMAPFILEHEADER', 'value' : []}
 
   let value = {
-        \ 'name' : 'bfType', 'value' : 'BM',
+        \ 'name' : 'bfType', 'value' : '"BM"',
         \ 'size' : 2, 'type' : 'unsigned short', 'address' : offset,
         \ }
   call add(file_header.value, value)
@@ -101,30 +101,86 @@ function! s:analyzer.parse(vinarise, context)"{{{
 
   if bisize == 40
     " BITMAPINFOHEADER
-    call add(candidates, 'BITMAPINFOHEADER')
+    let info_header = { 'name' : 'BITMAPINFOHEADER', 'value' : []}
 
-    " call add(candidates, 'biSize = ' . bisize)
-    " let offset += 4
-    " call add(candidates, 'biWidth = ' . a:vinarise.get_int32_le(offset))
-    " let offset += 4
-    " call add(candidates, 'biHeight = ' . a:vinarise.get_int32_le(offset))
-    " let offset += 4
-    " call add(candidates, 'biPlains = ' . a:vinarise.get_int16_le(offset))
-    " let offset += 2
-    " call add(candidates, 'biBitCount = ' . a:vinarise.get_int16_le(offset))
-    " let offset += 2
-    " call add(candidates, 'biCompression = ' . a:vinarise.get_int32_le(offset))
-    " let offset += 4
-    " call add(candidates, 'biSizeImage = ' . a:vinarise.get_int32_le(offset))
-    " let offset += 4
-    " call add(candidates, 'biXPixPerMeter = ' . a:vinarise.get_int32_le(offset))
-    " let offset += 4
-    " call add(candidates, 'biYPixPerMeter = ' . a:vinarise.get_int32_le(offset))
-    " let offset += 4
-    " call add(candidates, 'biClrUsed = ' . a:vinarise.get_int32_le(offset))
-    " let offset += 4
-    " call add(candidates, 'biClrImportant = ' . a:vinarise.get_int32_le(offset))
-    " let offset += 4
+    let value = {
+          \ 'name' : 'biSize', 'value' : a:vinarise.get_int32_le(offset),
+          \ 'size' : 4, 'type' : 'unsigned long', 'address' : offset,
+          \ }
+    call add(info_header.value, value)
+    let offset += value.size
+
+    let value = {
+          \ 'name' : 'biWidth', 'value' : a:vinarise.get_int32_le(offset),
+          \ 'size' : 4, 'type' : 'long', 'address' : offset,
+          \ }
+    call add(info_header.value, value)
+    let offset += value.size
+
+    let value = {
+          \ 'name' : 'biHeight', 'value' : a:vinarise.get_int32_le(offset),
+          \ 'size' : 4, 'type' : 'long', 'address' : offset,
+          \ }
+    call add(info_header.value, value)
+    let offset += value.size
+
+    let value = {
+          \ 'name' : 'biPlains', 'value' : a:vinarise.get_int16_le(offset),
+          \ 'size' : 2, 'type' : 'unsigned short', 'address' : offset,
+          \ }
+    call add(info_header.value, value)
+    let offset += value.size
+
+    let value = {
+          \ 'name' : 'biBitCount', 'value' : a:vinarise.get_int16_le(offset),
+          \ 'size' : 2, 'type' : 'unsigned short', 'address' : offset,
+          \ }
+    call add(info_header.value, value)
+    let offset += value.size
+
+    let value = {
+          \ 'name' : 'biCompression', 'value' : a:vinarise.get_int32_le(offset),
+          \ 'size' : 4, 'type' : 'unsigned long', 'address' : offset,
+          \ }
+    call add(info_header.value, value)
+    let offset += value.size
+
+    let value = {
+          \ 'name' : 'biSizeImage', 'value' : a:vinarise.get_int32_le(offset),
+          \ 'size' : 4, 'type' : 'unsigned long', 'address' : offset,
+          \ }
+    call add(info_header.value, value)
+    let offset += value.size
+
+    let value = {
+          \ 'name' : 'biXPixPerMeter', 'value' : a:vinarise.get_int32_le(offset),
+          \ 'size' : 4, 'type' : 'long', 'address' : offset,
+          \ }
+    call add(info_header.value, value)
+    let offset += value.size
+
+    let value = {
+          \ 'name' : 'biYPixPerMeter', 'value' : a:vinarise.get_int32_le(offset),
+          \ 'size' : 4, 'type' : 'long', 'address' : offset,
+          \ }
+    call add(info_header.value, value)
+    let offset += value.size
+
+    let value = {
+          \ 'name' : 'biClrUsed', 'value' : a:vinarise.get_int32_le(offset),
+          \ 'size' : 4, 'type' : 'unsigned long', 'address' : offset,
+          \ }
+    call add(info_header.value, value)
+    let offset += value.size
+
+    let value = {
+          \ 'name' : 'biClrImportant', 'value' : a:vinarise.get_int32_le(offset),
+          \ 'size' : 4, 'type' : 'unsigned long', 'address' : offset,
+          \ }
+    call add(info_header.value, value)
+    let offset += value.size
+
+    call add(candidates, info_header)
   endif
 
   return candidates
