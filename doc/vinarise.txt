@@ -274,6 +274,7 @@ CHANGELOG					*vinarise-changelog*
 
 2012-08-15
 - Improved error check.
+- Added vinarise/analysis source.
 
 2012-08-14
 - Ver.1.1 development is started.
