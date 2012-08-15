@@ -88,16 +88,44 @@ function! s:source.gather_candidates(args, context) "{{{
 
   let candidates = s:initialize_candidates(s:call_analyzer(
         \ a:context.source__analyzer_name, 'parse',
-        \ a:context.source__vinarise, a:context))
-  echomsg string(candidates)
+        \ a:context.source__vinarise, a:context), 0)
 
   return candidates
 endfunction "}}}
 
-function! s:initialize_candidates(list)"{{{
-  return map(copy(a:list), "{
-        \'word' : v:val,
-        \}")
+function! s:initialize_candidates(list, level)"{{{
+  let candidates = []
+  for item in a:list
+    let dict = (type(item) == type('')) ?
+          \ {'name' : item} : item
+
+    if has_key(dict, 'type')
+      let dict.name = dict.type.' '.dict.name
+    endif
+    let dict.name = repeat(' ', a:level*8) . dict.name
+
+    if type(get(dict, 'value', '')) == type([])
+      call add(candidates, {
+          \ 'word' : dict.name,
+          \})
+      let candidates += s:initialize_candidates(
+            \ dict.value, a:level + 1)
+    else
+      let abbr = has_key(dict, 'value') ?
+            \        dict.name.' : '.dict.value : dict.name
+
+      let candidate = {
+            \ 'word' : dict.name,
+            \ 'abbr' : abbr,
+            \}
+
+      call add(candidates, candidate)
+    endif
+
+    unlet item
+  endfor
+
+  return candidates
 endfunction"}}}
 
 function! s:call_analyzer(analyzer_name, function, vinarise, context)"{{{
