@@ -294,6 +294,7 @@ CHANGELOG					*vinarise-changelog*
 - Implemented parser.
 - Improved candidates.
 - Fixed bitmap parser.
+- Improved action.
 
 2012-08-14
 - Ver.1.1 development is started.

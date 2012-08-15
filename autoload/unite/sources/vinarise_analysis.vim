@@ -38,6 +38,8 @@ let s:analyzers = {}
 let s:source = {
       \ 'name': 'vinarise/analysis',
       \ 'hooks' : {},
+      \ 'action_table' : {},
+      \ 'default_action' : 'jump',
       \ }
 
 function! s:source.hooks.on_init(args, context) "{{{
@@ -93,6 +95,49 @@ function! s:source.gather_candidates(args, context) "{{{
   return candidates
 endfunction "}}}
 
+" Actions"{{{
+let s:source.action_table.jump = {
+      \ 'description' : 'jump to the structure item',
+      \ }
+function! s:source.action_table.jump.func(candidate)"{{{
+  if !has_key(a:candidate, 'action__address')
+        \ || &filetype !=# 'vinarise'
+    return
+  endif
+
+  call vinarise#mappings#move_to_address(a:candidate.action__address)
+endfunction"}}}
+
+let s:source.action_table.edit = {
+      \ 'description' : 'edit the structure item',
+      \ 'is_invalidate_cache' : 1,
+      \ }
+function! s:source.action_table.edit.func(candidate)"{{{
+  if !has_key(a:candidate, 'action__address')
+        \ || !has_key(a:candidate, 'action__size')
+        \ || !has_key(a:candidate, 'action__value')
+        \ || !has_key(a:candidate, 'action__type')
+        \ || &filetype !=# 'vinarise'
+    call unite#print_error('Cannot edit this candidate.')
+    return
+  endif
+
+  let old_value = a:candidate.action__value
+  let value = input('Please input new value: '.
+        \ printf('%x', old_value) . ' -> ')
+  redraw
+  if value == ''
+    return
+  elseif value !~ '^\x\x\?$'
+    echo 'Invalid value.'
+    return
+  endif
+"   let value = str2nr(value, 16)
+" 
+"   call b:vinarise.set_byte(address, value)
+endfunction"}}}
+"}}}
+
 function! s:initialize_candidates(list, level)"{{{
   let candidates = []
   for item in a:list
@@ -104,26 +149,39 @@ function! s:initialize_candidates(list, level)"{{{
     endif
     let dict.name = repeat(' ', a:level*8) . dict.name
 
-    if type(get(dict, 'value', '')) == type([])
-      call add(candidates, {
+    let candidate = {
           \ 'word' : dict.name,
-          \})
+          \}
+    if has_key(dict, 'address')
+      let candidate.action__address = dict.address
+    endif
+    if has_key(dict, 'size')
+      let candidate.action__size = dict.size
+    endif
+    if has_key(dict, 'raw_value')
+      let candidate.action__value = dict.raw_value
+    endif
+    if has_key(dict, 'raw_type')
+      let candidate.action__type = dict.raw_type
+    endif
+
+    if type(get(dict, 'value', '')) == type([])
+      call add(candidates, candidate)
+
       let candidates += s:initialize_candidates(
             \ dict.value, a:level + 1)
     else
       let abbr = has_key(dict, 'value') ?
             \        dict.name.' : '.dict.value : dict.name
-
-      let candidate = {
-            \ 'word' : dict.name,
-            \ 'abbr' : abbr,
-            \}
+      let candidate.abbr = abbr
 
       call add(candidates, candidate)
     endif
 
     unlet item
   endfor
+
+  echomsg string(candidates)
 
   return candidates
 endfunction"}}}
