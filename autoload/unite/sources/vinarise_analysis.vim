@@ -86,21 +86,28 @@ function! s:source.gather_candidates(args, context) "{{{
   call unite#print_message('[vinarise/analysis] analyzer : '
         \ . a:context.source__analyzer_name)
 
-  let candidates = s:call_analyzer(
+  let candidates = s:initialize_candidates(s:call_analyzer(
         \ a:context.source__analyzer_name, 'parse',
-        \ a:context.source__vinarise, a:context)
+        \ a:context.source__vinarise, a:context))
+  echomsg string(candidates)
 
-  return []
+  return candidates
 endfunction "}}}
 
-function! s:call_analyzer(analyzer_name, function, vinarise, context)
+function! s:initialize_candidates(list)"{{{
+  return map(copy(a:list), "{
+        \'word' : v:val,
+        \}")
+endfunction"}}}
+
+function! s:call_analyzer(analyzer_name, function, vinarise, context)"{{{
   let analyzer = s:analyzers[a:analyzer_name]
   if has_key(analyzer, a:function)
     return call(analyzer[a:function], [a:vinarise, a:context], analyzer)
   endif
 
   return 0
-endfunction
+endfunction"}}}
 
 function! unite#sources#vinarise_analysis#add_analyzers(analyzer)"{{{
   let s:analyzers[a:analyzer.name] = a:analyzer

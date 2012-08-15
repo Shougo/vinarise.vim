@@ -55,6 +55,22 @@ function! s:analyzer.detect(vinarise, context)"{{{
 endfunction"}}}
 
 function! s:analyzer.parse(vinarise, context)"{{{
+  let candidates = []
+
+  call add(candidates, 'BITMAPFILEHEADER')
+
+  let offset = 0
+  call add(candidates, 'bfType = ' . string('BM'))
+  let offset += 2
+  call add(candidates, 'bfSize = ' . a:vinarise.get_int32_le(offset))
+  let offset += 4
+  call add(candidates, 'bfReserved1 = ' . a:vinarise.get_int16_le(offset))
+  let offset += 2
+  call add(candidates, 'bfReserved2 = ' . a:vinarise.get_int16_le(offset))
+  let offset += 2
+  call add(candidates, 'bfOffBits = ' . a:vinarise.get_int32_le(offset))
+
+  return candidates
 endfunction"}}}
 
 let &cpo = s:save_cpo
