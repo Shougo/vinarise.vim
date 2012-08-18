@@ -288,6 +288,9 @@ vinarise/analysis				*vinarise-unite-action-vinarise-analysis*
 ==============================================================================
 CHANGELOG					*vinarise-changelog*
 
+2012-08-18
+- Use vinarise#util#iconv().
+
 2012-08-15
 - Improved error check.
 - Added vinarise/analysis source.

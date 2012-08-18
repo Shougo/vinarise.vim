@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: vinarise.vim
 " AUTHOR:  Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 15 Aug 2012.
+" Last Modified: 18 Aug 2012.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -164,7 +164,7 @@ function! vinarise#open(filename, context)"{{{
 
   " try
     execute 'python' g:vinarise_var_prefix.
-          \ ".open(vim.eval('iconv(filename, &encoding, \"char\")'),".
+          \ ".open(vim.eval('vinarise#util#iconv(filename, &encoding, \"char\")'),".
           \ "vim.eval('vinarise#util#is_windows()'))"
   " catch
     " call vinarise#print_error(v:exception)
@@ -377,7 +377,7 @@ function! s:initialize_vinarise_buffer(context, filename, filesize)"{{{
   " Wrapper functions.
   function! b:vinarise.open(filename)"{{{
     execute 'python' self.python.
-          \ ".open(vim.eval('iconv(filename, &encoding, \"char\")'),".
+          \ ".open(vim.eval('vinarise#util#iconv(filename, &encoding, \"char\")'),".
           \ "vim.eval('vinarise#util#is_windows()'))"
   endfunction"}}}
   function! b:vinarise.close()"{{{
