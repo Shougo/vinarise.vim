@@ -290,6 +290,7 @@ CHANGELOG					*vinarise-changelog*
 
 2012-08-26
 - Improved analysis bitmap.
+- Added zip analyzer(imcomplete).
 
 2012-08-18
 - Use vinarise#util#iconv().

@@ -115,7 +115,7 @@ function! s:analyzer.parse(vinarise, context)"{{{
   return candidates
 endfunction"}}}
 
-function! s:analyze_info_header(vinarise, candidates, offset)
+function! s:analyze_info_header(vinarise, candidates, offset)"{{{
   " BITMAPINFOHEADER
   let offset = a:offset
   let info_header = { 'name' : 'BITMAPINFOHEADER', 'value' : []}
@@ -222,7 +222,7 @@ function! s:analyze_info_header(vinarise, candidates, offset)
   call add(a:candidates, info_header)
 
   return [a:candidates, offset]
-endfunction
+endfunction"}}}
 
 let &cpo = s:save_cpo
 unlet s:save_cpo

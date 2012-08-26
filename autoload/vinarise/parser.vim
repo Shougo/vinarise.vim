@@ -1,7 +1,7 @@
 "=============================================================================
-" FILE: vinarise/dump.vim
-" AUTHOR:  Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 13 Aug 2010
+" FILE: parser.vim
+" AUTHOR: Shougo Matsushita <Shougo.Matsu@gmail.com>
+" Last Modified: 26 Aug 2012.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -24,59 +24,43 @@
 " }}}
 "=============================================================================
 
-" Constants"{{{
-let s:FALSE = 0
-let s:TRUE = !s:FALSE
+let s:save_cpo = &cpo
+set cpo&vim
 
-if has('win16') || has('win32') || has('win64')  " on Microsoft Windows
-  let s:dump_BUFFER_NAME = '[vinarise-dump-objdump]'
-else
-  let s:dump_BUFFER_NAME = '*vinarise-dump-objdump*'
-endif
-"}}}
-" Variables  "{{{
-if !exists('g:vinarise_objdump_command')
-  let g:vinarise_objdump_command = 'objdump'
-endif
-"}}}
-
-function! vinarise#dump#open(filename, is_overwrite)"{{{
-  if !executable(g:vinarise_objdump_command)
-    echoerr g:vinarise_objdump_command . ' is not installed.'
-    return
+function! vinarise#parser#parse_one_line(line, vinarise, offset, ...)
+  let is_little = get(a:000, 0, 1)
+  let matchlist = matchlist(a:line, '^\s*\(\S\+\)\s\+\(\S\+\)\s*;\s*$')
+  if len(matchlist) < 3
+    throw printf('[vinarise] Parse error in "%s"', a:line)
   endif
 
-  if a:filename == ''
-    let l:filename = bufname('%')
+  let [all, type, name; _] = matchlist
+
+  let offset = a:offset
+  let value = { 'name' : name, 'address' : a:offset, 'type' : type }
+  if type ==# 'uint8_t'
+    let value.value = a:vinarise.get_int8(offset)
+    let value.size = 1
+    let value.raw_type = 'number'
+  elseif type ==# 'uint16_t'
+    let value.value = a:vinarise.get_int16(offset, is_little)
+    let value.size = 2
+    let value.raw_type = 'number'
+  elseif type ==# 'uint32_t'
+    let value.value = a:vinarise.get_int32(offset, is_little)
+    let value.size = 4
+    let value.raw_type = 'number'
   else
-    let l:filename = a:filename
+    throw printf('[vinarise] Not supported type : "%s" in "%s"',
+          \ type, a:line)
   endif
+  let value.raw_value = value.value
+  let offset += value.size
 
-  if !a:is_overwrite
-    edit `=s:dump_BUFFER_NAME . ' - ' . l:filename`
-  endif
+  return [value, offset]
+endfunction
 
-  silent % delete _
-  call s:initialize_dump_buffer()
-
-  setlocal modifiable
-  execute '%!'.g:vinarise_objdump_command.' -DCslx "' . l:filename . '"'
-  setlocal nomodifiable
-  setlocal nomodified
-endfunction"}}}
-
-" Misc.
-function! s:initialize_dump_buffer()"{{{
-  " Basic settings.
-  setlocal buftype=nofile
-  setlocal noswapfile
-  setlocal nomodifiable
-  setlocal nofoldenable
-  setlocal foldcolumn=0
-  setlocal tabstop=8
-
-  " User's initialization.
-  setfiletype vinarise-dump-objdump
-endfunction"}}}
+let &cpo = s:save_cpo
+unlet s:save_cpo
 
 " vim: foldmethod=marker
