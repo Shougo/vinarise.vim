@@ -60,7 +60,6 @@ function! s:analyzer.parse(vinarise, context)"{{{
 
   while 1
     let signature = a:vinarise.get_bytes(offset, 4)
-    echomsg string(signature)
 
     if signature == [0x50, 0x4b, 0x03, 0x04]
       " ZIP_HEADER
@@ -296,11 +295,13 @@ function! s:analyze_zip_central_header(vinarise, candidates, offset)"{{{
         \ 'uint16_t file_name_length;',
         \ a:vinarise, offset)
   call add(header.value, value)
+  let filename_offset = value.raw_value
 
   let [value, offset] = vinarise#parser#parse_one_line(
         \ 'uint16_t extra_field_length;',
         \ a:vinarise, offset)
   call add(header.value, value)
+  let extra_size = value.raw_value
 
   let [value, offset] = vinarise#parser#parse_one_line(
         \ 'uint16_t file_comment_length;',
@@ -318,17 +319,35 @@ function! s:analyze_zip_central_header(vinarise, candidates, offset)"{{{
   call add(header.value, value)
 
   let [value, offset] = vinarise#parser#parse_one_line(
-        \ 'uint16_t external_file_attributes;',
+        \ 'uint32_t external_file_attributes;',
         \ a:vinarise, offset)
   call add(header.value, value)
 
   let [value, offset] = vinarise#parser#parse_one_line(
-        \ 'uint16_t position;',
+        \ 'uint32_t position;',
         \ a:vinarise, offset)
   call add(header.value, value)
 
-  call add(a:candidates, header)
+  " filename
+  call add(header.value, {
+        \ 'name' : 'filename', 'value' :
+        \      a:vinarise.get_chars(offset, filename_offset,
+        \           &encoding, &encoding),
+        \ 'size' : filename_offset,
+        \ 'type' : 'string', 'address' : offset,
+        \ })
+  let offset += filename_offset
 
+  " extra field.
+  call add(header.value, {
+        \ 'name' : 'extra field', 'value' : '?',
+        \ 'type' : 'string', 'address' : offset,
+        \ })
+  let offset += extra_size
+
+  call add(header.value, value)
+
+  call add(a:candidates, header)
   return [a:candidates, offset]
 endfunction"}}}
 
@@ -380,7 +399,7 @@ function! s:analyze_zip_end_header(vinarise, candidates, offset)"{{{
   call add(header.value, value)
 
   let [value, offset] = vinarise#parser#parse_one_line(
-        \ 'uint32_t file_comment_length;',
+        \ 'uint16_t file_comment_length;',
         \ a:vinarise, offset)
   call add(header.value, value)
 
