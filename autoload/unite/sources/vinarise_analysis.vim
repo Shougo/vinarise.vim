@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: vinarise_analysis.vim
 " AUTHOR:  Shougo Matsushita <Shougo.Matsu at gmail.com>
-" Last Modified: 15 Aug 2012.
+" Last Modified: 26 Aug 2012.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -180,8 +180,6 @@ function! s:initialize_candidates(list, level)"{{{
 
     unlet item
   endfor
-
-  echomsg string(candidates)
 
   return candidates
 endfunction"}}}

@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: bitmap_analysis.vim
 " AUTHOR:  Shougo Matsushita <Shougo.Matsu at gmail.com>
-" Last Modified: 15 Aug 2012.
+" Last Modified: 26 Aug 2012.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -108,113 +108,121 @@ function! s:analyzer.parse(vinarise, context)"{{{
   let bisize = a:vinarise.get_int32_le(offset)
 
   if bisize == 40
-    " BITMAPINFOHEADER
-    let info_header = { 'name' : 'BITMAPINFOHEADER', 'value' : []}
-
-    let value = {
-          \ 'name' : 'biSize', 'value' : a:vinarise.get_int32_le(offset),
-          \ 'size' : 4, 'type' : 'unsigned long', 'address' : offset,
-          \ 'raw_type' : 'number',
-          \ }
-    let value.raw_value = value.value
-    call add(info_header.value, value)
-    let offset += value.size
-
-    let value = {
-          \ 'name' : 'biWidth', 'value' : a:vinarise.get_int32_le(offset),
-          \ 'size' : 4, 'type' : 'long', 'address' : offset,
-          \ 'raw_type' : 'number',
-          \ }
-    let value.raw_value = value.value
-    call add(info_header.value, value)
-    let offset += value.size
-
-    let value = {
-          \ 'name' : 'biHeight', 'value' : a:vinarise.get_int32_le(offset),
-          \ 'size' : 4, 'type' : 'long', 'address' : offset,
-          \ 'raw_type' : 'number',
-          \ }
-    let value.raw_value = value.value
-    call add(info_header.value, value)
-    let offset += value.size
-
-    let value = {
-          \ 'name' : 'biPlains', 'value' : a:vinarise.get_int16_le(offset),
-          \ 'size' : 2, 'type' : 'unsigned short', 'address' : offset,
-          \ 'raw_type' : 'number',
-          \ }
-    let value.raw_value = value.value
-    call add(info_header.value, value)
-    let offset += value.size
-
-    let value = {
-          \ 'name' : 'biBitCount', 'value' : a:vinarise.get_int16_le(offset),
-          \ 'size' : 2, 'type' : 'unsigned short', 'address' : offset,
-          \ 'raw_type' : 'number',
-          \ }
-    let value.raw_value = value.value
-    call add(info_header.value, value)
-    let offset += value.size
-
-    let value = {
-          \ 'name' : 'biCompression', 'value' : a:vinarise.get_int32_le(offset),
-          \ 'size' : 4, 'type' : 'unsigned long', 'address' : offset,
-          \ 'raw_type' : 'number',
-          \ }
-    let value.raw_value = value.value
-    call add(info_header.value, value)
-    let offset += value.size
-
-    let value = {
-          \ 'name' : 'biSizeImage', 'value' : a:vinarise.get_int32_le(offset),
-          \ 'size' : 4, 'type' : 'unsigned long', 'address' : offset,
-          \ 'raw_type' : 'number',
-          \ }
-    let value.raw_value = value.value
-    call add(info_header.value, value)
-    let offset += value.size
-
-    let value = {
-          \ 'name' : 'biXPixPerMeter', 'value' : a:vinarise.get_int32_le(offset),
-          \ 'size' : 4, 'type' : 'long', 'address' : offset,
-          \ 'raw_type' : 'number',
-          \ }
-    let value.raw_value = value.value
-    call add(info_header.value, value)
-    let offset += value.size
-
-    let value = {
-          \ 'name' : 'biYPixPerMeter', 'value' : a:vinarise.get_int32_le(offset),
-          \ 'size' : 4, 'type' : 'long', 'address' : offset,
-          \ 'raw_type' : 'number',
-          \ }
-    let value.raw_value = value.value
-    call add(info_header.value, value)
-    let offset += value.size
-
-    let value = {
-          \ 'name' : 'biClrUsed', 'value' : a:vinarise.get_int32_le(offset),
-          \ 'size' : 4, 'type' : 'unsigned long', 'address' : offset,
-          \ 'raw_type' : 'number',
-          \ }
-    let value.raw_value = value.value
-    call add(info_header.value, value)
-    let offset += value.size
-
-    let value = {
-          \ 'name' : 'biClrImportant', 'value' : a:vinarise.get_int32_le(offset),
-          \ 'size' : 4, 'type' : 'unsigned long', 'address' : offset,
-          \ 'raw_type' : 'number',
-          \ }
-    let value.raw_value = value.value
-    call add(info_header.value, value)
-    let offset += value.size
-
-    call add(candidates, info_header)
+    let [candidates, offset] = s:analyze_info_header(
+          \ a:vinarise, candidates, offset)
   endif
 
   return candidates
 endfunction"}}}
+
+function! s:analyze_info_header(vinarise, candidates, offset)
+  " BITMAPINFOHEADER
+  let offset = a:offset
+  let info_header = { 'name' : 'BITMAPINFOHEADER', 'value' : []}
+
+  let value = {
+        \ 'name' : 'biSize', 'value' : a:vinarise.get_int32_le(offset),
+        \ 'size' : 4, 'type' : 'unsigned long', 'address' : offset,
+        \ 'raw_type' : 'number',
+        \ }
+  let value.raw_value = value.value
+  call add(info_header.value, value)
+  let offset += value.size
+
+  let value = {
+        \ 'name' : 'biWidth', 'value' : a:vinarise.get_int32_le(offset),
+        \ 'size' : 4, 'type' : 'long', 'address' : offset,
+        \ 'raw_type' : 'number',
+        \ }
+  let value.raw_value = value.value
+  call add(info_header.value, value)
+  let offset += value.size
+
+  let value = {
+        \ 'name' : 'biHeight', 'value' : a:vinarise.get_int32_le(offset),
+        \ 'size' : 4, 'type' : 'long', 'address' : offset,
+        \ 'raw_type' : 'number',
+        \ }
+  let value.raw_value = value.value
+  call add(info_header.value, value)
+  let offset += value.size
+
+  let value = {
+        \ 'name' : 'biPlains', 'value' : a:vinarise.get_int16_le(offset),
+        \ 'size' : 2, 'type' : 'unsigned short', 'address' : offset,
+        \ 'raw_type' : 'number',
+        \ }
+  let value.raw_value = value.value
+  call add(info_header.value, value)
+  let offset += value.size
+
+  let value = {
+        \ 'name' : 'biBitCount', 'value' : a:vinarise.get_int16_le(offset),
+        \ 'size' : 2, 'type' : 'unsigned short', 'address' : offset,
+        \ 'raw_type' : 'number',
+        \ }
+  let value.raw_value = value.value
+  call add(info_header.value, value)
+  let offset += value.size
+
+  let value = {
+        \ 'name' : 'biCompression', 'value' : a:vinarise.get_int32_le(offset),
+        \ 'size' : 4, 'type' : 'unsigned long', 'address' : offset,
+        \ 'raw_type' : 'number',
+        \ }
+  let value.raw_value = value.value
+  call add(info_header.value, value)
+  let offset += value.size
+
+  let value = {
+        \ 'name' : 'biSizeImage', 'value' : a:vinarise.get_int32_le(offset),
+        \ 'size' : 4, 'type' : 'unsigned long', 'address' : offset,
+        \ 'raw_type' : 'number',
+        \ }
+  let value.raw_value = value.value
+  call add(info_header.value, value)
+  let offset += value.size
+
+  let value = {
+        \ 'name' : 'biXPixPerMeter', 'value' : a:vinarise.get_int32_le(offset),
+        \ 'size' : 4, 'type' : 'long', 'address' : offset,
+        \ 'raw_type' : 'number',
+        \ }
+  let value.raw_value = value.value
+  call add(info_header.value, value)
+  let offset += value.size
+
+  let value = {
+        \ 'name' : 'biYPixPerMeter', 'value' : a:vinarise.get_int32_le(offset),
+        \ 'size' : 4, 'type' : 'long', 'address' : offset,
+        \ 'raw_type' : 'number',
+        \ }
+  let value.raw_value = value.value
+  call add(info_header.value, value)
+  let offset += value.size
+
+  let value = {
+        \ 'name' : 'biClrUsed', 'value' : a:vinarise.get_int32_le(offset),
+        \ 'size' : 4, 'type' : 'unsigned long', 'address' : offset,
+        \ 'raw_type' : 'number',
+        \ }
+  let value.raw_value = value.value
+  call add(info_header.value, value)
+  let offset += value.size
+
+  let value = {
+        \ 'name' : 'biClrImportant', 'value' : a:vinarise.get_int32_le(offset),
+        \ 'size' : 4, 'type' : 'unsigned long', 'address' : offset,
+        \ 'raw_type' : 'number',
+        \ }
+  let value.raw_value = value.value
+  call add(info_header.value, value)
+  let offset += value.size
+
+  call add(a:candidates, info_header)
+
+  return [a:candidates, offset]
+endfunction
 
 let &cpo = s:save_cpo
 unlet s:save_cpo
