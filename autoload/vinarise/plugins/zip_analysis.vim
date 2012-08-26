@@ -138,13 +138,13 @@ function! s:analyze_zip_header(vinarise, candidates, offset)"{{{
         \ 'uint32_t compressed_size;',
         \ a:vinarise, offset)
   call add(header.value, value)
-  let data_offset = value.raw_value
+  let filesize = value.raw_value
 
   let [value, offset] = vinarise#parser#parse_one_line(
         \ 'uint32_t uncompressed_size;',
         \ a:vinarise, offset)
   call add(header.value, value)
-  let data_offset += value.raw_value
+  let filesize += value.raw_value
 
   let [value, offset] = vinarise#parser#parse_one_line(
         \ 'uint16_t file_name_length;',
@@ -156,13 +156,37 @@ function! s:analyze_zip_header(vinarise, candidates, offset)"{{{
         \ 'uint16_t extra_field_length;',
         \ a:vinarise, offset)
   call add(header.value, value)
-  let data_offset += value.raw_value
+  let data_offset = filesize + value.raw_value
 
   " filename
+  call add(header.value, {
+        \ 'name' : 'filename', 'value' :
+        \      a:vinarise.get_chars(offset, filename_offset,
+        \           &encoding, &encoding),
+        \ 'size' : filename_offset,
+        \ 'type' : 'string', 'address' : offset,
+        \ })
   let offset += filename_offset
 
   " data
+  call add(header.value, {
+        \ 'name' : 'data', 'value' : '?',
+        \ 'type' : 'string', 'address' : offset,
+        \ })
+
   let offset += data_offset
+
+  " Skip until PK78.
+  while filesize == 0
+    let signature = a:vinarise.get_bytes(offset, 4)
+
+    if len(signature) != 4 || signature ==
+        \ [0x50, 0x4b, 0x07, 0x08]
+      break
+    endif
+
+    let offset += 1
+  endwhile
 
   call add(a:candidates, header)
 
