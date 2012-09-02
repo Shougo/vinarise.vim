@@ -1,5 +1,5 @@
 "=============================================================================
-" FILE: vinarise/dump.vim
+" FILE: dump.vim
 " AUTHOR:  Shougo Matsushita <Shougo.Matsu@gmail.com>
 " Last Modified: 13 Aug 2010
 " License: MIT license  {{{
@@ -25,10 +25,7 @@
 "=============================================================================
 
 " Constants"{{{
-let s:FALSE = 0
-let s:TRUE = !s:FALSE
-
-if has('win16') || has('win32') || has('win64')  " on Microsoft Windows
+if vinarise#util#is_windows()
   let s:dump_BUFFER_NAME = '[vinarise-dump-objdump]'
 else
   let s:dump_BUFFER_NAME = '*vinarise-dump-objdump*'
@@ -38,29 +35,49 @@ endif
 if !exists('g:vinarise_objdump_command')
   let g:vinarise_objdump_command = 'objdump'
 endif
+
+let s:V = vital#of('vinarise')
+let s:BM = s:V.import('Vim.Buffer.Manager')
+let s:manager = s:BM.new()  " creates new manager
+call s:manager.config('opener', 'silent edit')
 "}}}
 
-function! vinarise#dump#open(filename, is_overwrite)"{{{
+let s:save_cpo = &cpo
+set cpo&vim
+
+function! vinarise#plugins#dump#define()
+  return s:plugin
+endfunction
+
+let s:plugin = {
+      \ 'name' : 'dump',
+      \ 'description' : 'hex dump by objdump',
+      \}
+
+function! s:plugin.initialize(vinarise, context)"{{{
+  command! VinarisePluginDump call s:dump_open()
+endfunction"}}}
+
+function! s:dump_open()"{{{
   if !executable(g:vinarise_objdump_command)
     echoerr g:vinarise_objdump_command . ' is not installed.'
     return
   endif
 
-  if a:filename == ''
-    let l:filename = bufname('%')
-  else
-    let l:filename = a:filename
+  let vinarise = vinarise#get_current_vinarise()
+
+  let ret = s:manager.open(s:dump_BUFFER_NAME . vinarise.filename)
+  if !ret.loaded
+    call vinarise#print_error(
+          \ '[vinarise] Failed to open Buffer.')
+    return
   endif
 
-  if !a:is_overwrite
-    edit `=s:dump_BUFFER_NAME . ' - ' . l:filename`
-  endif
-
-  silent % delete _
   call s:initialize_dump_buffer()
 
   setlocal modifiable
-  execute '%!'.g:vinarise_objdump_command.' -DCslx "' . l:filename . '"'
+  execute '%!'.g:vinarise_objdump_command.' -DCslx "'
+        \ . vinarise.filename . '"'
   setlocal nomodifiable
   setlocal nomodified
 endfunction"}}}

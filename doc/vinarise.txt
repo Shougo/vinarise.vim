@@ -79,7 +79,7 @@ COMMANDS 					*vinarise-commands*
 
 The commands of plugins				*:vinarise-sources-commands*
 
-:VinariseDump {file}				*:VinariseDump*
+:VinarisePluginDump {file}			*:VinarisePluginDump*
 		View executable file with objdump.
 
 :VinarisePluginViewBitmapView			*:VinarisePluginBitmapView*
@@ -287,6 +287,9 @@ vinarise/analysis				*vinarise-unite-action-vinarise-analysis*
 
 ==============================================================================
 CHANGELOG					*vinarise-changelog*
+
+2012-09-02
+- Renamed :VinarisePluginDump.
 
 2012-08-26
 - Improved analysis bitmap.
