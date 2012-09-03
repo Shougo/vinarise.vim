@@ -288,6 +288,9 @@ vinarise/analysis				*vinarise-unite-action-vinarise-analysis*
 ==============================================================================
 CHANGELOG					*vinarise-changelog*
 
+2012-09-03
+- Improved documentation.
+
 2012-09-02
 - Renamed :VinarisePluginDump.
 
