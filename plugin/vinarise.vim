@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: vinarise.vim
 " AUTHOR:  Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 27 May 2012.
+" Last Modified: 03 Sep 2012.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -77,7 +77,7 @@ function! s:call_vinarise(default, args)"{{{
     endif
   endfor
 
-  call vinarise#open(join(args), context)
+  call vinarise#start(join(args), context)
 endfunction"}}}
 
 function! s:browse_check(path)"{{{

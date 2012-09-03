@@ -79,7 +79,7 @@ COMMANDS 					*vinarise-commands*
 
 The commands of plugins				*:vinarise-sources-commands*
 
-:VinarisePluginDump {file}			*:VinarisePluginDump*
+:VinarisePluginDump				*:VinarisePluginDump*
 		View executable file with objdump.
 
 :VinarisePluginViewBitmapView			*:VinarisePluginBitmapView*

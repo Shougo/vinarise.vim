@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: mappings.vim
 " AUTHOR: Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 19 May 2012.
+" Last Modified: 03 Sep 2012.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -535,7 +535,7 @@ function! s:reload()"{{{
   let context = deepcopy(vinarise.context)
   let filename = vinarise#get_current_vinarise().filename
 
-  call vinarise#open(filename, context)
+  call vinarise#start(filename, context)
 endfunction"}}}
 
 " vim: foldmethod=marker
