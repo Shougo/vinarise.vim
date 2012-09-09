@@ -22,8 +22,22 @@ class VinariseBuffer:
             self.mmap = mmap.mmap(self.file.fileno(), mmap_max,
                     access = mmap.ACCESS_COPY, offset = 0)
 
+    def open_bytes(self, length, is_windows):
+        # init vars
+        self.path = ''
+        self.is_windows = is_windows
+        self.fsize = int(length)
+
+        if int(is_windows):
+            self.mmap = mmap.mmap(-1, self.fsize,
+                    None, mmap.ACCESS_COPY, 0)
+        else:
+            self.mmap = mmap.mmap(-1, self.fsize,
+                    access = mmap.ACCESS_COPY, offset = 0)
+
     def close(self):
-        self.file.close()
+        if file in self:
+            self.file.close()
         self.mmap.close()
 
     def write(self, path):
@@ -80,10 +94,10 @@ class VinariseBuffer:
         self.mmap[int(addr)] = chr(int(value))
 
     def get_percentage(self, address):
-        return (int(address)*100) / (os.path.getsize(self.path) - 1)
+        return (int(address)*100) / (self.fsize - 1)
 
     def get_percentage_address(self, percent):
-        return ((os.path.getsize(self.path) - 1) * int(percent)) / 100
+        return ((self.fsize - 1) * int(percent)) / 100
 
     def find(self, address, str, from_enc, to_enc):
         pattern = unicode(str, from_enc, 'replace').encode(to_enc, 'replace')

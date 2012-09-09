@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: vinarise.vim
 " AUTHOR:  Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 03 Sep 2012.
+" Last Modified: 09 Sep 2012.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -120,34 +120,39 @@ function! vinarise#start(filename, context)"{{{
   endif
 
   let filename = vinarise#util#expand(a:filename)
-  if filename == ''
-    let filename = bufname('%')
-    if &l:buftype =~ 'nofile'
+  let context = s:initialize_context(a:context)
+
+  if empty(context.bytes)
+    if filename == ''
+      let filename = bufname('%')
+      if &l:buftype =~ 'nofile'
+        call vinarise#print_error(
+              \ '[vinarise] Nofile buffer is detected. This operation is invalid.')
+        return
+      elseif &l:modified
+        call vinarise#print_error(
+              \ '[vinarise] Modified buffer is detected! This operation is invalid.')
+        return
+      endif
+    endif
+
+    if !filereadable(filename)
       call vinarise#print_error(
-            \ '[vinarise] Nofile buffer is detected. This operation is invalid.')
-      return
-    elseif &l:modified
-      call vinarise#print_error(
-            \ '[vinarise] Modified buffer is detected! This operation is invalid.')
+            \ '[vinarise] File "'.filename.'" is not found.')
       return
     endif
+
+    let filesize = getfsize(filename)
+    if filesize == 0
+      call vinarise#print_error(
+            \ '[vinarise] File "'.filename.'" is empty. '.
+            \ 'vinarise cannot open empty file.')
+      return
+    endif
+  else
+    let filesize = len(context.bytes)
   endif
 
-  if !filereadable(filename)
-    call vinarise#print_error(
-          \ '[vinarise] File "'.filename.'" is not found.')
-    return
-  endif
-
-  let filesize = getfsize(filename)
-  if filesize == 0
-    call vinarise#print_error(
-          \ '[vinarise] File "'.filename.'" is empty. '.
-          \ 'vinarise cannot open empty file.')
-    return
-  endif
-
-  let context = s:initialize_context(a:context)
   if context.encoding !~?
         \ vinarise#multibyte#get_supported_encoding_pattern()
     call vinarise#print_error(
@@ -163,9 +168,23 @@ function! vinarise#start(filename, context)"{{{
   execute 'python' g:vinarise_var_prefix.' = VinariseBuffer()'
 
   " try
-    execute 'python' g:vinarise_var_prefix.
-          \ ".open(vim.eval('vinarise#util#iconv(filename, &encoding, \"char\")'),".
-          \ "vim.eval('vinarise#util#is_windows()'))"
+    if empty(context.bytes)
+      execute 'python' g:vinarise_var_prefix.
+            \ ".open(vim.eval('vinarise#util#iconv(filename, &encoding, \"char\")'),".
+            \ "vim.eval('vinarise#util#is_windows()'))"
+    else
+      execute 'python' g:vinarise_var_prefix.
+            \ ".open_bytes(vim.eval('len(context.bytes)'),".
+            \ "vim.eval('vinarise#util#is_windows()'))"
+
+      " Set values.
+      let address = 0
+      for byte in context.bytes
+        execute 'python' g:vinarise_var_prefix.
+              \ '.set_byte(vim.eval("address"), vim.eval("byte"))'
+        let address += 1
+      endfor
+    endif
   " catch
     " call vinarise#print_error(v:exception)
     " call vinarise#print_error(v:throwpoint)
@@ -178,8 +197,9 @@ function! vinarise#start(filename, context)"{{{
   endif
 
   if !context.overwrite
-    let ret = s:manager.open(
-          \ s:vinarise_BUFFER_NAME . ' - ' . filename)
+    let prefix = s:vinarise_BUFFER_NAME . ' - ' . filename
+    let bufname = prefix . s:get_postfix(prefix, 1)
+    let ret = s:manager.open(bufname)
     if ret.bufnr <= 0
       call vinarise#print_error(
             \ '[vinarise] Failed to open Buffer.')
@@ -380,6 +400,16 @@ function! s:initialize_vinarise_buffer(context, filename, filesize)"{{{
           \ ".open(vim.eval('vinarise#util#iconv(filename, &encoding, \"char\")'),".
           \ "vim.eval('vinarise#util#is_windows()'))"
   endfunction"}}}
+  function! b:vinarise.open_bytes(bytes)"{{{
+    execute 'python' self.python.
+          \ ".open(vim.eval('len(a:bytes)'),".
+          \ "vim.eval('vinarise#util#is_windows()'))"
+    let address = 0
+    for byte in a:bytes
+      call self.set_byte(address, byte)
+      let address += 1
+    endfor
+  endfunction"}}}
   function! b:vinarise.close()"{{{
     execute 'python' self.python.'.close()'
   endfunction"}}}
@@ -567,6 +597,7 @@ function! s:initialize_context(context)"{{{
         \ 'split_command' : 'split',
         \ 'overwrite' : 0,
         \ 'encoding' : 'latin1',
+        \ 'bytes' : [],
         \ }
   let context = extend(default_context, a:context)
 
@@ -576,6 +607,19 @@ function! s:initialize_context(context)"{{{
   endif
 
   return context
+endfunction"}}}
+function! s:get_postfix(prefix, is_create)"{{{
+  let buffers = get(a:000, 0, range(1, bufnr('$')))
+  let buflist = vimshell#util#sort_by(filter(map(buffers,
+        \ 'bufname(v:val)'), 'stridx(v:val, a:prefix) >= 0'),
+        \ "str2nr(matchstr(v:val, '\\d\\+$'))")
+  if empty(buflist)
+    return ''
+  endif
+
+  let num = matchstr(buflist[-1], '@\zs\d\+$')
+  return num == '' && !a:is_create ? '' :
+        \ '@' . (a:is_create ? (num + 1) : num)
 endfunction"}}}
 
 let &cpo = s:save_cpo
