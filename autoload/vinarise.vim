@@ -198,6 +198,9 @@ function! vinarise#start(filename, context)"{{{
 
   if !context.overwrite
     let prefix = s:vinarise_BUFFER_NAME . ' - ' . filename
+    if filename == ''
+      let prefix .= 'noname'
+    endif
     let bufname = prefix . s:get_postfix(prefix, 1)
     let ret = s:manager.open(bufname)
     if ret.bufnr <= 0
@@ -214,6 +217,11 @@ function! vinarise#start(filename, context)"{{{
   call vinarise#mappings#move_to_address(0)
 
   setlocal nomodified
+
+  if filename != '' && !empty(context.bytes)
+    " Write data.
+    call vinarise#write_buffer(filename)
+  endif
 endfunction"}}}
 function! vinarise#print_lines(lines, ...)"{{{
   " Get last address.

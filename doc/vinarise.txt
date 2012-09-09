@@ -77,6 +77,13 @@ COMMANDS 					*vinarise-commands*
 		"utf-16be", "ucs-2le" or "ucs-2be" encodings are supported in
 		this version.
 
+:VinariseScript2Hex [{options}...] [{path}]	*:VinariseScript2Hex*
+		Convert hexript to vinarise binary data.
+		The {options} is same to |:Vinarise|.
+		If {path} is set, vinarise will write the data in {path}.
+		Note: This command uses |hexript.vim| plugin.
+		https://github.com/rbtnn/hexript.vim
+
 The commands of plugins				*:vinarise-sources-commands*
 
 :VinarisePluginDump				*:VinarisePluginDump*
@@ -291,6 +298,7 @@ CHANGELOG					*vinarise-changelog*
 2012-09-09
 - Added bytes.
 - Fixed write behavior.
+- Added :VinariseHex2Script command.
 
 2012-09-03
 - Improved documentation.

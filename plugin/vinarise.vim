@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: vinarise.vim
 " AUTHOR:  Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 03 Sep 2012.
+" Last Modified: 09 Sep 2012.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -47,6 +47,8 @@ command! -nargs=? -complete=customlist,vinarise#complete Vinarise
       \ call s:call_vinarise({}, <q-args>)
 command! -nargs=? -complete=customlist,vinarise#complete VinariseDump
       \ call vinarise#dump#open(<q-args>, 0)
+command! -nargs=? -complete=customlist,vinarise#complete VinariseScript2Hex
+      \ call s:call_script2hex({'split' : 1}, <q-args>)
 
 if g:vinarise_enable_auto_detect
   augroup vinarise
@@ -57,6 +59,27 @@ if g:vinarise_enable_auto_detect
 endif
 
 function! s:call_vinarise(default, args)"{{{
+  let [args, context] = s:parse_args(a:default, a:args)
+
+  call vinarise#start(join(args), context)
+endfunction"}}}
+function! s:call_script2hex(default, args)"{{{
+  let [args, context] = s:parse_args(a:default, a:args)
+  if !get(g:, 'loaded_hexript', 0)
+    call vinarise#print_error('hexript plugin is needed.')
+    return
+  elseif &filetype !=# 'hexript' || !filereadable(expand('%'))
+    call vinarise#print_error('hexript file is not found.')
+    return
+  endif
+
+  " Get hexript data.
+  let dict = hexript#file_to_dict(expand('%'))
+  let context.bytes = dict.bytes
+
+  call vinarise#start(join(args), context)
+endfunction"}}}
+function! s:parse_args(default, args)"{{{
   let args = []
   let context = a:default
   for arg in split(a:args, '\%(\\\@<!\s\)\+')
@@ -77,7 +100,7 @@ function! s:call_vinarise(default, args)"{{{
     endif
   endfor
 
-  call vinarise#start(join(args), context)
+  return [args, context]
 endfunction"}}}
 
 function! s:browse_check(path)"{{{
