@@ -333,6 +333,20 @@ function! vinarise#release_buffer(bufnr)"{{{
   call vinarise.close()
 endfunction"}}}
 function! vinarise#write_buffer(filename)"{{{
+  let vinarise = vinarise#get_current_vinarise()
+  let filename = (a:filename ==# vinarise.bufname) ?
+        \ vinarise.filename : a:filename
+
+  if filename == ''
+    call vinarise#print_error('filename is needed.')
+    return
+  endif
+
+  if vinarise.filename == ''
+    " Change filename.
+    let vinarise.filename = filename
+  endif
+
   " Write current buffer.
   let filename = a:filename
   if getbufvar(bufnr(a:filename), '&filetype') ==# 'vinarise'
@@ -392,6 +406,7 @@ function! s:initialize_vinarise_buffer(context, filename, filesize)"{{{
    \  'last_search_type' : 'binary',
    \  'width' : 16,
    \  'bufnr' : bufnr('%'),
+   \  'bufname' : bufname('%'),
    \ }
 
   " Wrapper functions.
