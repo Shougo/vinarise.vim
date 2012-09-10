@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: vinarise.vim
 " AUTHOR:  Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 09 Sep 2012.
+" Last Modified: 10 Sep 2012.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -43,11 +43,11 @@ let g:vinarise_cursor_ascii_highlight =
       \ get(g:, 'vinarise_cursor_ascii_highlight', 'Search')
 "}}}
 
-command! -nargs=? -complete=customlist,vinarise#complete Vinarise
+command! -nargs=* -complete=customlist,vinarise#complete Vinarise
       \ call s:call_vinarise({}, <q-args>)
 command! -nargs=? -complete=customlist,vinarise#complete VinariseDump
       \ call vinarise#dump#open(<q-args>, 0)
-command! -nargs=? -complete=customlist,vinarise#complete VinariseScript2Hex
+command! -nargs=* -complete=customlist,vinarise#complete VinariseScript2Hex
       \ call s:call_script2hex({'split' : 1}, <q-args>)
 
 if g:vinarise_enable_auto_detect

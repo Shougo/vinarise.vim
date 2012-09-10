@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: vinarise.vim
 " AUTHOR:  Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 09 Sep 2012.
+" Last Modified: 10 Sep 2012.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -579,6 +579,9 @@ function! s:initialize_vinarise_buffer(context, filename, filesize)"{{{
           \ call vinarise#write_buffer(expand('<afile>'))
   augroup END
 
+  command! -buffer -nargs=1 -complete=file VinariseHex2Script
+        \ call s:hex2script(<f-args>)
+
   call vinarise#mappings#define_default_mappings()
 
   " User's initialization.
@@ -643,6 +646,21 @@ function! s:get_postfix(prefix, is_create)"{{{
   let num = matchstr(buflist[-1], '@\zs\d\+$')
   return num == '' && !a:is_create ? '' :
         \ '@' . (a:is_create ? (num + 1) : num)
+endfunction"}}}
+function! s:hex2script(filename)"{{{
+  if !get(g:, 'loaded_hexript', 0)
+    call vinarise#print_error('hexript plugin is needed.')
+    return
+  endif
+
+  let vinarise = vinarise#get_current_vinarise()
+
+  " Convert hexript data.
+  let dict = { 'bytes' : vinarise.get_bytes(0, vinarise.filesize) }
+  call hexript#dict_to_file(dict, a:filename)
+
+  " Open file.
+  split `=a:filename`
 endfunction"}}}
 
 let &cpo = s:save_cpo
