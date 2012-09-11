@@ -36,7 +36,7 @@ class VinariseBuffer:
                     access = mmap.ACCESS_COPY, offset = 0)
 
     def close(self):
-        if file in self:
+        if hasattr(self, 'file'):
             self.file.close()
         self.mmap.close()
 
