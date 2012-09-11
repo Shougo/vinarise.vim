@@ -84,6 +84,11 @@ COMMANDS 					*vinarise-commands*
 		Note: This command uses |hexript.vim| plugin.
 		https://github.com/rbtnn/hexript.vim
 
+:VinariseHex2Script {path}			*:VinariseHex2Script*
+		Convert vinarise binary data to hexript in {path} file.
+		Note: This command uses |hexript.vim| plugin.
+		https://github.com/rbtnn/hexript.vim
+
 The commands of plugins				*:vinarise-sources-commands*
 
 :VinarisePluginDump				*:VinarisePluginDump*
@@ -297,6 +302,9 @@ CHANGELOG					*vinarise-changelog*
 
 2012-09-11
 - Fixed error in saving.
+
+2012-09-10
+- Added :VinariseHex2Script command.
 
 2012-09-09
 - Added bytes.
