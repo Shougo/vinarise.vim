@@ -300,6 +300,9 @@ vinarise/analysis				*vinarise-unite-action-vinarise-analysis*
 ==============================================================================
 CHANGELOG					*vinarise-changelog*
 
+2012-09-11
+- Fixed error in saving.
+
 2012-09-10
 - Added :VinariseHex2Script command.
 
