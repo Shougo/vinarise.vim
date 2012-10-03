@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: util.vim
 " AUTHOR: Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 18 Aug 2012.
+" Last Modified: 03 Oct 2012.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -77,6 +77,10 @@ endfunction
 function! vinarise#util#iconv(...)
   return call(s:V.iconv, a:000)
 endfunction
+
+function! vinarise#util#is_cmdwin()"{{{
+  return bufname('%') ==# '[Command Line]'
+endfunction"}}}
 
 function! vinarise#util#alternate_buffer()"{{{
   if s:buflisted(bufnr('#'))
