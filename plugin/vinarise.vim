@@ -34,7 +34,7 @@ endif
 let s:save_cpo = &cpo
 set cpo&vim
 
-" Global options definition."{{{
+" Global options definition. "{{{
 let g:vinarise_enable_auto_detect =
       \ get(g:, 'vinarise_enable_auto_detect', 0)
 let g:vinarise_detect_large_file_size =
@@ -58,12 +58,12 @@ if g:vinarise_enable_auto_detect
   augroup END
 endif
 
-function! s:call_vinarise(default, args)"{{{
+function! s:call_vinarise(default, args) "{{{
   let [args, context] = s:parse_args(a:default, a:args)
 
   call vinarise#start(join(args), context)
 endfunction"}}}
-function! s:call_script2hex(default, args)"{{{
+function! s:call_script2hex(default, args) "{{{
   let [args, context] = s:parse_args(a:default, a:args)
   if !get(g:, 'loaded_hexript', 0)
     call vinarise#print_error('hexript plugin is needed.')
@@ -79,7 +79,7 @@ function! s:call_script2hex(default, args)"{{{
 
   call vinarise#start(join(args), context)
 endfunction"}}}
-function! s:parse_args(default, args)"{{{
+function! s:parse_args(default, args) "{{{
   let args = []
   let context = a:default
   for arg in split(a:args, '\%(\\\@<!\s\)\+')
@@ -103,7 +103,7 @@ function! s:parse_args(default, args)"{{{
   return [args, context]
 endfunction"}}}
 
-function! s:browse_check(path)"{{{
+function! s:browse_check(path) "{{{
   let path = vinarise#util#expand(a:path)
   if fnamemodify(path, ':t') ==# '~'
     let path = vinarise#util#expand('~')

@@ -52,13 +52,13 @@ let s:plugin = {
       \ 'description' : 'bitmap view',
       \}
 
-function! s:plugin.initialize(vinarise, context)"{{{
+function! s:plugin.initialize(vinarise, context) "{{{
   command! VinarisePluginBitmapView call s:bitmapview_open()
 endfunction"}}}
-function! s:plugin.finalize(vinarise, context)"{{{
+function! s:plugin.finalize(vinarise, context) "{{{
 endfunction"}}}
 
-function! s:bitmapview_open()"{{{
+function! s:bitmapview_open() "{{{
   let vinarise = vinarise#get_current_vinarise()
 
   let prefix = vinarise#util#is_windows() ?
@@ -103,8 +103,8 @@ function! s:bitmapview_open()"{{{
   call s:set_cursor_address(0)
 endfunction"}}}
 
-function! s:define_default_mappings()"{{{
-  " Plugin keymappings"{{{
+function! s:define_default_mappings() "{{{
+  " Plugin keymappings "{{{
   nnoremap <buffer><silent> <Plug>(vinarise_bitmapview_move_to_current_address)
         \ :<C-u>call <SID>move_to_current_address()<CR>
   nnoremap <buffer><silent> <Plug>(vinarise_bitmapview_exit)
@@ -153,7 +153,7 @@ function! s:define_default_mappings()"{{{
   nmap <buffer> G    <Plug>(vinarise_bitmapview_move_to_last_address)
 endfunction"}}}
 
-function! s:parse_address(string, cur_text)"{{{
+function! s:parse_address(string, cur_text) "{{{
   " Get last address.
   let base_address = matchstr(a:string, '^\x\+')
 
@@ -173,7 +173,7 @@ function! s:parse_address(string, cur_text)"{{{
   return [type, address]
 endfunction"}}}
 
-function! s:move_to_address(address)"{{{
+function! s:move_to_address(address) "{{{
   let address = a:address
   if address >= b:bitmapview.vinarise.filesize
     let address = b:bitmapview.vinarise.filesize - 1
@@ -191,7 +191,7 @@ function! s:move_to_address(address)"{{{
   " Set cursor.
   call s:set_cursor_address(address)
 endfunction"}}}
-function! s:print_lines(lines, ...)"{{{
+function! s:print_lines(lines, ...) "{{{
   " Get last address.
   if a:0 >= 1
     let address = a:1
@@ -242,7 +242,7 @@ function! s:print_lines(lines, ...)"{{{
   let &l:modified = modified_save
   setlocal nomodifiable
 endfunction"}}}
-function! s:make_line(line_address)"{{{
+function! s:make_line(line_address) "{{{
   " Make new lines.
   let line = ''
 
@@ -255,14 +255,14 @@ function! s:make_line(line_address)"{{{
 
   return printf('%08x: %s', a:line_address * b:bitmapview.width, line)
 endfunction"}}}
-function! s:set_cursor_address(address)"{{{
+function! s:set_cursor_address(address) "{{{
   let line_address = (a:address / b:bitmapview.width) * b:bitmapview.width
   let [lnum, col] = searchpos(
         \ printf('%08x: .\{%d}', line_address, a:address - line_address + 1), 'cew')
   call cursor(lnum, col)
 endfunction"}}}
 
-function! s:change_windowsize()"{{{
+function! s:change_windowsize() "{{{
   if !has('gui_running') || !empty(s:save_gui)
     return
   endif
@@ -280,7 +280,7 @@ function! s:change_windowsize()"{{{
   let &lines = (s:save_gui[2] * old_fontsize) / 9
   let &columns = (s:save_gui[3] * old_fontsize) / 9
 endfunction"}}}
-function! s:restore_windowsize()"{{{
+function! s:restore_windowsize() "{{{
   if empty(s:save_gui)
     return
   endif
@@ -299,10 +299,10 @@ function! s:change_fontsize(font, size)
 endfunction
 
 " Mappings.
-function! s:exit()"{{{
+function! s:exit() "{{{
   call vinarise#util#delete_buffer()
 endfunction"}}}
-function! s:print_current_position()"{{{
+function! s:print_current_position() "{{{
   " Get current address.
   let [type, address] = s:parse_address(getline('.'),
         \ vinarise#get_cur_text(getline('.'), col('.')))
@@ -311,7 +311,7 @@ function! s:print_current_position()"{{{
   echo printf('[%s] %8d / %8d (%3d%%)',
         \ type, address, b:bitmapview.vinarise.filesize - 1, percentage)
 endfunction"}}}
-function! s:move_to_current_address()"{{{
+function! s:move_to_current_address() "{{{
   " Get current address.
   let [type, address] = s:parse_address(getline('.'),
         \ vinarise#get_cur_text(getline('.'), col('.')))
@@ -321,7 +321,7 @@ function! s:move_to_current_address()"{{{
   call vinarise#mappings#move_to_address(address)
 endfunction"}}}
 
-function! s:move_line(is_next)"{{{
+function! s:move_line(is_next) "{{{
   if a:is_next
     if line('.') == line('$')
       call s:print_lines(2)
@@ -334,7 +334,7 @@ function! s:move_line(is_next)"{{{
     normal! k
   endif
 endfunction "}}}
-function! s:move_screen(is_next)"{{{
+function! s:move_screen(is_next) "{{{
   if a:is_next
     if line('.') + 2 * winheight(0) > line('$')
       call s:print_lines(winheight(0))
@@ -347,7 +347,7 @@ function! s:move_screen(is_next)"{{{
     execute "normal! \<C-b>"
   endif
 endfunction "}}}
-function! s:move_half_screen(is_next)"{{{
+function! s:move_half_screen(is_next) "{{{
   if a:is_next
     if line('.') + winheight(0) > line('$')
       call s:print_lines(winheight(0)/2)
@@ -360,7 +360,7 @@ function! s:move_half_screen(is_next)"{{{
     execute "normal! \<C-u>"
   endif
 endfunction "}}}
-function! s:move_by_input_offset(input)"{{{
+function! s:move_by_input_offset(input) "{{{
   " Get current address.
   let [type, address] = s:parse_address(getline('.'),
         \ vinarise#get_cur_text(getline('.'), col('.')))
@@ -389,7 +389,7 @@ function! s:move_by_input_offset(input)"{{{
   endif
   call s:move_by_input_address(printf("0x%x", address))
 endfunction "}}}
-function! s:move_by_input_address(input)"{{{
+function! s:move_by_input_address(input) "{{{
   let address = (a:input == '') ?
         \ input(printf('Please input new address(max 0x%x) : ',
         \     b:bitmapview.vinarise.filesize), '0x') : a:input

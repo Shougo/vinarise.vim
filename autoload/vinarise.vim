@@ -24,7 +24,7 @@
 " }}}
 "=============================================================================
 
-" Check Python."{{{
+" Check Python. "{{{
 if !has('python')
   echoerr 'Vinarise requires python interface.'
   finish
@@ -34,7 +34,7 @@ endif
 let s:save_cpo = &cpo
 set cpo&vim
 
-" Constants"{{{
+" Constants "{{{
 let s:FALSE = 0
 let s:TRUE = !s:FALSE
 
@@ -67,7 +67,7 @@ let s:use_current_vinarise = 0
 let s:vinarise_plugins = {}
 "}}}
 
-function! vinarise#complete(arglead, cmdline, cursorpos)"{{{
+function! vinarise#complete(arglead, cmdline, cursorpos) "{{{
   let _ = []
 
   let args = split(join(split(a:cmdline)[1:]), '\\\@<!\s\+')
@@ -104,17 +104,17 @@ function! vinarise#complete(arglead, cmdline, cursorpos)"{{{
 
   return _
 endfunction"}}}
-function! vinarise#complete_encodings(arglead, cmdline, cursorpos)"{{{
+function! vinarise#complete_encodings(arglead, cmdline, cursorpos) "{{{
   return sort(filter(vinarise#multibyte#get_supported_encoding_list(),
         \ 'stridx(v:val, a:arglead) == 0'))
 endfunction"}}}
-function! vinarise#get_options()"{{{
+function! vinarise#get_options() "{{{
   return copy(s:vinarise_options)
 endfunction"}}}
-function! vinarise#print_error(string)"{{{
+function! vinarise#print_error(string) "{{{
   echohl Error | echo a:string | echohl None
 endfunction"}}}
-function! vinarise#start(filename, context)"{{{
+function! vinarise#start(filename, context) "{{{
   if empty(s:vinarise_plugins)
     call s:load_plugins()
   endif
@@ -223,7 +223,7 @@ function! vinarise#start(filename, context)"{{{
     call vinarise#write_buffer(filename)
   endif
 endfunction"}}}
-function! vinarise#print_lines(lines, ...)"{{{
+function! vinarise#print_lines(lines, ...) "{{{
   " Get last address.
   if a:0 >= 1
     let address = a:1
@@ -273,7 +273,7 @@ function! vinarise#print_lines(lines, ...)"{{{
   let &l:modified = modified_save
   setlocal nomodifiable
 endfunction"}}}
-function! vinarise#make_line(line_address)"{{{
+function! vinarise#make_line(line_address) "{{{
   " Make new line.
   let bytes = b:vinarise.get_bytes(
         \ a:line_address * b:vinarise.width, b:vinarise.width)
@@ -290,7 +290,7 @@ function! vinarise#make_line(line_address)"{{{
   return printf('%07x0: %-48s|%s',
         \ a:line_address, hex_line, ascii_line)
 endfunction"}}}
-function! vinarise#parse_address(string, cur_text)"{{{
+function! vinarise#parse_address(string, cur_text) "{{{
   " Get last address.
   let base_address = matchstr(a:string, '^\x\+')
 
@@ -324,10 +324,10 @@ function! vinarise#parse_address(string, cur_text)"{{{
 
   return [type, address]
 endfunction"}}}
-function! vinarise#get_cur_text(string, col)"{{{
+function! vinarise#get_cur_text(string, col) "{{{
   return matchstr(a:string, '^.*\%' . a:col . 'c.')
 endfunction"}}}
-function! vinarise#release_buffer(bufnr)"{{{
+function! vinarise#release_buffer(bufnr) "{{{
   " Close previous variable.
   let vinarise = getbufvar(a:bufnr, 'vinarise')
 
@@ -340,7 +340,7 @@ function! vinarise#release_buffer(bufnr)"{{{
 
   call vinarise.close()
 endfunction"}}}
-function! vinarise#write_buffer(filename)"{{{
+function! vinarise#write_buffer(filename) "{{{
   let vinarise = vinarise#get_current_vinarise()
   let filename = (a:filename ==# vinarise.bufname) ?
         \ vinarise.filename : a:filename
@@ -367,7 +367,7 @@ function! vinarise#write_buffer(filename)"{{{
   setlocal nomodified
   echo printf('"%s" %d bytes', filename, b:vinarise.filesize)
 endfunction"}}}
-function! vinarise#set_cursor_address(address)"{{{
+function! vinarise#set_cursor_address(address) "{{{
   let line_address = (a:address / b:vinarise.width) * b:vinarise.width
   let hex_line = repeat(' \x\x', a:address - line_address + 1)
   let [lnum, col] = searchpos(
@@ -380,7 +380,7 @@ function! vinarise#get_current_vinarise() "{{{
 endfunction"}}}
 
 " Misc.
-function! s:load_plugins()"{{{
+function! s:load_plugins() "{{{
   " Load all plugins.
   let s:vinarise_plugins = {}
 
@@ -397,7 +397,7 @@ function! s:load_plugins()"{{{
     unlet define
   endfor
 endfunction"}}}
-function! s:initialize_vinarise_buffer(context, filename, filesize)"{{{
+function! s:initialize_vinarise_buffer(context, filename, filesize) "{{{
   if exists('b:vinarise')
     call vinarise#release_buffer(bufnr('%'))
   endif
@@ -418,12 +418,12 @@ function! s:initialize_vinarise_buffer(context, filename, filesize)"{{{
    \ }
 
   " Wrapper functions.
-  function! b:vinarise.open(filename)"{{{
+  function! b:vinarise.open(filename) "{{{
     execute 'python' self.python.
           \ ".open(vim.eval('vinarise#util#iconv(filename, &encoding, \"char\")'),".
           \ "vim.eval('vinarise#util#is_windows()'))"
   endfunction"}}}
-  function! b:vinarise.open_bytes(bytes)"{{{
+  function! b:vinarise.open_bytes(bytes) "{{{
     execute 'python' self.python.
           \ ".open(vim.eval('len(a:bytes)'),".
           \ "vim.eval('vinarise#util#is_windows()'))"
@@ -433,79 +433,79 @@ function! s:initialize_vinarise_buffer(context, filename, filesize)"{{{
       let address += 1
     endfor
   endfunction"}}}
-  function! b:vinarise.close()"{{{
+  function! b:vinarise.close() "{{{
     execute 'python' self.python.'.close()'
   endfunction"}}}
-  function! b:vinarise.write(path)"{{{
+  function! b:vinarise.write(path) "{{{
     execute 'python' self.python.'.write('
           \ "vim.eval('a:path'))"
   endfunction"}}}
-  function! b:vinarise.get_byte(address)"{{{
+  function! b:vinarise.get_byte(address) "{{{
     execute 'python' 'vim.command("let num = " + str('.
           \ self.python .'.get_byte(vim.eval("a:address"))))'
     return num
   endfunction"}}}
-  function! b:vinarise.get_bytes(address, count)"{{{
+  function! b:vinarise.get_bytes(address, count) "{{{
     execute 'python' 'vim.command("let bytes = " + str('.
           \ self.python .".get_bytes(vim.eval('a:address'), vim.eval('a:count'))))"
     return bytes
   endfunction"}}}
-  function! b:vinarise.get_int8(address)"{{{
+  function! b:vinarise.get_int8(address) "{{{
     execute 'python' 'vim.command("let num = " + str('.
           \ self.python .'.get_int8(vim.eval("a:address"))))'
     return num
   endfunction"}}}
-  function! b:vinarise.get_int16(address, is_little_endian)"{{{
+  function! b:vinarise.get_int16(address, is_little_endian) "{{{
     return a:is_little_endian ?
           \ self.get_int16_le(a:address) : self.get_int16_be(a:address)
   endfunction"}}}
-  function! b:vinarise.get_int16_le(address)"{{{
+  function! b:vinarise.get_int16_le(address) "{{{
     execute 'python' 'vim.command("let num = " + str('.
           \ self.python .'.get_int16_le(vim.eval("a:address"))))'
     return num
   endfunction"}}}
-  function! b:vinarise.get_int16_be(address)"{{{
+  function! b:vinarise.get_int16_be(address) "{{{
     execute 'python' 'vim.command("let num = " + str('.
           \ self.python .'.get_int16_be(vim.eval("a:address"))))'
     return num
   endfunction"}}}
-  function! b:vinarise.get_int32(address, is_little_endian)"{{{
+  function! b:vinarise.get_int32(address, is_little_endian) "{{{
     return a:is_little_endian ?
           \ self.get_int32_le(a:address) : self.get_int32_be(a:address)
   endfunction"}}}
-  function! b:vinarise.get_int32_le(address)"{{{
+  function! b:vinarise.get_int32_le(address) "{{{
     execute 'python' 'vim.command("let num = " + str('.
           \ self.python .'.get_int32_le(vim.eval("a:address"))))'
     return num
   endfunction"}}}
-  function! b:vinarise.get_int32_be(address)"{{{
+  function! b:vinarise.get_int32_be(address) "{{{
     execute 'python' 'vim.command("let num = " + str('.
           \ self.python .'.get_int32_be(vim.eval("a:address"))))'
     return num
   endfunction"}}}
-  function! b:vinarise.get_chars(address, count, from, to)"{{{
+  function! b:vinarise.get_chars(address, count, from, to) "{{{
     execute 'python' 'vim.command("let chars = ''" + str('.
           \ self.python .".get_chars(vim.eval('a:address'),"
           \ ."vim.eval('a:count'), vim.eval('a:from'),"
           \ ."vim.eval('a:to'))) + \"'\")"
     return chars
   endfunction"}}}
-  function! b:vinarise.set_byte(address, value)"{{{
+  function! b:vinarise.set_byte(address, value) "{{{
     execute 'python' self.python .
           \ '.set_byte(vim.eval("a:address"), vim.eval("a:value"))'
   endfunction"}}}
-  function! b:vinarise.get_percentage(address)"{{{
+  function! b:vinarise.get_percentage(address) "{{{
     execute 'python' 'vim.command("let percentage = " + str('.
           \ self.python .'.get_percentage(vim.eval("a:address"))))'
     return percentage
   endfunction"}}}
-  function! b:vinarise.get_percentage_address(percentage)"{{{
+  function! b:vinarise.get_percentage_address(percentage) "{{{
     execute 'python' 'vim.command("let address = " + str('.
           \ self.python .
           \ ".get_percentage_address(vim.eval('a:percentage'))))"
     return address
   endfunction"}}}
-  function! b:vinarise.find(address, str, from, to)"{{{
+  function! b:vinarise.find(address, str, from, to) "{{{
     execute 'python' 'vim.command("let address = " + str('.
           \ self.python .
           \ ".find(vim.eval('a:address'), vim.eval('a:str'),"
@@ -513,7 +513,7 @@ function! s:initialize_vinarise_buffer(context, filename, filesize)"{{{
           \ ."vim.eval('a:to'))))"
     return address
   endfunction"}}}
-  function! b:vinarise.rfind(address, str, from, to)"{{{
+  function! b:vinarise.rfind(address, str, from, to) "{{{
     execute 'python' 'vim.command("let address = " + str('.
           \ self.python .
           \ ".rfind(vim.eval('a:address'), vim.eval('a:str'),"
@@ -521,7 +521,7 @@ function! s:initialize_vinarise_buffer(context, filename, filesize)"{{{
           \ ."vim.eval('a:to'))))"
     return address
   endfunction"}}}
-  function! b:vinarise.find_regexp(address, str, from, to)"{{{
+  function! b:vinarise.find_regexp(address, str, from, to) "{{{
     try
       execute 'python' 'vim.command("let address = " + str('.
             \ self.python .
@@ -535,25 +535,25 @@ function! s:initialize_vinarise_buffer(context, filename, filesize)"{{{
 
     return address
   endfunction"}}}
-  function! b:vinarise.find_binary(address, binary)"{{{
+  function! b:vinarise.find_binary(address, binary) "{{{
     execute 'python' 'vim.command("let address = " + str('.
           \ self.python .
           \ ".find_binary(vim.eval('a:address'), vim.eval('a:binary'))))"
     return address
   endfunction"}}}
-  function! b:vinarise.rfind_binary(address, binary)"{{{
+  function! b:vinarise.rfind_binary(address, binary) "{{{
     execute 'python' 'vim.command("let address = " + str('.
           \ self.python .
           \ ".rfind_binary(vim.eval('a:address'), vim.eval('a:binary'))))"
     return address
   endfunction"}}}
-  function! b:vinarise.find_binary_not(address, binary)"{{{
+  function! b:vinarise.find_binary_not(address, binary) "{{{
     execute 'python' 'vim.command("let address = " + str('.
           \ self.python .
           \ ".find_binary_not(vim.eval('a:address'), vim.eval('a:binary'))))"
     return address
   endfunction"}}}
-  function! b:vinarise.rfind_binary_not(address, binary)"{{{
+  function! b:vinarise.rfind_binary_not(address, binary) "{{{
     execute 'python' 'vim.command("let address = " + str('.
           \ self.python .
           \ ".rfind_binary_not(vim.eval('a:address'), vim.eval('a:binary'))))"
@@ -594,7 +594,7 @@ function! s:initialize_vinarise_buffer(context, filename, filesize)"{{{
     endif
   endfor
 endfunction"}}}
-function! s:match_ascii()"{{{
+function! s:match_ascii() "{{{
   let [type, address] = vinarise#parse_address(getline('.'),
         \ vinarise#get_cur_text(getline('.'), col('.')))
   if type != 'hex'
@@ -615,7 +615,7 @@ function! s:match_ascii()"{{{
         \ ' /\%'.line('.').'l\%'.(63+offset).'c/'
 endfunction"}}}
 
-function! s:initialize_context(context)"{{{
+function! s:initialize_context(context) "{{{
   let default_context = {
         \ 'winwidth' : 0,
         \ 'winheight' : 0,
@@ -634,7 +634,7 @@ function! s:initialize_context(context)"{{{
 
   return context
 endfunction"}}}
-function! s:get_postfix(prefix, is_create)"{{{
+function! s:get_postfix(prefix, is_create) "{{{
   let buffers = get(a:000, 0, range(1, bufnr('$')))
   let buflist = vimshell#util#sort_by(filter(map(buffers,
         \ 'bufname(v:val)'), 'stridx(v:val, a:prefix) >= 0'),
@@ -647,7 +647,7 @@ function! s:get_postfix(prefix, is_create)"{{{
   return num == '' && !a:is_create ? '' :
         \ '@' . (a:is_create ? (num + 1) : num)
 endfunction"}}}
-function! s:hex2script(filename)"{{{
+function! s:hex2script(filename) "{{{
   if !get(g:, 'loaded_hexript', 0)
     call vinarise#print_error('hexript plugin is needed.')
     return

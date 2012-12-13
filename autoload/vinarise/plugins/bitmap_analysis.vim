@@ -39,10 +39,10 @@ let s:plugin = {
       \ 'description' : 'bitmap analyzer',
       \}
 
-function! s:plugin.initialize(vinarise, context)"{{{
+function! s:plugin.initialize(vinarise, context) "{{{
   call unite#sources#vinarise_analysis#add_analyzers(s:analyzer)
 endfunction"}}}
-function! s:plugin.finalize(vinarise, context)"{{{
+function! s:plugin.finalize(vinarise, context) "{{{
 endfunction"}}}
 
 let s:analyzer = {
@@ -50,11 +50,11 @@ let s:analyzer = {
       \ 'description' : 'bitmap analyzer',
       \}
 
-function! s:analyzer.detect(vinarise, context)"{{{
+function! s:analyzer.detect(vinarise, context) "{{{
   return a:vinarise.get_bytes(0, 2) == [0x42, 0x4d]
 endfunction"}}}
 
-function! s:analyzer.parse(vinarise, context)"{{{
+function! s:analyzer.parse(vinarise, context) "{{{
   let candidates = []
   let offset = 0
 
@@ -115,7 +115,7 @@ function! s:analyzer.parse(vinarise, context)"{{{
   return candidates
 endfunction"}}}
 
-function! s:analyze_info_header(vinarise, candidates, offset)"{{{
+function! s:analyze_info_header(vinarise, candidates, offset) "{{{
   " BITMAPINFOHEADER
   let offset = a:offset
   let info_header = { 'name' : 'BITMAPINFOHEADER', 'value' : []}

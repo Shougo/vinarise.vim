@@ -24,7 +24,7 @@
 " }}}
 "=============================================================================
 
-" Constants"{{{
+" Constants "{{{
 if vinarise#util#is_windows()
   let s:dump_BUFFER_NAME = '[vinarise-dump-objdump]'
 else
@@ -54,11 +54,11 @@ let s:plugin = {
       \ 'description' : 'hex dump by objdump',
       \}
 
-function! s:plugin.initialize(vinarise, context)"{{{
+function! s:plugin.initialize(vinarise, context) "{{{
   command! VinarisePluginDump call s:dump_open()
 endfunction"}}}
 
-function! s:dump_open()"{{{
+function! s:dump_open() "{{{
   if !executable(g:vinarise_objdump_command)
     echoerr g:vinarise_objdump_command . ' is not installed.'
     return
@@ -83,7 +83,7 @@ function! s:dump_open()"{{{
 endfunction"}}}
 
 " Misc.
-function! s:initialize_dump_buffer()"{{{
+function! s:initialize_dump_buffer() "{{{
   " Basic settings.
   setlocal buftype=nofile
   setlocal noswapfile

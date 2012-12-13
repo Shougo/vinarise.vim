@@ -25,8 +25,8 @@
 "=============================================================================
 
 " Define default mappings.
-function! vinarise#mappings#define_default_mappings()"{{{
-  " Plugin keymappings"{{{
+function! vinarise#mappings#define_default_mappings() "{{{
+  " Plugin keymappings "{{{
   nnoremap <buffer><silent> <Plug>(vinarise_edit_with_vim)
         \ :<C-u>call <SID>edit_with_vim()<CR>
   nnoremap <buffer><silent> <Plug>(vinarise_hide)
@@ -133,7 +133,7 @@ function! vinarise#mappings#define_default_mappings()"{{{
   nmap <buffer> g<C-l>     <Plug>(vinarise_reload)
 endfunction"}}}
 
-function! vinarise#mappings#move_to_address(address)"{{{
+function! vinarise#mappings#move_to_address(address) "{{{
   let address = a:address
   if address >= b:vinarise.filesize
     let address = b:vinarise.filesize - 1
@@ -156,7 +156,7 @@ function! vinarise#mappings#move_to_address(address)"{{{
   " Set cursor.
   call vinarise#set_cursor_address(address)
 endfunction "}}}
-function! vinarise#mappings#redraw()"{{{
+function! vinarise#mappings#redraw() "{{{
   " Redraw vinarise buffer.
 
   let [_, address] = vinarise#parse_address(getline('.'),
@@ -164,7 +164,7 @@ function! vinarise#mappings#redraw()"{{{
   call vinarise#mappings#move_to_address(address)
 endfunction "}}}
 
-function! s:edit_with_vim()"{{{
+function! s:edit_with_vim() "{{{
   let save_auto_detect = g:vinarise_enable_auto_detect
   let g:vinarise_enable_auto_detect = 0
 
@@ -174,7 +174,7 @@ function! s:edit_with_vim()"{{{
     let g:vinarise_enable_auto_detect = save_auto_detect
   endtry
 endfunction"}}}
-function! s:hide()"{{{
+function! s:hide() "{{{
   if &l:modified
     let yes = input(
           \ 'Current vinarise buffer is modified! Hide anyway?: ', 'yes')
@@ -191,7 +191,7 @@ function! s:hide()"{{{
     call vinarise#util#alternate_buffer()
   endif
 endfunction"}}}
-function! s:exit()"{{{
+function! s:exit() "{{{
   if &l:modified
     let yes = input(
           \ 'Current vinarise buffer is modified! Exit anyway?: ')
@@ -204,7 +204,7 @@ function! s:exit()"{{{
   call vinarise#release_buffer(bufnr('%'))
   call vinarise#util#delete_buffer()
 endfunction"}}}
-function! s:print_current_position()"{{{
+function! s:print_current_position() "{{{
   " Get current address.
   let [type, address] = vinarise#parse_address(getline('.'),
         \ vinarise#get_cur_text(getline('.'), col('.')))
@@ -213,7 +213,7 @@ function! s:print_current_position()"{{{
   echo printf('[%s] %8d / %8d (%3d%%)',
         \ type, address, b:vinarise.filesize - 1, percentage)
 endfunction"}}}
-function! s:change_current_address()"{{{
+function! s:change_current_address() "{{{
   " Get current address.
   let [type, address] = vinarise#parse_address(getline('.'),
         \ vinarise#get_cur_text(getline('.'), col('.')))
@@ -245,7 +245,7 @@ function! s:change_current_address()"{{{
 
   setlocal nomodifiable
 endfunction"}}}
-function! s:overwrite_from_current_address()"{{{
+function! s:overwrite_from_current_address() "{{{
   " Get current address.
   let [type, address] = vinarise#parse_address(getline('.'),
         \ vinarise#get_cur_text(getline('.'), col('.')))
@@ -285,7 +285,7 @@ function! s:overwrite_from_current_address()"{{{
   setlocal modified
 endfunction"}}}
 
-function! s:move_col(is_next)"{{{
+function! s:move_col(is_next) "{{{
   let [type, address] = vinarise#parse_address(getline('.'),
         \ vinarise#get_cur_text(getline('.'), col('.')))
   if a:is_next
@@ -316,7 +316,7 @@ function! s:move_col(is_next)"{{{
     endif
   endif
 endfunction "}}}
-function! s:move_line(is_next)"{{{
+function! s:move_line(is_next) "{{{
   if a:is_next
     if line('.') == line('$')
       call vinarise#print_lines(2)
@@ -329,7 +329,7 @@ function! s:move_line(is_next)"{{{
     normal! k
   endif
 endfunction "}}}
-function! s:move_line_address(is_first)"{{{
+function! s:move_line_address(is_first) "{{{
   let [type, address] = vinarise#parse_address(getline('.'),
         \ vinarise#get_cur_text(getline('.'), col('.')))
   let address = (address / b:vinarise.width) * b:vinarise.width
@@ -339,7 +339,7 @@ function! s:move_line_address(is_first)"{{{
 
   call vinarise#set_cursor_address(address)
 endfunction "}}}
-function! s:move_screen(is_next)"{{{
+function! s:move_screen(is_next) "{{{
   if a:is_next
     if line('.') + 2 * winheight(0) > line('$')
       call vinarise#print_lines(winheight(0))
@@ -352,7 +352,7 @@ function! s:move_screen(is_next)"{{{
     execute "normal! \<C-b>"
   endif
 endfunction "}}}
-function! s:move_half_screen(is_next)"{{{
+function! s:move_half_screen(is_next) "{{{
   if a:is_next
     if line('.') + winheight(0) > line('$')
       call vinarise#print_lines(winheight(0)/2)
@@ -365,7 +365,7 @@ function! s:move_half_screen(is_next)"{{{
     execute "normal! \<C-u>"
   endif
 endfunction "}}}
-function! s:move_by_input_offset(input)"{{{
+function! s:move_by_input_offset(input) "{{{
   " Get current address.
   let [type, address] = vinarise#parse_address(getline('.'),
         \ vinarise#get_cur_text(getline('.'), col('.')))
@@ -397,7 +397,7 @@ function! s:move_by_input_offset(input)"{{{
 
   call s:move_by_input_address(printf("0x%x", address))
 endfunction "}}}
-function! s:move_by_input_address(input)"{{{
+function! s:move_by_input_address(input) "{{{
   let address = (a:input == '') ?
         \ input(printf('Please input new address(max 0x%x) : ',
         \     b:vinarise.filesize), '0x') : a:input
@@ -422,7 +422,7 @@ function! s:move_by_input_address(input)"{{{
 
   call vinarise#mappings#move_to_address(address)
 endfunction "}}}
-function! s:search_buffer(type, is_reverse, string)"{{{
+function! s:search_buffer(type, is_reverse, string) "{{{
   if a:string != ''
     let string = a:string
   elseif a:type ==# 'binary'
@@ -509,7 +509,7 @@ function! s:search_buffer(type, is_reverse, string)"{{{
   let b:vinarise.last_search_string = string
   let b:vinarise.last_search_type = a:type
 endfunction "}}}
-function! s:change_encoding()"{{{
+function! s:change_encoding() "{{{
   let context = vinarise#get_current_vinarise().context
   let encoding = input('Please input new encoding type: '.
         \ context.encoding . ' -> ', '', 'customlist,vinarise#complete_encodings')
@@ -530,7 +530,7 @@ function! s:change_encoding()"{{{
   " Redraw vinarise buffer.
   call vinarise#mappings#redraw()
 endfunction"}}}
-function! s:reload()"{{{
+function! s:reload() "{{{
   let vinarise = vinarise#get_current_vinarise()
   let context = deepcopy(vinarise.context)
   let filename = vinarise#get_current_vinarise().filename

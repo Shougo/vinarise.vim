@@ -26,41 +26,41 @@
 
 let s:V = vital#of('vinarise')
 
-function! vinarise#util#truncate_smart(...)"{{{
+function! vinarise#util#truncate_smart(...) "{{{
   return call(s:V.truncate_smart, a:000)
 endfunction"}}}
 
-function! vinarise#util#truncate(...)"{{{
+function! vinarise#util#truncate(...) "{{{
   return call(s:V.truncate, a:000)
 endfunction"}}}
 
-function! vinarise#util#strchars(...)"{{{
+function! vinarise#util#strchars(...) "{{{
   return call(s:V.strchars, a:000)
 endfunction"}}}
 
-function! vinarise#util#wcswidth(...)"{{{
+function! vinarise#util#wcswidth(...) "{{{
   return call(s:V.wcswidth, a:000)
 endfunction"}}}
-function! vinarise#util#strwidthpart(...)"{{{
+function! vinarise#util#strwidthpart(...) "{{{
   return call(s:V.strwidthpart, a:000)
 endfunction"}}}
-function! vinarise#util#strwidthpart_reverse(...)"{{{
+function! vinarise#util#strwidthpart_reverse(...) "{{{
   return call(s:V.strwidthpart_reverse, a:000)
 endfunction"}}}
-function! vinarise#util#is_windows(...)"{{{
+function! vinarise#util#is_windows(...) "{{{
   return call(s:V.is_windows, a:000)
 endfunction"}}}
-function! vinarise#util#is_mac(...)"{{{
+function! vinarise#util#is_mac(...) "{{{
   return call(s:V.is_mac, a:000)
 endfunction"}}}
 
-function! s:buflisted(bufnr)"{{{
+function! s:buflisted(bufnr) "{{{
   return exists('t:unite_buffer_dictionary') ?
         \ has_key(t:unite_buffer_dictionary, a:bufnr) && buflisted(a:bufnr) :
         \ buflisted(a:bufnr)
 endfunction"}}}
 
-function! vinarise#util#expand(path)"{{{
+function! vinarise#util#expand(path) "{{{
   return s:V.substitute_path_separator(
         \ (a:path =~ '^\~') ? substitute(a:path, '^\~', expand('~'), '') :
         \ (a:path =~ '^\$\h\w*') ? substitute(a:path,
@@ -78,11 +78,11 @@ function! vinarise#util#iconv(...)
   return call(s:V.iconv, a:000)
 endfunction
 
-function! vinarise#util#is_cmdwin()"{{{
+function! vinarise#util#is_cmdwin() "{{{
   return bufname('%') ==# '[Command Line]'
 endfunction"}}}
 
-function! vinarise#util#alternate_buffer()"{{{
+function! vinarise#util#alternate_buffer() "{{{
   if s:buflisted(bufnr('#'))
     buffer #
     return
@@ -98,12 +98,12 @@ function! vinarise#util#alternate_buffer()"{{{
           \ listed_buffer[current+1] : listed_buffer[current-1])
   endif
 endfunction"}}}
-function! vinarise#util#delete_buffer(...)"{{{
+function! vinarise#util#delete_buffer(...) "{{{
   let bufnr = get(a:000, 0, bufnr('%'))
   call vinarise#util#alternate_buffer()
   execute 'bdelete!' bufnr
 endfunction"}}}
-function! s:buflisted(bufnr)"{{{
+function! s:buflisted(bufnr) "{{{
   return exists('t:unite_buffer_dictionary') ?
         \ has_key(t:unite_buffer_dictionary, a:bufnr) && buflisted(a:bufnr) :
         \ buflisted(a:bufnr)

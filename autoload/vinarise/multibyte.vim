@@ -24,17 +24,17 @@
 " }}}
 "=============================================================================
 
-function! vinarise#multibyte#get_supported_encoding_pattern()"{{{
+function! vinarise#multibyte#get_supported_encoding_pattern() "{{{
   " Ascii only.
   return '^\%('.join(vinarise#multibyte#get_supported_encoding_list(), '\|').'\)$'
 endfunction"}}}
-function! vinarise#multibyte#get_supported_encoding_list()"{{{
+function! vinarise#multibyte#get_supported_encoding_list() "{{{
   " Ascii only.
   return (v:version < 703) ? ['latin1'] :
         \ ['latin1', 'utf-8', 'cp932', 'euc-jp',
         \  'utf-16le', 'utf-16be', 'ucs-2le', 'ucs-2be']
 endfunction"}}}
-function! vinarise#multibyte#make_ascii_line(line_address, bytes)"{{{
+function! vinarise#multibyte#make_ascii_line(line_address, bytes) "{{{
   let encoding = vinarise#get_current_vinarise().context.encoding
   if encoding =~? '^utf-\?8$'
     " UTF-8.
@@ -55,7 +55,7 @@ function! vinarise#multibyte#make_ascii_line(line_address, bytes)"{{{
   endif
 endfunction"}}}
 
-function! s:make_latin1_line(line_address, bytes)"{{{
+function! s:make_latin1_line(line_address, bytes) "{{{
   " Make new line.
   let ascii_line = '   '
 
@@ -72,7 +72,7 @@ function! s:make_latin1_line(line_address, bytes)"{{{
   return ascii_line . '  '
 endfunction"}}}
 
-function! s:make_utf8_line(line_address, bytes)"{{{
+function! s:make_utf8_line(line_address, bytes) "{{{
   let encoding = vinarise#get_current_vinarise().context.encoding
   let base_address = a:line_address * b:vinarise.width
   " Make new line.
@@ -143,7 +143,7 @@ function! s:make_utf8_line(line_address, bytes)"{{{
         \ strwidth(ascii_line) - (b:vinarise.width + 4))
 endfunction"}}}
 
-function! s:make_utf16_line(line_address, bytes, is_little_endian)"{{{
+function! s:make_utf16_line(line_address, bytes, is_little_endian) "{{{
   let encoding = vinarise#get_current_vinarise().context.encoding
   let base_address = a:line_address * b:vinarise.width
   " Make new line.
@@ -210,7 +210,7 @@ function! s:make_utf16_line(line_address, bytes, is_little_endian)"{{{
         \ strwidth(ascii_line) - (b:vinarise.width + 4))
 endfunction"}}}
 
-function! s:make_euc_jp_line(line_address, bytes)"{{{
+function! s:make_euc_jp_line(line_address, bytes) "{{{
   let encoding = vinarise#get_current_vinarise().context.encoding
   let base_address = a:line_address * b:vinarise.width
   " Make new line.
@@ -302,7 +302,7 @@ function! s:make_euc_jp_line(line_address, bytes)"{{{
         \ strwidth(ascii_line) - (b:vinarise.width + 4))
 endfunction"}}}
 
-function! s:make_cp932_line(line_address, bytes)"{{{
+function! s:make_cp932_line(line_address, bytes) "{{{
   let encoding = vinarise#get_current_vinarise().context.encoding
   let base_address = a:line_address * b:vinarise.width
   " Make new line.
