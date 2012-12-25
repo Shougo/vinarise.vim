@@ -37,7 +37,7 @@ if !exists('g:vinarise_objdump_command')
 endif
 
 let s:V = vital#of('vinarise')
-let s:BM = s:V.import('Vim.Buffer.Manager')
+let s:BM = s:V.import('Vim.BufferManager')
 let s:manager = s:BM.new()  " creates new manager
 call s:manager.config('opener', 'silent edit')
 "}}}

@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: bitmapview.vim
 " AUTHOR:  Shougo Matsushita <Shougo.Matsu at gmail.com>
-" Last Modified: 31 Jul 2012.
+" Last Modified: 25 Dec 2012.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -42,7 +42,7 @@ let s:font_pattern =
       \                        '*Unknown system*'
 
 let s:V = vital#of('vinarise')
-let s:BM = s:V.import('Vim.Buffer.Manager')
+let s:BM = s:V.import('Vim.BufferManager')
 let s:manager = s:BM.new()  " creates new manager
 call s:manager.config('opener', 'silent edit')
 "}}}
@@ -133,7 +133,8 @@ function! s:define_default_mappings() "{{{
         \ :<C-u>call <SID>move_by_input_address('100%')<CR>
   "}}}
 
-  if exists('g:vimshell_no_default_keymappings') && g:vimshell_no_default_keymappings
+  if exists('g:vinarise_no_default_keymappings') &&
+        \ g:vinarise_no_default_keymappings
     return
   endif
 

@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: util.vim
 " AUTHOR: Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 03 Oct 2012.
+" Last Modified: 25 Dec 2012.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -25,6 +25,7 @@
 "=============================================================================
 
 let s:V = vital#of('vinarise')
+let s:List = vital#of('vinarise').import('Data.List')
 
 function! vinarise#util#truncate_smart(...) "{{{
   return call(s:V.truncate_smart, a:000)
@@ -77,6 +78,10 @@ endfunction
 function! vinarise#util#iconv(...)
   return call(s:V.iconv, a:000)
 endfunction
+
+function! vinarise#util#sort_by(...) "{{{
+  return call(s:List.sort_by, a:000)
+endfunction"}}}
 
 function! vinarise#util#is_cmdwin() "{{{
   return bufname('%') ==# '[Command Line]'

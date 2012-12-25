@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: vinarise.vim
 " AUTHOR:  Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 10 Sep 2012.
+" Last Modified: 25 Dec 2012.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -51,7 +51,7 @@ let g:vinarise_var_prefix = 'vinarise_'
 "}}}
 " Variables  "{{{
 let s:V = vital#of('vinarise')
-let s:BM = s:V.import('Vim.Buffer.Manager')
+let s:BM = s:V.import('Vim.BufferManager')
 let s:manager = s:BM.new()  " creates new manager
 call s:manager.config('opener', 'silent edit')
 
@@ -636,7 +636,7 @@ function! s:initialize_context(context) "{{{
 endfunction"}}}
 function! s:get_postfix(prefix, is_create) "{{{
   let buffers = get(a:000, 0, range(1, bufnr('$')))
-  let buflist = vimshell#util#sort_by(filter(map(buffers,
+  let buflist = vinarise#util#sort_by(filter(map(buffers,
         \ 'bufname(v:val)'), 'stridx(v:val, a:prefix) >= 0'),
         \ "str2nr(matchstr(v:val, '\\d\\+$'))")
   if empty(buflist)
