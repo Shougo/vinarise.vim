@@ -8,7 +8,8 @@ WINDOWS = sys.platform == 'win32'
 PY3 = sys.version_info[0] == 3
 
 if PY3:
-    unicode = str
+    unicode = str      # str is already unicode.
+    ord = lambda x: x  # mmap[i] returns int.
 
 class VinariseBuffer(object):
     def open(self, path):
