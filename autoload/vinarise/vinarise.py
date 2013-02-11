@@ -5,7 +5,7 @@ import vim
 import sys
 
 WINDOWS = sys.platform == 'win32'
-PY3K = sys.version_info[0] == 3
+PY3 = sys.version_info[0] == 3
 
 class VinariseBuffer(object):
     def open(self, path):
