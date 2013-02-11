@@ -7,6 +7,9 @@ import sys
 WINDOWS = sys.platform == 'win32'
 PY3 = sys.version_info[0] == 3
 
+if PY3:
+    unicode = str
+
 class VinariseBuffer(object):
     def open(self, path):
         # init vars
