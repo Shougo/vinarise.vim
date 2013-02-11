@@ -2,38 +2,33 @@ import mmap
 import os
 import re
 import vim
+import sys
 
+WINDOWS = sys.platform == 'win32'
+PY3K = sys.version_info[0] == 3
 
 class VinariseBuffer(object):
-    def open(self, path, is_windows):
+    def open(self, path):
         # init vars
         self.file = open(path, 'rb')
         self.path = path
-        self.is_windows = is_windows
         self.fsize = os.path.getsize(self.path)
         mmap_max = 0
         if self.fsize > 1000000000:
             mmap_max = 1000000000
+        self._mmap(self.file.fileno(), mmap_max)
 
-        if int(is_windows):
-            self.mmap = mmap.mmap(self.file.fileno(), mmap_max,
-                    None, mmap.ACCESS_COPY, 0)
-        else:
-            self.mmap = mmap.mmap(self.file.fileno(), mmap_max,
-                    access = mmap.ACCESS_COPY, offset = 0)
-
-    def open_bytes(self, length, is_windows):
+    def open_bytes(self, length):
         # init vars
         self.path = ''
-        self.is_windows = is_windows
         self.fsize = int(length)
+        self._mmap(-1, self.fsize)
 
-        if int(is_windows):
-            self.mmap = mmap.mmap(-1, self.fsize,
-                    None, mmap.ACCESS_COPY, 0)
+    def _mmap(self, fno, size):
+        if WINDOWS:
+            self.mmap = mmap.mmap(fno, size, None, mmap.ACCESS_COPY, 0)
         else:
-            self.mmap = mmap.mmap(-1, self.fsize,
-                    access = mmap.ACCESS_COPY, offset = 0)
+            self.mmap = mmap.mmap(fno, size, access=mmap.ACCESS_COPY, offset=0)
 
     def close(self):
         if hasattr(self, 'file'):
@@ -44,7 +39,6 @@ class VinariseBuffer(object):
         if path == self.path:
             # Close current file temporary.
             str = self.mmap[0:]
-            is_windows = self.is_windows
             self.close()
         else:
             str = self.mmap
@@ -55,7 +49,7 @@ class VinariseBuffer(object):
 
         if path == self.path:
             # Re open file.
-            self.open(path, is_windows)
+            self.open(path)
 
     def get_byte(self, addr):
         return ord(self.mmap[int(addr)])
