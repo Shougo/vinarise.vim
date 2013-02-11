@@ -2,38 +2,37 @@ import mmap
 import os
 import re
 import vim
-import os.path
+import sys
 
-class VinariseBuffer:
-    def open(self, path, is_windows):
+WINDOWS = sys.platform == 'win32'
+PY3 = sys.version_info[0] == 3
+
+if PY3:
+    unicode = str      # str is already unicode.
+    ord = lambda x: x  # mmap[i] returns int.
+
+class VinariseBuffer(object):
+    def open(self, path):
         # init vars
         self.file = open(path, 'rb')
         self.path = path
-        self.is_windows = is_windows
         self.fsize = os.path.getsize(self.path)
         mmap_max = 0
         if self.fsize > 1000000000:
             mmap_max = 1000000000
+        self._mmap(self.file.fileno(), mmap_max)
 
-        if int(is_windows):
-            self.mmap = mmap.mmap(self.file.fileno(), mmap_max,
-                    None, mmap.ACCESS_COPY, 0)
-        else:
-            self.mmap = mmap.mmap(self.file.fileno(), mmap_max,
-                    access = mmap.ACCESS_COPY, offset = 0)
-
-    def open_bytes(self, length, is_windows):
+    def open_bytes(self, length):
         # init vars
         self.path = ''
-        self.is_windows = is_windows
         self.fsize = int(length)
+        self._mmap(-1, self.fsize)
 
-        if int(is_windows):
-            self.mmap = mmap.mmap(-1, self.fsize,
-                    None, mmap.ACCESS_COPY, 0)
+    def _mmap(self, fno, size):
+        if WINDOWS:
+            self.mmap = mmap.mmap(fno, size, None, mmap.ACCESS_COPY, 0)
         else:
-            self.mmap = mmap.mmap(-1, self.fsize,
-                    access = mmap.ACCESS_COPY, offset = 0)
+            self.mmap = mmap.mmap(fno, size, access=mmap.ACCESS_COPY, offset=0)
 
     def close(self):
         if hasattr(self, 'file'):
@@ -44,7 +43,6 @@ class VinariseBuffer:
         if path == self.path:
             # Close current file temporary.
             str = self.mmap[0:]
-            is_windows = self.is_windows
             self.close()
         else:
             str = self.mmap
@@ -55,7 +53,7 @@ class VinariseBuffer:
 
         if path == self.path:
             # Re open file.
-            self.open(path, is_windows)
+            self.open(path)
 
     def get_byte(self, addr):
         return ord(self.mmap[int(addr)])
@@ -94,10 +92,10 @@ class VinariseBuffer:
         self.mmap[int(addr)] = chr(int(value))
 
     def get_percentage(self, address):
-        return (int(address)*100) / (self.fsize - 1)
+        return (int(address)*100) // (self.fsize - 1)
 
     def get_percentage_address(self, percent):
-        return ((self.fsize - 1) * int(percent)) / 100
+        return ((self.fsize - 1) * int(percent)) // 100
 
     def find(self, address, str, from_enc, to_enc):
         pattern = unicode(str, from_enc, 'replace').encode(to_enc, 'replace')
@@ -117,7 +115,7 @@ class VinariseBuffer:
 
     def find_binary(self, address, binary):
         addr = int(address)
-        bytes = [int(binary[i*2 : i*2+2], 16) for i in range(len(binary) / 2)]
+        bytes = [int(binary[i*2 : i*2+2], 16) for i in range(len(binary) // 2)]
         while addr < self.fsize:
             if self.get_byte(addr) == bytes[0] and bytes == self.get_bytes(addr, len(bytes)):
                 return addr
@@ -126,7 +124,7 @@ class VinariseBuffer:
 
     def rfind_binary(self, address, binary):
         addr = int(address)
-        bytes = [int(binary[i*2 : i*2+2], 16) for i in range(len(binary) / 2)]
+        bytes = [int(binary[i*2 : i*2+2], 16) for i in range(len(binary) // 2)]
         while addr < self.fsize:
             if self.get_byte(addr) == bytes[0] and bytes == self.get_bytes(addr, len(bytes)):
                 return addr
@@ -135,7 +133,7 @@ class VinariseBuffer:
 
     def find_binary_not(self, address, binary):
         addr = int(address)
-        bytes = [int(binary[i*2 : i*2+2], 16) for i in range(len(binary) / 2)]
+        bytes = [int(binary[i*2 : i*2+2], 16) for i in range(len(binary) // 2)]
         while addr < self.fsize:
             if self.get_byte(addr) != bytes[0] and bytes != self.get_bytes(addr, len(bytes)):
                 return addr
@@ -144,10 +142,9 @@ class VinariseBuffer:
 
     def rfind_binary_not(self, address, binary):
         addr = int(address)
-        bytes = [int(binary[i*2 : i*2+2], 16) for i in range(len(binary) / 2)]
+        bytes = [int(binary[i*2 : i*2+2], 16) for i in range(len(binary) // 2)]
         while addr < self.fsize:
             if self.get_byte(addr) != bytes[0] and bytes != self.get_bytes(addr, len(bytes)):
                 return addr
             addr -= 1
         return -1
-
