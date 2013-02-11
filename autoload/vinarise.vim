@@ -170,12 +170,10 @@ function! vinarise#start(filename, context) "{{{
   " try
     if empty(context.bytes)
       execute 'python' g:vinarise_var_prefix.
-            \ ".open(vim.eval('vinarise#util#iconv(filename, &encoding, \"char\")'),".
-            \ "vim.eval('vinarise#util#is_windows()'))"
+            \ ".open(vim.eval('vinarise#util#iconv(filename, &encoding, \"char\")'))"
     else
       execute 'python' g:vinarise_var_prefix.
-            \ ".open_bytes(vim.eval('len(context.bytes)'),".
-            \ "vim.eval('vinarise#util#is_windows()'))"
+            \ ".open_bytes(vim.eval('len(context.bytes)'))"
 
       " Set values.
       let address = 0
@@ -420,13 +418,11 @@ function! s:initialize_vinarise_buffer(context, filename, filesize) "{{{
   " Wrapper functions.
   function! b:vinarise.open(filename) "{{{
     execute 'python' self.python.
-          \ ".open(vim.eval('vinarise#util#iconv(filename, &encoding, \"char\")'),".
-          \ "vim.eval('vinarise#util#is_windows()'))"
+          \ ".open(vim.eval('vinarise#util#iconv(filename, &encoding, \"char\")'))"
   endfunction"}}}
   function! b:vinarise.open_bytes(bytes) "{{{
     execute 'python' self.python.
-          \ ".open(vim.eval('len(a:bytes)'),".
-          \ "vim.eval('vinarise#util#is_windows()'))"
+          \ ".open(vim.eval('len(a:bytes)'))"
     let address = 0
     for byte in a:bytes
       call self.set_byte(address, byte)
