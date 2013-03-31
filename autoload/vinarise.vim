@@ -25,12 +25,12 @@
 "=============================================================================
 
 " Check Python. "{{{
-if has('python')
-  let s:python = 'python'
-  let s:pyfile = 'pyfile'
-elseif has('python3')
+if has('python3')
   let s:python = 'python3'
   let s:pyfile = 'py3file'
+elseif has('python')
+  let s:python = 'python'
+  let s:pyfile = 'pyfile'
 else
   echoerr 'Vinarise requires python interface.'
   finish
