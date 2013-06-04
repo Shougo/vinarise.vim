@@ -109,8 +109,8 @@ g:vinarise_enable_auto_detect			*g:vinarise_enable_auto_detect*
 
 g:vinarise_detect_large_file_size		*g:vinarise_detect_large_file_size*
 		This variable is |vinarise| detect large file size.
-		If this variable value is less equal than 0, will disable large
-		file detection.
+		If this variable value is less equal than 0, will disable
+		large file detection.
 		Note: This variable is valid in |g:vinarise_enable_auto_detect|
 		is 1.
 		
@@ -174,10 +174,10 @@ VINARISE BUFFER KEY MAPPINGS 			*vinarise-buffer-key-mappings*
 		Move to previous screen address in vinarise buffer.
 
 <Plug>(vinarise_next_half_screen)		*<Plug>(vinarise_next_half_screen)*
-		Move to next a harf of screen address in vinarise buffer.
+		Move to next a half of screen address in vinarise buffer.
 
 <Plug>(vinarise_prev_half_screen)		*<Plug>(vinarise_prev_half_screen)*
-		Move to previous a harf of screen address in vinarise buffer.
+		Move to previous a half of screen address in vinarise buffer.
 
 <Plug>(vinarise_print_current_position)		*<Plug>(vinarise_print_current_position)*
 		Print current portion.
@@ -227,7 +227,8 @@ VINARISE BUFFER KEY MAPPINGS 			*vinarise-buffer-key-mappings*
 		Search the last pattern repeatedly in the binary file.
 
 <Plug>(vinarise_search_last_pattern_reverse)	*<Plug>(vinarise_search_last_pattern_reverse)*
-		Search the last pattern repeatedly in the binary file by reverse.
+		Search the last pattern repeatedly in the binary file by
+		reverse.
 
 <Plug>(vinarise_change_encoding)		*<Plug>(vinarise_change_encoding)*
 		Change vinarise buffer encoding.
