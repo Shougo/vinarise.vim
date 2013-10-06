@@ -27,6 +27,10 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
+function! vinarise#version() "{{{
+  return str2nr(printf('%02d%02d', 2, 0))
+endfunction"}}}
+
 " Variables  "{{{
 let s:vinarise_options = [
       \ '-split', '-split-command',
