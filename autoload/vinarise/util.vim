@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: util.vim
 " AUTHOR: Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 25 Dec 2012.
+" Last Modified: 06 Oct 2013.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -25,7 +25,12 @@
 "=============================================================================
 
 let s:V = vital#of('vinarise')
-let s:List = vital#of('vinarise').import('Data.List')
+
+function! vinarise#util#get_vital() "{{{
+  return s:V
+endfunction"}}}
+
+let s:List = vinarise#util#get_vital().import('Data.List')
 
 function! vinarise#util#truncate_smart(...) "{{{
   return call(s:V.truncate_smart, a:000)
@@ -69,15 +74,15 @@ function! vinarise#util#expand(path) "{{{
         \ a:path)
 endfunction"}}}
 
-function! vinarise#util#substitute_path_separator(...)
+function! vinarise#util#substitute_path_separator(...) "{{{
   return call(s:V.substitute_path_separator, a:000)
-endfunction
-function! vinarise#util#escape_file_searching(...)
+endfunction"}}}
+function! vinarise#util#escape_file_searching(...) "{{{
   return call(s:V.escape_file_searching, a:000)
-endfunction
-function! vinarise#util#iconv(...)
+endfunction"}}}
+function! vinarise#util#iconv(...) "{{{
   return call(s:V.iconv, a:000)
-endfunction
+endfunction"}}}
 
 function! vinarise#util#sort_by(...) "{{{
   return call(s:List.sort_by, a:000)
