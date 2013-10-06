@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: vinarise.vim
 " AUTHOR:  Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 26 May 2013.
+" Last Modified: 06 Oct 2013.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -104,6 +104,11 @@ function! s:parse_args(default, args) "{{{
 endfunction"}}}
 
 function! s:browse_check(path) "{{{
+  if bufnr('%') != expand('<abuf>')
+        \ || a:path == ''
+    return
+  endif
+
   let path = vinarise#util#expand(a:path)
   if fnamemodify(path, ':t') ==# '~'
     let path = vinarise#util#expand('~')
