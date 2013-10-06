@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: mappings.vim
 " AUTHOR: Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 09 Sep 2012.
+" Last Modified: 06 Oct 2013.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -148,18 +148,18 @@ function! vinarise#mappings#move_to_address(address) "{{{
   if first_address < 0
     let first_address = 0
   endif
-  call vinarise#print_lines(winheight(0), first_address)
+  call vinarise#view#print_lines(winheight(0), first_address)
 
   let &l:modified = modified_save
   setlocal nomodifiable
 
   " Set cursor.
-  call vinarise#set_cursor_address(address)
+  call vinarise#view#set_cursor_address(address)
 endfunction "}}}
 function! vinarise#mappings#redraw() "{{{
   " Redraw vinarise buffer.
 
-  let [_, address] = vinarise#parse_address(getline('.'),
+  let [_, address] = vinarise#helper#parse_address(getline('.'),
         \ vinarise#get_cur_text(getline('.'), col('.')))
   call vinarise#mappings#move_to_address(address)
 endfunction "}}}
@@ -201,12 +201,12 @@ function! s:exit() "{{{
     endif
   endif
 
-  call vinarise#release_buffer(bufnr('%'))
+  call vinarise#handler#release_buffer(bufnr('%'))
   call vinarise#util#delete_buffer()
 endfunction"}}}
 function! s:print_current_position() "{{{
   " Get current address.
-  let [type, address] = vinarise#parse_address(getline('.'),
+  let [type, address] = vinarise#helper#parse_address(getline('.'),
         \ vinarise#get_cur_text(getline('.'), col('.')))
   let percentage = b:vinarise.get_percentage(address)
 
@@ -215,7 +215,7 @@ function! s:print_current_position() "{{{
 endfunction"}}}
 function! s:change_current_address() "{{{
   " Get current address.
-  let [type, address] = vinarise#parse_address(getline('.'),
+  let [type, address] = vinarise#helper#parse_address(getline('.'),
         \ vinarise#get_cur_text(getline('.'), col('.')))
   if type == 'address'
     " Invalid.
@@ -240,14 +240,14 @@ function! s:change_current_address() "{{{
   setlocal modifiable
 
   " Change current line.
-  call setline('.', vinarise#make_line(address / b:vinarise.width))
+  call setline('.', vinarise#view#make_line(address / b:vinarise.width))
   setlocal modified
 
   setlocal nomodifiable
 endfunction"}}}
 function! s:overwrite_from_current_address() "{{{
   " Get current address.
-  let [type, address] = vinarise#parse_address(getline('.'),
+  let [type, address] = vinarise#helper#parse_address(getline('.'),
         \ vinarise#get_cur_text(getline('.'), col('.')))
   if type == 'address'
     " Invalid.
@@ -263,9 +263,9 @@ function! s:overwrite_from_current_address() "{{{
     if value == ''
       return
     elseif value !~ '^\x\+$'
-      call vinarise#print_error('The value must be hex.')
+      call vinarise#view#print_error('The value must be hex.')
     elseif len(value) % 2 != 0
-      call vinarise#print_error('The value length must be 2^n.')
+      call vinarise#view#print_error('The value length must be 2^n.')
     else
       break
     endif
@@ -286,7 +286,7 @@ function! s:overwrite_from_current_address() "{{{
 endfunction"}}}
 
 function! s:move_col(is_next) "{{{
-  let [type, address] = vinarise#parse_address(getline('.'),
+  let [type, address] = vinarise#helper#parse_address(getline('.'),
         \ vinarise#get_cur_text(getline('.'), col('.')))
   if a:is_next
     if type ==# 'hex'
@@ -319,35 +319,35 @@ endfunction "}}}
 function! s:move_line(is_next) "{{{
   if a:is_next
     if line('.') == line('$')
-      call vinarise#print_lines(2)
+      call vinarise#view#print_lines(2)
     endif
     normal! j
   else
     if !a:is_next && line('.') == 1
-      call vinarise#print_lines(-2)
+      call vinarise#view#print_lines(-2)
     endif
     normal! k
   endif
 endfunction "}}}
 function! s:move_line_address(is_first) "{{{
-  let [type, address] = vinarise#parse_address(getline('.'),
+  let [type, address] = vinarise#helper#parse_address(getline('.'),
         \ vinarise#get_cur_text(getline('.'), col('.')))
   let address = (address / b:vinarise.width) * b:vinarise.width
   if !a:is_first
     let address += 15
   endif
 
-  call vinarise#set_cursor_address(address)
+  call vinarise#view#set_cursor_address(address)
 endfunction "}}}
 function! s:move_screen(is_next) "{{{
   if a:is_next
     if line('.') + 2 * winheight(0) > line('$')
-      call vinarise#print_lines(winheight(0))
+      call vinarise#view#print_lines(winheight(0))
     endif
     execute "normal! \<C-f>"
   else
     if line('.') < 2 * winheight(0)
-      call vinarise#print_lines(-winheight(0))
+      call vinarise#view#print_lines(-winheight(0))
     endif
     execute "normal! \<C-b>"
   endif
@@ -355,19 +355,19 @@ endfunction "}}}
 function! s:move_half_screen(is_next) "{{{
   if a:is_next
     if line('.') + winheight(0) > line('$')
-      call vinarise#print_lines(winheight(0)/2)
+      call vinarise#view#print_lines(winheight(0)/2)
     endif
     execute "normal! \<C-d>"
   else
     if !a:is_next && line('.') < winheight(0)
-      call vinarise#print_lines(-winheight(0)/2)
+      call vinarise#view#print_lines(-winheight(0)/2)
     endif
     execute "normal! \<C-u>"
   endif
 endfunction "}}}
 function! s:move_by_input_offset(input) "{{{
   " Get current address.
-  let [type, address] = vinarise#parse_address(getline('.'),
+  let [type, address] = vinarise#helper#parse_address(getline('.'),
         \ vinarise#get_cur_text(getline('.'), col('.')))
   let rest = max([0, b:vinarise.filesize - address - 1])
   let offset = (a:input == '') ?
@@ -467,7 +467,7 @@ function! s:search_buffer(type, is_reverse, string) "{{{
     endif
   endif
 
-  let [_, start] = vinarise#parse_address(getline('.'),
+  let [_, start] = vinarise#helper#parse_address(getline('.'),
         \ vinarise#get_cur_text(getline('.'), col('.')))
   if a:is_reverse
     let start -= 1
@@ -519,7 +519,7 @@ function! s:change_encoding() "{{{
     return
   elseif encoding !~?
         \ vinarise#multibyte#get_supported_encoding_pattern()
-    call vinarise#print_error(
+    call vinarise#view#print_error(
           \ 'encoding type: "'.encoding.'" is not supported.')
     return
   endif
@@ -535,7 +535,7 @@ function! s:reload() "{{{
   let context = deepcopy(vinarise.context)
   let filename = vinarise#get_current_vinarise().filename
 
-  call vinarise#start(filename, context)
+  call vinarise#init#start(filename, context)
 endfunction"}}}
 
 " vim: foldmethod=marker

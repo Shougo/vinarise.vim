@@ -61,15 +61,15 @@ endif
 function! s:call_vinarise(default, args) "{{{
   let [args, context] = s:parse_args(a:default, a:args)
 
-  call vinarise#start(join(args), context)
+  call vinarise#init#start(join(args), context)
 endfunction"}}}
 function! s:call_script2hex(default, args) "{{{
   let [args, context] = s:parse_args(a:default, a:args)
   if !get(g:, 'loaded_hexript', 0)
-    call vinarise#print_error('hexript plugin is needed.')
+    call vinarise#view#print_error('hexript plugin is needed.')
     return
   elseif &filetype !=# 'hexript' || !filereadable(expand('%'))
-    call vinarise#print_error('hexript file is not found.')
+    call vinarise#view#print_error('hexript file is not found.')
     return
   endif
 
@@ -77,7 +77,7 @@ function! s:call_script2hex(default, args) "{{{
   let dict = hexript#file_to_dict(expand('%'))
   let context.bytes = dict.bytes
 
-  call vinarise#start(join(args), context)
+  call vinarise#init#start(join(args), context)
 endfunction"}}}
 function! s:parse_args(default, args) "{{{
   let args = []

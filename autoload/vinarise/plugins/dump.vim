@@ -68,7 +68,7 @@ function! s:dump_open() "{{{
 
   let ret = s:manager.open(s:dump_BUFFER_NAME . vinarise.filename)
   if !ret.loaded
-    call vinarise#print_error(
+    call vinarise#view#print_error(
           \ '[vinarise] Failed to open Buffer.')
     return
   endif
