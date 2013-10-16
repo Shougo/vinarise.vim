@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: handlerss.vim
 " AUTHOR: Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 06 Oct 2013.
+" Last Modified: 17 Oct 2013.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -32,7 +32,7 @@ function! vinarise#handlers#release_buffer(bufnr) "{{{
   let vinarise = getbufvar(a:bufnr, 'vinarise')
 
   " Plugins finalization.
-  for plugin in values(s:vinarise_plugins)
+  for plugin in values(vinarise.plugins)
     if has_key(plugin, 'finalize')
       call plugin.finalize(vinarise, vinarise.context)
     endif
@@ -66,6 +66,26 @@ function! vinarise#handlers#write_buffer(filename) "{{{
 
   setlocal nomodified
   echo printf('"%s" %d bytes', filename, b:vinarise.filesize)
+endfunction"}}}
+function! vinarise#handlers#match_ascii() "{{{
+  let [type, address] = vinarise#helper#parse_address(getline('.'),
+        \ vinarise#get_cur_text(getline('.'), col('.')))
+  if type != 'hex'
+    match
+    return
+  endif
+
+  let offset = address % b:vinarise.width
+
+  let encoding = vinarise#get_current_vinarise().context.encoding
+
+  if encoding !=# 'latin1'
+    let offset = len(vinarise#util#truncate(
+          \ matchstr(getline('.'), '\x\+\s\+|\zs.*\ze.$'), offset + 3)) - 3
+  endif
+
+  execute 'match' g:vinarise_cursor_ascii_highlight.
+        \ ' /\%'.line('.').'l\%'.(63+offset).'c/'
 endfunction"}}}
 
 let &cpo = s:save_cpo

@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: mappings.vim
 " AUTHOR: Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 06 Oct 2013.
+" Last Modified: 17 Oct 2013.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -201,7 +201,7 @@ function! s:exit() "{{{
     endif
   endif
 
-  call vinarise#handler#release_buffer(bufnr('%'))
+  call vinarise#handlers#release_buffer(bufnr('%'))
   call vinarise#util#delete_buffer()
 endfunction"}}}
 function! s:print_current_position() "{{{
