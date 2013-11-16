@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: mappings.vim
 " AUTHOR: Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 17 Oct 2013.
+" Last Modified: 16 Nov 2013.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -107,6 +107,8 @@ function! vinarise#mappings#define_default_mappings() "{{{
   nmap <buffer> k         <Plug>(vinarise_prev_line)
   nmap <buffer> <C-f>     <Plug>(vinarise_next_screen)
   nmap <buffer> <C-b>     <Plug>(vinarise_prev_screen)
+  nmap <buffer> <PageDown>   <Plug>(vinarise_next_screen)
+  nmap <buffer> <PageUp>     <Plug>(vinarise_prev_screen)
   nmap <buffer> <C-d>     <Plug>(vinarise_next_half_screen)
   nmap <buffer> <C-u>     <Plug>(vinarise_prev_half_screen)
   nmap <buffer> <C-g>     <Plug>(vinarise_print_current_position)
