@@ -10,6 +10,7 @@ PY3 = sys.version_info[0] == 3
 if PY3:
     unicode = str      # str is already unicode.
     ord = lambda x: x  # mmap[i] returns int.
+    chr = lambda x: x  # mmap[i] must be int.
 
 class VinariseBuffer(object):
     def open(self, path):
