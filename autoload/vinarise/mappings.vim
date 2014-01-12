@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: mappings.vim
 " AUTHOR: Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 16 Nov 2013.
+" Last Modified: 12 Jan 2014.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -135,6 +135,31 @@ function! vinarise#mappings#define_default_mappings() "{{{
   nmap <buffer> g<C-l>     <Plug>(vinarise_reload)
 endfunction"}}}
 
+function! vinarise#mappings#move_by_input_address(input) "{{{
+  let address = (a:input == '') ?
+        \ input(printf('Please input new address(max 0x%x) : ',
+        \     b:vinarise.filesize), '0x') : a:input
+  redraw
+  if address == ''
+    echo 'Canceled.'
+    return
+  endif
+  if address =~ '^0x\x\+$'
+    " Convert hex.
+    let address = str2nr(address, 16)
+  elseif address =~ '^\d\+%$'
+    " Convert percentage.
+    let percentage = address[: -2]
+    let address = b:vinarise.get_percentage_address(percentage)
+  endif
+
+  if address !~ '^\d\+$'
+    echo 'Invalid address.'
+    return
+  endif
+
+  call vinarise#mappings#move_to_address(address)
+endfunction "}}}
 function! vinarise#mappings#move_to_address(address) "{{{
   let address = a:address
   if address >= b:vinarise.filesize
@@ -397,32 +422,7 @@ function! s:move_by_input_offset(input) "{{{
     return
   endif
 
-  call s:move_by_input_address(printf("0x%x", address))
-endfunction "}}}
-function! s:move_by_input_address(input) "{{{
-  let address = (a:input == '') ?
-        \ input(printf('Please input new address(max 0x%x) : ',
-        \     b:vinarise.filesize), '0x') : a:input
-  redraw
-  if address == ''
-    echo 'Canceled.'
-    return
-  endif
-  if address =~ '^0x\x\+$'
-    " Convert hex.
-    let address = str2nr(address, 16)
-  elseif address =~ '^\d\+%$'
-    " Convert percentage.
-    let percentage = address[: -2]
-    let address = b:vinarise.get_percentage_address(percentage)
-  endif
-
-  if address !~ '^\d\+$'
-    echo 'Invalid address.'
-    return
-  endif
-
-  call vinarise#mappings#move_to_address(address)
+  call vinarise#mappings#move_by_input_address(printf("0x%x", address))
 endfunction "}}}
 function! s:search_buffer(type, is_reverse, string) "{{{
   if a:string != ''

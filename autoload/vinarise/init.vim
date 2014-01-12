@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: init.vim
 " AUTHOR:  Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 17 Oct 2013.
+" Last Modified: 12 Jan 2014.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -62,25 +62,25 @@ function! vinarise#init#start(filename, context) "{{{
     if filename == ''
       let filename = bufname('%')
       if &l:buftype =~ 'nofile'
-        call vinarise#print_error(
+        call vinarise#view#print_error(
               \ '[vinarise] Nofile buffer is detected. This operation is invalid.')
         return
       elseif &l:modified
-        call vinarise#print_error(
+        call vinarise#view#print_error(
               \ '[vinarise] Modified buffer is detected! This operation is invalid.')
         return
       endif
     endif
 
     if !filereadable(filename)
-      call vinarise#print_error(
+      call vinarise#view#print_error(
             \ '[vinarise] File "'.filename.'" is not found.')
       return
     endif
 
     let filesize = getfsize(filename)
     if filesize == 0
-      call vinarise#print_error(
+      call vinarise#view#print_error(
             \ '[vinarise] File "'.filename.'" is empty. '.
             \ 'vinarise cannot open empty file.')
       return
@@ -91,7 +91,7 @@ function! vinarise#init#start(filename, context) "{{{
 
   if context.encoding !~?
         \ vinarise#multibyte#get_supported_encoding_pattern()
-    call vinarise#print_error(
+    call vinarise#view#print_error(
           \ '[vinarise] encoding type: "'.context.encoding.'" is not supported.')
     return
   endif
@@ -120,9 +120,9 @@ function! vinarise#init#start(filename, context) "{{{
       endfor
     endif
   " catch
-    " call vinarise#print_error(v:exception)
-    " call vinarise#print_error(v:throwpoint)
-    " call vinarise#print_error('file : "' . filename . '" Its filesize may be too large.')
+    " call vinarise#view#print_error(v:exception)
+    " call vinarise#view#print_error(v:throwpoint)
+    " call vinarise#view#print_error('file : "' . filename . '" Its filesize may be too large.')
     " return
   " endtry
 
@@ -138,7 +138,7 @@ function! vinarise#init#start(filename, context) "{{{
     let bufname = prefix . s:get_postfix(prefix, 1)
     let ret = s:manager.open(bufname)
     if ret.bufnr <= 0
-      call vinarise#print_error(
+      call vinarise#view#print_error(
             \ '[vinarise] Failed to open Buffer.')
       return
     endif
@@ -148,7 +148,11 @@ function! vinarise#init#start(filename, context) "{{{
 
   let s:current_vinarise = b:vinarise
 
-  call vinarise#mappings#move_to_address(0)
+  if context.position =~ '^\d\+$'
+    call vinarise#mappings#move_to_address(context.position)
+  else
+    call vinarise#mappings#move_by_input_address(context.position)
+  endif
 
   setlocal nomodified
 
@@ -310,7 +314,7 @@ function! s:initialize_vinarise_buffer(context, filename, filesize) "{{{
             \ ."vim.eval('a:from'),"
             \ ."vim.eval('a:to'))))"
     catch
-      call vinarise#print_error('Invalid regexp pattern!')
+      call vinarise#view#print_error('Invalid regexp pattern!')
       return -1
     endtry
 
@@ -384,6 +388,7 @@ function! s:initialize_context(context) "{{{
         \ 'split_command' : 'split',
         \ 'overwrite' : 0,
         \ 'encoding' : 'latin1',
+        \ 'position' : 0,
         \ 'bytes' : [],
         \ }
   let context = extend(default_context, a:context)
@@ -410,7 +415,7 @@ function! s:get_postfix(prefix, is_create) "{{{
 endfunction"}}}
 function! s:hex2script(filename) "{{{
   if !get(g:, 'loaded_hexript', 0)
-    call vinarise#print_error('hexript plugin is needed.')
+    call vinarise#view#print_error('hexript plugin is needed.')
     return
   endif
 

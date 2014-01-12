@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: vinarise.vim
 " AUTHOR:  Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 06 Oct 2013.
+" Last Modified: 12 Jan 2014.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -83,7 +83,7 @@ function! s:parse_args(default, args) "{{{
   let args = []
   let context = a:default
   for arg in split(a:args, '\%(\\\@<!\s\)\+')
-    let arg = substitute(arg, '\\\( \)', '\1', 'g')
+    let arg = substitute(arg, '\\\(.\)', '\1', 'g')
 
     let matched_list = filter(copy(vinarise#get_options()),
           \  'stridx(arg, v:val) == 0')

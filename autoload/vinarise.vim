@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: vinarise.vim
 " AUTHOR:  Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 06 Oct 2013.
+" Last Modified: 12 Jan 2014.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -35,7 +35,7 @@ endfunction"}}}
 let s:vinarise_options = [
       \ '-split', '-split-command',
       \ '-winwidth=', '-winheight=',
-      \ '-overwrite', '-encoding='
+      \ '-overwrite', '-encoding=', '-position=',
       \]
 let s:current_vinarise = {}
 let s:use_current_vinarise = 0
