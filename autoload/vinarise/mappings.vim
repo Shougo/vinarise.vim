@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: mappings.vim
 " AUTHOR: Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 12 Jan 2014.
+" Last Modified: 20 Jan 2014.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -61,13 +61,13 @@ function! vinarise#mappings#define_default_mappings() "{{{
         \ <Plug>(vinarise_overwrite_from_current_address)
         \ :<C-u>call <SID>overwrite_from_current_address()<CR>
   nnoremap <buffer><silent> <Plug>(vinarise_move_by_input_address)
-        \ :<C-u>call <SID>move_by_input_address('')<CR>
+        \ :<C-u>call vinarise#mappings#move_by_input_address('')<CR>
   nnoremap <buffer><silent> <Plug>(vinarise_move_by_input_offset)
         \ :<C-u>call <SID>move_by_input_offset('')<CR>
   nnoremap <buffer><silent> <Plug>(vinarise_move_to_first_address)
-        \ :<C-u>call <SID>move_by_input_address('0%')<CR>
+        \ :<C-u>call vinarise#mappings#move_by_input_address('0%')<CR>
   nnoremap <buffer><silent> <Plug>(vinarise_move_to_last_address)
-        \ :<C-u>call <SID>move_by_input_address('100%')<CR>
+        \ :<C-u>call vinarise#mappings#move_by_input_address('100%')<CR>
   nnoremap <buffer><silent> <Plug>(vinarise_search_binary)
         \ :<C-u>call <SID>search_buffer('binary', 0, '')<CR>
   nnoremap <buffer><silent> <Plug>(vinarise_search_binary_reverse)

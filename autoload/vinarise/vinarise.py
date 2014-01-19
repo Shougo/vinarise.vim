@@ -12,8 +12,8 @@ if PY3:
     ord_wrap = lambda x: x  # mmap[i] returns int.
     chr_wrap = lambda x: x  # mmap[i] must be int.
 else:
-    ord_wrap = lambda x: ord_wrap(x)  # mmap[i] returns int.
-    chr_wrap = lambda x: chr_wrap(x)  # mmap[i] must be int.
+    ord_wrap = lambda x: ord(x)  # mmap[i] returns int.
+    chr_wrap = lambda x: chr(x)  # mmap[i] must be int.
 
 class VinariseBuffer(object):
     def open(self, path):
