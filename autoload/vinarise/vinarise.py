@@ -9,8 +9,11 @@ PY3 = sys.version_info[0] == 3
 
 if PY3:
     unicode = str      # str is already unicode.
-    ord = lambda x: x  # mmap[i] returns int.
-    chr = lambda x: x  # mmap[i] must be int.
+    ord_wrap = lambda x: x  # mmap[i] returns int.
+    chr_wrap = lambda x: x  # mmap[i] must be int.
+else:
+    ord_wrap = lambda x: ord_wrap(x)  # mmap[i] returns int.
+    chr_wrap = lambda x: chr_wrap(x)  # mmap[i] must be int.
 
 class VinariseBuffer(object):
     def open(self, path):
@@ -57,12 +60,12 @@ class VinariseBuffer(object):
             self.open(path)
 
     def get_byte(self, addr):
-        return ord(self.mmap[int(addr)])
+        return ord_wrap(self.mmap[int(addr)])
 
     def get_bytes(self, addr, count):
         if int(count) == 0:
             return []
-        return [ord(x) for x in self.mmap[int(addr) : int(addr)+int(count)]]
+        return [ord_wrap(x) for x in self.mmap[int(addr) : int(addr)+int(count)]]
 
     def get_int8(self, addr):
         return self.get_byte(addr)
@@ -90,7 +93,7 @@ class VinariseBuffer(object):
         return unicode(chars, from_enc, 'replace').encode(to_enc, 'replace')
 
     def set_byte(self, addr, value):
-        self.mmap[int(addr)] = chr(int(value))
+        self.mmap[int(addr)] = chr_wrap(int(value))
 
     def get_percentage(self, address):
         return (int(address)*100) // (self.fsize - 1)
