@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: bitmapview.vim
 " AUTHOR:  Shougo Matsushita <Shougo.Matsu at gmail.com>
-" Last Modified: 06 Oct 2013.
+" Last Modified: 21 Jan 2014.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -327,12 +327,12 @@ function! s:move_line(is_next) "{{{
     if line('.') == line('$')
       call s:print_lines(2)
     endif
-    normal! j
+    call cursor(0, col('.')+1)
   else
     if !a:is_next && line('.') == 1
       call s:print_lines(-2)
     endif
-    normal! k
+    call cursor(0, col('.')-1)
   endif
 endfunction "}}}
 function! s:move_screen(is_next) "{{{
