@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: util.vim
 " AUTHOR: Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 06 Oct 2013.
+" Last Modified: 04 Feb 2014.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -24,40 +24,57 @@
 " }}}
 "=============================================================================
 
-let s:V = vital#of('vinarise')
-
 function! vinarise#util#get_vital() "{{{
+  if !exists('s:V')
+    let s:V = vital#of('vinarise')
+  endif
   return s:V
 endfunction"}}}
-
-let s:List = vinarise#util#get_vital().import('Data.List')
+function! s:get_prelude() "{{{
+  if !exists('s:Prelude')
+    let s:Prelude = vinarise#util#get_vital().import('Prelude')
+  endif
+  return s:Prelude
+endfunction"}}}
+function! s:get_list() "{{{
+  if !exists('s:List')
+    let s:List = vinarise#util#get_vital().import('Data.List')
+  endif
+  return s:List
+endfunction"}}}
+function! s:get_process() "{{{
+  if !exists('s:Process')
+    let s:Process = vinarise#util#get_vital().import('Process')
+  endif
+  return s:Process
+endfunction"}}}
 
 function! vinarise#util#truncate_smart(...) "{{{
-  return call(s:V.truncate_smart, a:000)
+  return call(s:get_prelude().truncate_smart, a:000)
 endfunction"}}}
 
 function! vinarise#util#truncate(...) "{{{
-  return call(s:V.truncate, a:000)
+  return call(s:get_prelude().truncate, a:000)
 endfunction"}}}
 
 function! vinarise#util#strchars(...) "{{{
-  return call(s:V.strchars, a:000)
+  return call(s:get_prelude().strchars, a:000)
 endfunction"}}}
 
 function! vinarise#util#wcswidth(...) "{{{
-  return call(s:V.wcswidth, a:000)
+  return call(s:get_prelude().wcswidth, a:000)
 endfunction"}}}
 function! vinarise#util#strwidthpart(...) "{{{
-  return call(s:V.strwidthpart, a:000)
+  return call(s:get_prelude().strwidthpart, a:000)
 endfunction"}}}
 function! vinarise#util#strwidthpart_reverse(...) "{{{
-  return call(s:V.strwidthpart_reverse, a:000)
+  return call(s:get_prelude().strwidthpart_reverse, a:000)
 endfunction"}}}
 function! vinarise#util#is_windows(...) "{{{
-  return call(s:V.is_windows, a:000)
+  return call(s:get_prelude().is_windows, a:000)
 endfunction"}}}
 function! vinarise#util#is_mac(...) "{{{
-  return call(s:V.is_mac, a:000)
+  return call(s:get_prelude().is_mac, a:000)
 endfunction"}}}
 
 function! s:buflisted(bufnr) "{{{
@@ -67,7 +84,7 @@ function! s:buflisted(bufnr) "{{{
 endfunction"}}}
 
 function! vinarise#util#expand(path) "{{{
-  return s:V.substitute_path_separator(
+  return s:get_prelude().substitute_path_separator(
         \ (a:path =~ '^\~') ? substitute(a:path, '^\~', expand('~'), '') :
         \ (a:path =~ '^\$\h\w*') ? substitute(a:path,
         \               '^\$\h\w*', '\=eval(submatch(0))', '') :
@@ -75,17 +92,17 @@ function! vinarise#util#expand(path) "{{{
 endfunction"}}}
 
 function! vinarise#util#substitute_path_separator(...) "{{{
-  return call(s:V.substitute_path_separator, a:000)
+  return call(s:get_prelude().substitute_path_separator, a:000)
 endfunction"}}}
 function! vinarise#util#escape_file_searching(...) "{{{
-  return call(s:V.escape_file_searching, a:000)
+  return call(s:get_prelude().escape_file_searching, a:000)
 endfunction"}}}
 function! vinarise#util#iconv(...) "{{{
-  return call(s:V.iconv, a:000)
+  return call(s:get_process().iconv, a:000)
 endfunction"}}}
 
 function! vinarise#util#sort_by(...) "{{{
-  return call(s:List.sort_by, a:000)
+  return call(s:get_list().sort_by, a:000)
 endfunction"}}}
 
 function! vinarise#util#is_cmdwin() "{{{
