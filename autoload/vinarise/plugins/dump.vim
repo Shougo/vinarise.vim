@@ -36,7 +36,7 @@ if !exists('g:vinarise_objdump_command')
   let g:vinarise_objdump_command = 'objdump'
 endif
 
-let s:manager = vital#of('vinarise').import('Vim.Buffer')
+let s:manager = vinarise#util#get_vital().import('Vim.Buffer')
 "}}}
 
 let s:save_cpo = &cpo

@@ -41,7 +41,7 @@ let s:font_pattern =
       \ has('X11') ?           '\v%([^-]*-){6}\zs\d+\ze%(-[^-]*){7}':
       \                        '*Unknown system*'
 
-let s:manager = vital#of('vinarise').import('Vim.Buffer')
+let s:manager = vinarise#util#get_vital().import('Vim.Buffer')
 "}}}
 
 let s:plugin = {

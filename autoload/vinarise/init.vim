@@ -38,7 +38,7 @@ let g:vinarise_var_prefix = 'vinarise_'
 "}}}
 
 " Variables  "{{{
-let s:manager = vital#of('vinarise').import('Vim.Buffer')
+let s:manager = vinarise#util#get_vital().import('Vim.Buffer')
 
 let s:vinarise_dicts = []
 
