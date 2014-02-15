@@ -36,10 +36,7 @@ if !exists('g:vinarise_objdump_command')
   let g:vinarise_objdump_command = 'objdump'
 endif
 
-let s:V = vital#of('vinarise')
-let s:BM = s:V.import('Vim.BufferManager')
-let s:manager = s:BM.new()  " creates new manager
-call s:manager.config('opener', 'silent edit')
+let s:manager = vital#of('vinarise').import('Vim.Buffer')
 "}}}
 
 let s:save_cpo = &cpo
@@ -66,8 +63,9 @@ function! s:dump_open() "{{{
 
   let vinarise = vinarise#get_current_vinarise()
 
-  let ret = s:manager.open(s:dump_BUFFER_NAME . vinarise.filename)
-  if !ret.loaded
+  let loaded = s:manager.open(s:dump_BUFFER_NAME .
+        \ vinarise.filename, 'silent edit')
+  if !loaded
     call vinarise#view#print_error(
           \ '[vinarise] Failed to open Buffer.')
     return

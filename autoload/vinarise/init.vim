@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: init.vim
 " AUTHOR:  Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 12 Jan 2014.
+" Last Modified: 15 Feb 2014.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -38,10 +38,7 @@ let g:vinarise_var_prefix = 'vinarise_'
 "}}}
 
 " Variables  "{{{
-let s:V = vital#of('vinarise')
-let s:BM = s:V.import('Vim.BufferManager')
-let s:manager = s:BM.new()  " creates new manager
-call s:manager.config('opener', 'silent edit')
+let s:manager = vital#of('vinarise').import('Vim.Buffer')
 
 let s:vinarise_dicts = []
 
@@ -136,8 +133,8 @@ function! vinarise#init#start(filename, context) "{{{
       let prefix .= 'noname'
     endif
     let bufname = prefix . s:get_postfix(prefix, 1)
-    let ret = s:manager.open(bufname)
-    if ret.bufnr <= 0
+    let loaded = s:manager.open(bufname, 'silent edit')
+    if !loaded
       call vinarise#view#print_error(
             \ '[vinarise] Failed to open Buffer.')
       return

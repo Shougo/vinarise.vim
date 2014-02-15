@@ -1,7 +1,7 @@
 vinarise
-39d8e9c
+450727f
 
 Prelude
+Vim.Buffer
 Data.List
-Vim.BufferManager
 Process
