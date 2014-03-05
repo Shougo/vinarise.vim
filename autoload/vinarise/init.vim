@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: init.vim
 " AUTHOR:  Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 15 Feb 2014.
+" Last Modified: 05 Mar 2014.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -350,6 +350,20 @@ function! s:initialize_vinarise_buffer(context, filename, filesize) "{{{
   setlocal nofoldenable
   setlocal hidden
   setlocal foldcolumn=0
+  setlocal nonumber
+  if has('conceal')
+    setlocal conceallevel=3
+    setlocal concealcursor=n
+  endif
+  if exists('+cursorcolumn')
+    setlocal nocursorcolumn
+  endif
+  if exists('+colorcolumn')
+    setlocal colorcolumn=0
+  endif
+  if exists('+relativenumber')
+    setlocal norelativenumber
+  endif
 
   " Autocommands.
   augroup plugin-vinarise
