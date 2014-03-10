@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: init.vim
 " AUTHOR:  Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 05 Mar 2014.
+" Last Modified: 11 Mar 2014.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -191,6 +191,8 @@ function! s:initialize_vinarise_buffer(context, filename, filesize) "{{{
   let b:vinarise = {
    \  'context' : a:context,
    \  'filename' : a:filename,
+   \  'current_dir' : vinarise#util#substitute_path_separator(
+   \            fnamemodify(a:filename, ':h')),
    \  'python' : g:vinarise_var_prefix.bufnr('%'),
    \  'filesize' : a:filesize,
    \  'last_search_string' : '',
