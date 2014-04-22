@@ -89,6 +89,8 @@ function! vinarise#mappings#define_default_mappings() "{{{
         \ :<C-u>call vinarise#mappings#redraw()<CR>
   nnoremap <buffer><silent> <Plug>(vinarise_reload)
         \ :<C-u>call <SID>reload()<CR>
+  nnoremap <buffer><silent> <Plug>(vinarise_bitmapview)
+        \ :<C-u>VinarisePluginBitmapView<CR>
   "}}}
 
   if exists('g:vinarise_no_default_keymappings') &&
@@ -132,6 +134,7 @@ function! vinarise#mappings#define_default_mappings() "{{{
   nmap <buffer> E          <Plug>(vinarise_change_encoding)
   nmap <buffer> <C-l>      <Plug>(vinarise_redraw)
   nmap <buffer> g<C-l>     <Plug>(vinarise_reload)
+  nmap <buffer> B          <Plug>(vinarise_bitmapview)
 endfunction"}}}
 
 function! vinarise#mappings#move_by_input_address(input) "{{{

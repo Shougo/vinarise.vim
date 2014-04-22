@@ -55,6 +55,7 @@ function! s:plugin.finalize(vinarise, context) "{{{
 endfunction"}}}
 
 function! s:bitmapview_open() "{{{
+  let prev_bufnr = bufnr('%')
   let vinarise = vinarise#get_current_vinarise()
 
   let prefix = vinarise#util#is_windows() ?
@@ -89,6 +90,7 @@ function! s:bitmapview_open() "{{{
   let b:bitmapview = {}
   let b:bitmapview.vinarise = vinarise
   let b:bitmapview.width = (winwidth(0) - 10) / 16 * 16
+  let b:bitmapview.prev_bufnr = prev_bufnr
 
   call s:define_default_mappings()
 
@@ -298,16 +300,29 @@ endfunction
 
 " Mappings.
 function! s:exit() "{{{
+  let prev_bufnr = b:bitmapview.prev_bufnr
   call vinarise#util#delete_buffer()
+  execute 'buffer' prev_bufnr
 endfunction"}}}
 function! s:print_current_position() "{{{
   " Get current address.
   let [type, address] = s:parse_address(getline('.'),
         \ vinarise#get_cur_text(getline('.'), col('.')))
   let percentage = b:bitmapview.vinarise.get_percentage(address)
+  let message = printf('[%s] %8d / %8d (%3d%%)',
+          \ type, address, b:bitmapview.vinarise.filesize - 1, percentage)
 
-  echo printf('[%s] %8d / %8d (%3d%%)',
-        \ type, address, b:bitmapview.vinarise.filesize - 1, percentage)
+  if has('gui_running')
+    let save_guioptions = &guioptions
+    try
+      set guioptions-=c
+      call confirm(message)
+    finally
+      let &guioptions = save_guioptions
+    endtry
+  else
+    echo message
+  endif
 endfunction"}}}
 function! s:move_to_current_address() "{{{
   " Get current address.

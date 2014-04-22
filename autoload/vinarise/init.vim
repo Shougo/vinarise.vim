@@ -352,6 +352,7 @@ function! s:initialize_vinarise_buffer(context, filename, filesize) "{{{
   setlocal hidden
   setlocal foldcolumn=0
   setlocal nonumber
+  setlocal nobuflisted
   if has('conceal')
     setlocal conceallevel=3
     setlocal concealcursor=n
