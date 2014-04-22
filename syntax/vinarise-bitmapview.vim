@@ -32,20 +32,29 @@ endif
 syntax match vinarise_BitmapviewAddress       '^\x\+:'
       \ contains=vinarise_BitmapviewSep
 syntax match vinarise_BitmapviewSep contained ':'
-syntax match vinarise_BitmapviewLine       '[^:]*$'
-      \ contains=vinarise_BitmapviewNull,vinarise_BitmapviewCntrl,vinarise_BitmapviewAscii,vinarise_BitmapviewEscape
+syntax match vinarise_BitmapviewLine       '[^:]*$' contains=
+      \vinarise_BitmapviewNull,
+      \vinarise_BitmapviewCntrl1,vinarise_BitmapviewCntrl2,
+      \vinarise_BitmapviewAscii1,vinarise_BitmapviewAscii2,
+      \vinarise_BitmapviewEscape1,vinarise_BitmapviewEscape2
 syntax match vinarise_BitmapviewNull contained '00'
-syntax match vinarise_BitmapviewCntrl contained '[01]\x'
-syntax match vinarise_BitmapviewAscii contained '[2-7]\x'
-syntax match vinarise_BitmapviewEscape contained '[8-f]\x'
+syntax match vinarise_BitmapviewCntrl1 contained '0\x'
+syntax match vinarise_BitmapviewCntrl2 contained '1\x'
+syntax match vinarise_BitmapviewAscii1 contained '[2-4]\x'
+syntax match vinarise_BitmapviewAscii2 contained '[5-7]\x'
+syntax match vinarise_BitmapviewEscape1 contained '[8-a]\x'
+syntax match vinarise_BitmapviewEscape2 contained '[b-f]\x'
 
 highlight default link vinarise_BitmapviewAddress Comment
 highlight default link vinarise_BitmapviewSep Identifier
 
-highlight vinarise_BitmapviewNull guifg=#00FF00 guibg=#00FF00 ctermfg=green ctermbg=green
-highlight vinarise_BitmapviewCntrl guifg=#00FF00 guibg=#00FF00 ctermfg=green ctermbg=green
-highlight vinarise_BitmapviewAscii guifg=#FF0000 guibg=#FF0000 ctermfg=red ctermbg=red
-highlight vinarise_BitmapviewEscape guifg=#00FF00 guibg=#00FF00 ctermfg=green ctermbg=green
+highlight vinarise_BitmapviewNull guifg=#808080 guibg=#808080 ctermfg=grey ctermbg=grey
+highlight vinarise_BitmapviewCntrl1 guifg=#00FF00 guibg=#00FF00 ctermfg=green ctermbg=green
+highlight vinarise_BitmapviewCntrl2 guifg=#008000 guibg=#008000 ctermfg=darkgreen ctermbg=darkgreen
+highlight vinarise_BitmapviewAscii1 guifg=#FF0000 guibg=#FF0000 ctermfg=red ctermbg=red
+highlight vinarise_BitmapviewAscii2 guifg=#800000 guibg=#800000 ctermfg=darkred ctermbg=darkred
+highlight vinarise_BitmapviewEscape1 guifg=#00FF00 guibg=#00FF00 ctermfg=green ctermbg=green
+highlight vinarise_BitmapviewEscape2 guifg=#008000 guibg=#008000 ctermfg=darkgreen ctermbg=darkgreen
 
 
 let b:current_syntax = 'vinarise-bitmapview'
