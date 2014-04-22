@@ -249,8 +249,7 @@ function! s:make_line(line_address) "{{{
   let i = 0
   for num in b:bitmapview.vinarise.get_bytes(
         \ a:line_address * b:bitmapview.width, b:bitmapview.width)
-    let line .= (num == 0) ?   ' ' :
-          \ (num < 0x1f) ? '.' : (num < 0x7f) ? '+' :  '*'
+    let line .= num
   endfor
 
   return printf('%08x: %s', a:line_address * b:bitmapview.width, line)
@@ -268,17 +267,17 @@ function! s:change_windowsize() "{{{
   endif
 
   let old_fontsize = matchstr(&guifont, s:font_pattern)
-  if old_fontsize == '' || old_fontsize <= 8
+  if old_fontsize == ''
     return
   endif
 
   let s:save_gui = [&guifont, &guifontwide, &lines, &columns,
         \ getwinposx(), getwinposy()]
 
-  let &guifont = s:change_fontsize(&guifont, 8)
-  let &guifontwide = s:change_fontsize(&guifontwide, 8)
-  let &lines = (s:save_gui[2] * old_fontsize) / 9
-  let &columns = (s:save_gui[3] * old_fontsize) / 9
+  let &guifont = s:change_fontsize(&guifont, 2)
+  let &guifontwide = s:change_fontsize(&guifontwide, 2)
+  let &lines = 400
+  let &columns = 512 + 20
 endfunction"}}}
 function! s:restore_windowsize() "{{{
   if empty(s:save_gui)
