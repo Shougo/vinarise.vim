@@ -134,10 +134,12 @@ VINARISE BUFFER KEY MAPPINGS 			*vinarise-buffer-key-mappings*
 <Plug>(vinarise_prev_col)			*<Plug>(vinarise_prev_col)*
 		Move to previous col address in vinarise buffer.
 
-<Plug>(vinarise_move_to_line_first_address)	*<Plug>(vinarise_line_first_address)*
+					*<Plug>(vinarise_line_first_address)*
+<Plug>(vinarise_move_to_line_first_address)
 		Move to first address in the current line.
 
-<Plug>(vinarise_move_to_line_last_address)	*<Plug>(vinarise_line_last_address)*
+					*<Plug>(vinarise_line_last_address)*
+<Plug>(vinarise_move_to_line_last_address)
 		Move to last address in the current line.
 
 <Plug>(vinarise_next_line)			*<Plug>(vinarise_next_line)*
@@ -152,36 +154,44 @@ VINARISE BUFFER KEY MAPPINGS 			*vinarise-buffer-key-mappings*
 <Plug>(vinarise_prev_screen)			*<Plug>(vinarise_prev_screen)*
 		Move to previous screen address in vinarise buffer.
 
-<Plug>(vinarise_next_half_screen)		*<Plug>(vinarise_next_half_screen)*
+					*<Plug>(vinarise_next_half_screen)*
+<Plug>(vinarise_next_half_screen)
 		Move to next a half of screen address in vinarise buffer.
 
-<Plug>(vinarise_prev_half_screen)		*<Plug>(vinarise_prev_half_screen)*
+					*<Plug>(vinarise_prev_half_screen)*
+<Plug>(vinarise_prev_half_screen)
 		Move to previous a half of screen address in vinarise buffer.
 
-<Plug>(vinarise_print_current_position)		*<Plug>(vinarise_print_current_position)*
+					*<Plug>(vinarise_print_current_position)*
+<Plug>(vinarise_print_current_position)
 		Print current portion.
 
-<Plug>(vinarise_change_current_address)		*<Plug>(vinarise_change_current_address)*
+					*<Plug>(vinarise_change_current_address)*
+<Plug>(vinarise_change_current_address)
 		Change value in current address.
 
+				*<Plug>(vinarise_overwrite_from_current_address)*
 <Plug>(vinarise_overwrite_from_current_address)
-						*<Plug>(vinarise_overwrite_from_current_address)*
 		Overwrite values from current address.
 
-<Plug>(vinarise_move_to_input_address)		*<Plug>(vinarise_move_to_input_address)*
+				*<Plug>(vinarise_move_to_input_address)*
+<Plug>(vinarise_move_to_input_address)
 		Move to input address. Hexadecimal and decimal are supported.
 		Note: If you input like "50%", move to 50% of filesize.
 
-<Plug>(vinarise_move_by_input_offset)		*<Plug>(vinarise_move_by_input_offset)*
+					*<Plug>(vinarise_move_by_input_offset)*
+<Plug>(vinarise_move_by_input_offset)
 		Move by input offset relative to current position.
 		Hexadecimal and decimal are supported.
 		Note: If you input like "50%", move by 50% of filesize
 		      relative to current position.
 
-<Plug>(vinarise_move_to_first_address)		*<Plug>(vinarise_move_to_first_address)*
+					*<Plug>(vinarise_move_to_first_address)*
+<Plug>(vinarise_move_to_first_address)
 		Move to first address in the binary file.
 
-<Plug>(vinarise_move_to_last_address)		*<Plug>(vinarise_move_to_last_address)*
+					*<Plug>(vinarise_move_to_last_address)*
+<Plug>(vinarise_move_to_last_address)
 		Move to last address in the binary file.
 
 <Plug>(vinarise_search_binary)			*<Plug>(vinarise_search_binary)*
@@ -189,27 +199,32 @@ VINARISE BUFFER KEY MAPPINGS 			*vinarise-buffer-key-mappings*
 		Hexadecimal and decimal are supported.
 		Note: "!" is not pattern. Ex: "!0x00"
 
-<Plug>(vinarise_search_binary_reverse)		*<Plug>(vinarise_search_binary_reverse)*
+					*<Plug>(vinarise_search_binary_reverse)*
+<Plug>(vinarise_search_binary_reverse)
 		Search the binary address in the binary file by reverse.
 		Hexadecimal and decimal are supported.
 
 <Plug>(vinarise_search_string)			*<Plug>(vinarise_search_string)*
 		Search the string address in the binary file.
 
-<Plug>(vinarise_search_string_reverse)		*<Plug>(vinarise_search_string_reverse)*
+					*<Plug>(vinarise_search_string_reverse)*
+<Plug>(vinarise_search_string_reverse)
 		Search the string address in the binary file by reverse.
 
-<Plug>(vinarise_search_regexp)			*<Plug>(vinarise_search_regexp)*
+<Plug>(vinarise_search_regexp)		*<Plug>(vinarise_search_regexp)*
 		Search the regexp pattern address in the binary file.
 
-<Plug>(vinarise_search_last_pattern)		*<Plug>(vinarise_search_last_pattern)*
+					*<Plug>(vinarise_search_last_pattern)*
+<Plug>(vinarise_search_last_pattern)
 		Search the last pattern repeatedly in the binary file.
 
-<Plug>(vinarise_search_last_pattern_reverse)	*<Plug>(vinarise_search_last_pattern_reverse)*
+				*<Plug>(vinarise_search_last_pattern_reverse)*
+<Plug>(vinarise_search_last_pattern_reverse)
 		Search the last pattern repeatedly in the binary file by
 		reverse.
 
-<Plug>(vinarise_change_encoding)		*<Plug>(vinarise_change_encoding)*
+					*<Plug>(vinarise_change_encoding)*
+<Plug>(vinarise_change_encoding)
 		Change vinarise buffer encoding.
 
 <Plug>(vinarise_redraw)				*<Plug>(vinarise_redraw)*
@@ -217,6 +232,9 @@ VINARISE BUFFER KEY MAPPINGS 			*vinarise-buffer-key-mappings*
 
 <Plug>(vinarise_reload)				*<Plug>(vinarise_reload)*
 		Reload opening file.
+
+<Plug>(vinarise_bitmapview)			*<Plug>(vinarise_bitmapview)*
+		Execute |:VinarisePluginBitmapView| command.
 
 Normal mode key mappings.
 
@@ -258,6 +276,7 @@ N			<Plug>(vinarise_search_last_pattern_reverse)
 E			<Plug>(vinarise_change_encoding)
 <C-l>			<Plug>(vinarise_redraw)
 g<C-l>			<Plug>(vinarise_reload)
+B			<Plug>(vinarise_bitmapview)
 
 ------------------------------------------------------------------------------
 OPTIONS 					*vinarise-options*
