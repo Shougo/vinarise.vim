@@ -55,7 +55,7 @@ syntax match vinarise_BitmapviewEscape2 contained '[ab]\x'
 syntax match vinarise_BitmapviewEscape3 contained '[cd]\x'
 syntax match vinarise_BitmapviewEscape4 contained '[ef]\x'
 
-syntax match vinarise_BitmapviewNewLine contained '0[da]'
+syntax match vinarise_BitmapviewNewLine contained '0[ad]'
 syntax match vinarise_BitmapviewTab contained '09'
 syntax match vinarise_BitmapviewNull contained '00'
 syntax match vinarise_BitmapviewFF contained 'ff'

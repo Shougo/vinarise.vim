@@ -57,6 +57,7 @@ endfunction"}}}
 function! s:bitmapview_open() "{{{
   let prev_bufnr = bufnr('%')
   let vinarise = vinarise#get_current_vinarise()
+  let filesize = vinarise.filesize
 
   let prefix = vinarise#util#is_windows() ?
         \ '[bitmapview] - ' : '*bitmapview* - '
@@ -85,12 +86,13 @@ function! s:bitmapview_open() "{{{
           \ call s:restore_windowsize()
   augroup END
 
-  call s:change_windowsize()
-
   let b:bitmapview = {}
   let b:bitmapview.vinarise = vinarise
-  let b:bitmapview.width = (winwidth(0) - 10) / 16 * 16
   let b:bitmapview.prev_bufnr = prev_bufnr
+  let b:bitmapview.filesize = filesize
+  let b:bitmapview.offset = 10
+
+  call s:change_windowsize()
 
   call s:define_default_mappings()
 
@@ -164,9 +166,9 @@ function! s:parse_address(string, cur_text) "{{{
   if a:cur_text =~ '^\s*\x\+\s*:.\+$'
     " Check hex line.
     let offset = len(matchstr(a:cur_text, '^\s*\x\+\s*: \zs.\+$')) - 1
-    if 0 <= offset && offset < b:bitmapview.width
+    if 0 <= offset && offset < (b:bitmapview.width*2)
       let type = 'bitmap'
-      let address += offset
+      let address += offset / 2
     endif
   endif
 
@@ -244,14 +246,9 @@ function! s:print_lines(lines, ...) "{{{
 endfunction"}}}
 function! s:make_line(line_address) "{{{
   " Make new lines.
-  let line = ''
-
-  let i = 0
-  for num in b:bitmapview.vinarise.get_bytes(
-        \ a:line_address * b:bitmapview.width, b:bitmapview.width)
-    let line .= num
-  endfor
-
+  let line = join(map(b:bitmapview.vinarise.get_bytes(
+        \ a:line_address * b:bitmapview.width, b:bitmapview.width),
+        \ "printf('%02x', v:val)"), '')
   return printf('%08x: %s', a:line_address * b:bitmapview.width, line)
 endfunction"}}}
 function! s:set_cursor_address(address) "{{{
@@ -262,7 +259,7 @@ function! s:set_cursor_address(address) "{{{
 endfunction"}}}
 
 function! s:change_windowsize() "{{{
-  if !has('gui_running') || !empty(s:save_gui)
+  if !has('gui_running') || !empty(s:save_gui) || !exists('b:bitmapview')
     return
   endif
 
@@ -274,10 +271,19 @@ function! s:change_windowsize() "{{{
   let s:save_gui = [&guifont, &guifontwide, &lines, &columns,
         \ getwinposx(), getwinposy()]
 
-  let &guifont = s:change_fontsize(&guifont, 2)
-  let &guifontwide = s:change_fontsize(&guifontwide, 2)
-  let &lines = 400
-  let &columns = 512 + 20
+  if b:bitmapview.filesize > 10000
+    let &guifont = s:change_fontsize(&guifont, 2)
+    let &guifontwide = s:change_fontsize(&guifontwide, 2)
+    let &lines = 400
+    let &columns = 512 + 20
+    let b:bitmapview.width = 256
+  else
+    let &guifont = s:change_fontsize(&guifont, 4)
+    let &guifontwide = s:change_fontsize(&guifontwide, 4)
+    let &lines = 200
+    let &columns = 256 + 20
+    let b:bitmapview.width = 128
+  endif
 endfunction"}}}
 function! s:restore_windowsize() "{{{
   if empty(s:save_gui)
