@@ -68,6 +68,7 @@ function! s:bitmapview_open() "{{{
   match
 
   setlocal nolist
+  setlocal nobuflisted
   setlocal buftype=nofile
   setlocal noswapfile
   setlocal nomodifiable
