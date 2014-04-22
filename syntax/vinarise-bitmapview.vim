@@ -53,8 +53,8 @@ highlight vinarise_BitmapviewCntrl1 guifg=#00FF00 guibg=#00FF00 ctermfg=green ct
 highlight vinarise_BitmapviewCntrl2 guifg=#008000 guibg=#008000 ctermfg=darkgreen ctermbg=darkgreen
 highlight vinarise_BitmapviewAscii1 guifg=#FF0000 guibg=#FF0000 ctermfg=red ctermbg=red
 highlight vinarise_BitmapviewAscii2 guifg=#800000 guibg=#800000 ctermfg=darkred ctermbg=darkred
-highlight vinarise_BitmapviewEscape1 guifg=#00FF00 guibg=#00FF00 ctermfg=green ctermbg=green
-highlight vinarise_BitmapviewEscape2 guifg=#008000 guibg=#008000 ctermfg=darkgreen ctermbg=darkgreen
+highlight vinarise_BitmapviewEscape1 guifg=#00FFFf guibg=#00FFFF ctermfg=cyan ctermbg=cyan
+highlight vinarise_BitmapviewEscape2 guifg=#008080 guibg=#008080 ctermfg=darkcyan ctermbg=darkcyan
 
 
 let b:current_syntax = 'vinarise-bitmapview'
