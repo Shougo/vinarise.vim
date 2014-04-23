@@ -67,6 +67,13 @@ function! s:bitmapview_open() "{{{
           \ '[vinarise] Failed to open Buffer.')
     return
   endif
+
+  if !has('gui_running')
+    call vinarise#view#print_error(
+          \ '[vinarise] You should not use this feature in Console mode.'
+          \.'  It is too slow and may be crash.')
+  endif
+
   match
 
   setlocal nolist
@@ -91,6 +98,7 @@ function! s:bitmapview_open() "{{{
   let b:bitmapview.prev_bufnr = prev_bufnr
   let b:bitmapview.filesize = filesize
   let b:bitmapview.offset = 10
+  let b:bitmapview.width = (&columns - b:bitmapview.offset) / 2
 
   call s:change_windowsize()
 
