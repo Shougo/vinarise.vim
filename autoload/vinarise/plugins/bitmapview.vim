@@ -61,7 +61,8 @@ function! s:bitmapview_open() "{{{
 
   let prefix = vinarise#util#is_windows() ?
         \ '[bitmapview] - ' : '*bitmapview* - '
-  let loaded = s:manager.open(prefix . vinarise.filename, 'silent edit')
+  let loaded = s:manager.open(vinarise.current_dir . '/' .
+        \ prefix . fnamemodify(vinarise.filename, ':t'), 'silent edit')
   if !loaded
     call vinarise#view#print_error(
           \ '[vinarise] Failed to open Buffer.')
