@@ -150,7 +150,8 @@ function! s:define_default_mappings() "{{{
 
   " Normal mode key-mappings.
   nmap <buffer> <CR>      <Plug>(vinarise_bitmapview_move_to_current_address)
-  nmap <buffer> q <Plug>(vinarise_bitmapview_exit)
+  nmap <buffer> B         <Plug>(vinarise_bitmapview_move_to_current_address)
+  nmap <buffer> q         <Plug>(vinarise_bitmapview_exit)
   nmap <buffer> j         <Plug>(vinarise_bitmapview_next_line)
   nmap <buffer> k         <Plug>(vinarise_bitmapview_prev_line)
   nmap <buffer> <C-f>     <Plug>(vinarise_bitmapview_next_screen)
@@ -158,10 +159,10 @@ function! s:define_default_mappings() "{{{
   nmap <buffer> <C-d>     <Plug>(vinarise_bitmapview_next_half_screen)
   nmap <buffer> <C-u>     <Plug>(vinarise_bitmapview_prev_half_screen)
   nmap <buffer> <C-g>     <Plug>(vinarise_bitmapview_print_current_position)
-  nmap <buffer> gG     <Plug>(vinarise_bitmapview_move_by_input_address)
-  nmap <buffer> go    <Plug>(vinarise_bitmapview_move_by_input_offset)
-  nmap <buffer> gg    <Plug>(vinarise_bitmapview_move_to_first_address)
-  nmap <buffer> G    <Plug>(vinarise_bitmapview_move_to_last_address)
+  nmap <buffer> gG        <Plug>(vinarise_bitmapview_move_by_input_address)
+  nmap <buffer> go        <Plug>(vinarise_bitmapview_move_by_input_offset)
+  nmap <buffer> gg        <Plug>(vinarise_bitmapview_move_to_first_address)
+  nmap <buffer> G         <Plug>(vinarise_bitmapview_move_to_last_address)
 endfunction"}}}
 
 function! s:parse_address(string, cur_text) "{{{
