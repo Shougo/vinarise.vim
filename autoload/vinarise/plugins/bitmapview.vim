@@ -279,20 +279,18 @@ function! s:change_windowsize() "{{{
 
   let s:save_gui = [&guifont, &guifontwide, &lines, &columns,
         \ getwinposx(), getwinposy()]
+  let fontsize =
+        \ b:bitmapview.filesize <    1000 ? 16 :
+        \ b:bitmapview.filesize <    4000 ? 8 :
+        \ b:bitmapview.filesize <   16000 ? 4 :
+        \ b:bitmapview.filesize < 1000000 ? 2 :
+        \ 1
 
-  if b:bitmapview.filesize > 10000
-    let &guifont = s:change_fontsize(&guifont, 2)
-    let &guifontwide = s:change_fontsize(&guifontwide, 2)
-    let &lines = 400
-    let &columns = 512 + 20
-    let b:bitmapview.width = 256
-  else
-    let &guifont = s:change_fontsize(&guifont, 4)
-    let &guifontwide = s:change_fontsize(&guifontwide, 4)
-    let &lines = 200
-    let &columns = 256 + 20
-    let b:bitmapview.width = 128
-  endif
+  let &guifont = s:change_fontsize(&guifont, fontsize)
+  let &guifontwide = s:change_fontsize(&guifontwide, fontsize)
+  let &lines = 800 / fontsize
+  let &columns = 1024 / fontsize + 20
+  let b:bitmapview.width = 512 / fontsize
 endfunction"}}}
 function! s:restore_windowsize() "{{{
   if empty(s:save_gui)
