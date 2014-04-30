@@ -228,7 +228,6 @@ function! s:print_lines(lines, ...) "{{{
     endif
     if max_lines - line_address < winheight(0)
           \ && line('$') < winheight(0)
-          \ && line_address != max_lines
       let line_address = max_lines - winheight(0) + 1
     endif
     if line_address < 0
@@ -264,7 +263,8 @@ endfunction"}}}
 function! s:set_cursor_address(address) "{{{
   let line_address = (a:address / b:bitmapview.width) * b:bitmapview.width
   let [lnum, col] = searchpos(
-        \ printf('%08x: .\{%d}', line_address, a:address - line_address + 1), 'cew')
+        \ printf('%08x: .\{%d}', line_address,
+        \    (a:address - line_address + 1) * 2), 'cew')
   call cursor(lnum, col)
 endfunction"}}}
 
