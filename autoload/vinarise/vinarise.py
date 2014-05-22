@@ -90,7 +90,10 @@ class VinariseBuffer(object):
         if int(count) == 0:
             return ""
         chars = self.mmap[int(addr) : int(addr)+int(count)]
-        return unicode(chars, from_enc, 'replace').encode(to_enc, 'replace')
+        s = unicode(chars, from_enc, 'replace')
+        if not PY3:
+            s = s.encode(to_enc, 'replace')
+        return s
 
     def set_byte(self, addr, value):
         self.mmap[int(addr)] = chr_wrap(int(value))
