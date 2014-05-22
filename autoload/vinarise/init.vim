@@ -52,6 +52,12 @@ function! vinarise#init#start(filename, context) "{{{
   endif
 
   let filename = vinarise#util#expand(a:filename)
+  let encoding = getbufvar(filename, '&fileencoding')
+  if encoding != '' && get(a:context, 'encoding', '') == ''
+        \ && encoding =~? vinarise#multibyte#get_supported_encoding_pattern()
+    let a:context.encoding = encoding
+  endif
+
   let context = s:initialize_context(a:context)
 
   if empty(context.bytes)

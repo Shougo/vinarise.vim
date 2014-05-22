@@ -298,7 +298,7 @@ OPTIONS 					*vinarise-options*
 						*vinarise-options-encoding*
 		-encoding={encoding-name}
 		Specify file encoding type.
-		If omitted it, "latin1" is used.
+		If omitted it, buffer encoding type or "latin1" is used.
 		Note: "latin1", "utf-8", "cp932", "euc-jp", "utf-16le",
 		"utf-16be", "ucs-2le" or "ucs-2be" encodings are supported in
 		this version.
