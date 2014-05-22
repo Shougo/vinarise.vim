@@ -406,7 +406,9 @@ function! s:initialize_context(context) "{{{
         \ 'split' : 0,
         \ 'split_command' : 'split',
         \ 'overwrite' : 0,
-        \ 'encoding' : 'latin1',
+        \ 'encoding' : (&encoding =~?
+        \   vinarise#multibyte#get_supported_encoding_pattern()) ?
+        \     &encoding : 'latin1',
         \ 'position' : 0,
         \ 'bytes' : [],
         \ }
