@@ -141,6 +141,10 @@ function! s:define_default_mappings() "{{{
         \ :<C-u>call <SID>move_by_input_address('0%')<CR>
   nnoremap <buffer><silent> <Plug>(vinarise_bitmapview_move_to_last_address)
         \ :<C-u>call <SID>move_by_input_address('100%')<CR>
+  nnoremap <buffer><silent> <Plug>(vinarise_bitmapview_next_nonzero)
+        \ :<C-u>call <SID>move_nonzero(1)<CR>
+  nnoremap <buffer><silent> <Plug>(vinarise_bitmapview_prev_nonzero)
+        \ :<C-u>call <SID>move_nonzero(0)<CR>
   "}}}
 
   if exists('g:vinarise_no_default_keymappings') &&
@@ -163,6 +167,8 @@ function! s:define_default_mappings() "{{{
   nmap <buffer> go        <Plug>(vinarise_bitmapview_move_by_input_offset)
   nmap <buffer> gg        <Plug>(vinarise_bitmapview_move_to_first_address)
   nmap <buffer> G         <Plug>(vinarise_bitmapview_move_to_last_address)
+  nmap <buffer> w         <Plug>(vinarise_bitmapview_next_nonzero)
+  nmap <buffer> b         <Plug>(vinarise_bitmapview_prev_nonzero)
 endfunction"}}}
 
 function! s:parse_address(string, cur_text) "{{{
@@ -437,6 +443,23 @@ function! s:move_by_input_address(input) "{{{
     echo 'Invalid address.'
     return
   endif
+  call s:move_to_address(address)
+endfunction "}}}
+function! s:move_nonzero(is_next) "{{{
+  let [type, address] = s:parse_address(getline('.'),
+        \ vinarise#get_cur_text(getline('.'), col('.')))
+  let offset = a:is_next ? 1 : -1
+  let address += offset
+
+  while address >= 0 && address < b:bitmapview.filesize
+    let value = b:bitmapview.vinarise.get_byte(address)
+    if value != 0
+      break
+    endif
+
+    let address += offset
+  endwhile
+
   call s:move_to_address(address)
 endfunction "}}}
 

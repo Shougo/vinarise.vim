@@ -438,7 +438,7 @@ function! s:move_nonzero(is_next) "{{{
   let offset = a:is_next ? 1 : -1
   let address += offset
 
-  while address >= 0 && address <= b:vinarise.filesize
+  while address >= 0 && address < b:vinarise.filesize
     let value = b:vinarise.get_byte(address)
     if value != 0
       break
