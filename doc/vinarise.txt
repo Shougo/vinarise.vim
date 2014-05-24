@@ -241,10 +241,12 @@ VINARISE BUFFER KEY MAPPINGS 			*vinarise-buffer-key-mappings*
 		too slow and may be crash.
 
 <Plug>(vinarise_next_skip)			*<Plug>(vinarise_next_skip)*
-		Move to next skip address.
+		If the cursor is on zero, move to next nonzero address.
+		If the cursor is on nonzero, move to next zero address.
 
 <Plug>(vinarise_prev_skip)			*<Plug>(vinarise_prev_skip)*
-		Move to previous skip address.
+		If the cursor is on zero, move to previous nonzero address.
+		If the cursor is on nonzero, move to previous zero address.
 
  					*vinarise-default-mappings*
 
