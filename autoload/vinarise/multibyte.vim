@@ -79,7 +79,7 @@ function! s:make_utf8_line(line_address, bytes) "{{{
   let offset = 0
 
   while offset < b:vinarise.width
-        \ && strwidth(ascii_line) < b:vinarise.width + 2
+        \ && strwidth(ascii_line) <= b:vinarise.width + 2
 
     if offset >= len(a:bytes)
       let ascii_line .= ' '
@@ -110,6 +110,7 @@ function! s:make_utf8_line(line_address, bytes) "{{{
       let sub_offset = index(prev_bytes, num) + 1
       if offset == 0
         let ascii_line = repeat(' ', 3 - sub_offset)
+              \ . ascii_line[3 - sub_offset :]
       endif
 
       let offset -= sub_offset
