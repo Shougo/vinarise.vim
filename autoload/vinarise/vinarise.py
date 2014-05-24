@@ -130,7 +130,7 @@ class VinariseBuffer(object):
     def find_binary(self, address, binary):
         addr = int(address)
         bytes = [int(binary[i*2 : i*2+2], 16) for i in range(len(binary) // 2)]
-        while addr < self.fsize:
+        while addr >= 0 and addr < self.fsize:
             if self.get_byte(addr) == bytes[0] and bytes == self.get_bytes(addr, len(bytes)):
                 return addr
             addr += 1
@@ -139,7 +139,7 @@ class VinariseBuffer(object):
     def rfind_binary(self, address, binary):
         addr = int(address)
         bytes = [int(binary[i*2 : i*2+2], 16) for i in range(len(binary) // 2)]
-        while addr < self.fsize:
+        while addr >= 0 and addr < self.fsize:
             if self.get_byte(addr) == bytes[0] and bytes == self.get_bytes(addr, len(bytes)):
                 return addr
             addr -= 1
@@ -148,7 +148,7 @@ class VinariseBuffer(object):
     def find_binary_not(self, address, binary):
         addr = int(address)
         bytes = [int(binary[i*2 : i*2+2], 16) for i in range(len(binary) // 2)]
-        while addr < self.fsize:
+        while addr >= 0 and addr < self.fsize:
             if self.get_byte(addr) != bytes[0] and bytes != self.get_bytes(addr, len(bytes)):
                 return addr
             addr += 1
@@ -157,7 +157,7 @@ class VinariseBuffer(object):
     def rfind_binary_not(self, address, binary):
         addr = int(address)
         bytes = [int(binary[i*2 : i*2+2], 16) for i in range(len(binary) // 2)]
-        while addr < self.fsize:
+        while addr >= 0 and addr < self.fsize:
             if self.get_byte(addr) != bytes[0] and bytes != self.get_bytes(addr, len(bytes)):
                 return addr
             addr -= 1

@@ -141,10 +141,10 @@ function! s:define_default_mappings() "{{{
         \ :<C-u>call <SID>move_by_input_address('0%')<CR>
   nnoremap <buffer><silent> <Plug>(vinarise_bitmapview_move_to_last_address)
         \ :<C-u>call <SID>move_by_input_address('100%')<CR>
-  nnoremap <buffer><silent> <Plug>(vinarise_bitmapview_next_nonzero)
-        \ :<C-u>call <SID>move_nonzero(1)<CR>
-  nnoremap <buffer><silent> <Plug>(vinarise_bitmapview_prev_nonzero)
-        \ :<C-u>call <SID>move_nonzero(0)<CR>
+  nnoremap <buffer><silent> <Plug>(vinarise_bitmapview_next_skip)
+        \ :<C-u>call <SID>move_skip(1)<CR>
+  nnoremap <buffer><silent> <Plug>(vinarise_bitmapview_prev_skip)
+        \ :<C-u>call <SID>move_skip(0)<CR>
   "}}}
 
   if exists('g:vinarise_no_default_keymappings') &&
@@ -167,8 +167,8 @@ function! s:define_default_mappings() "{{{
   nmap <buffer> go        <Plug>(vinarise_bitmapview_move_by_input_offset)
   nmap <buffer> gg        <Plug>(vinarise_bitmapview_move_to_first_address)
   nmap <buffer> G         <Plug>(vinarise_bitmapview_move_to_last_address)
-  nmap <buffer> w         <Plug>(vinarise_bitmapview_next_nonzero)
-  nmap <buffer> b         <Plug>(vinarise_bitmapview_prev_nonzero)
+  nmap <buffer> w         <Plug>(vinarise_bitmapview_next_skip)
+  nmap <buffer> b         <Plug>(vinarise_bitmapview_prev_skip)
 endfunction"}}}
 
 function! s:parse_address(string, cur_text) "{{{
@@ -445,22 +445,31 @@ function! s:move_by_input_address(input) "{{{
   endif
   call s:move_to_address(address)
 endfunction "}}}
-function! s:move_nonzero(is_next) "{{{
+function! s:move_skip(is_next) "{{{
+  let vinarise = b:bitmapview.vinarise
+
   let [type, address] = s:parse_address(getline('.'),
         \ vinarise#get_cur_text(getline('.'), col('.')))
-  let offset = a:is_next ? 1 : -1
-  let address += offset
 
-  while address >= 0 && address < b:bitmapview.filesize
-    let value = b:bitmapview.vinarise.get_byte(address)
-    if value != 0
-      break
-    endif
+  let value = vinarise.get_byte(address)
+  let binary = '00'
+  if value != 0
+    " Search zero
+    let ret = a:is_next ?
+          \ vinarise.find_binary(address + 1, binary) :
+          \ vinarise.rfind_binary(address - 1, binary)
+  else
+    " Search non zero
+    let ret = a:is_next ?
+          \ vinarise.find_binary_not(address + 1, binary) :
+          \ vinarise.rfind_binary_not(address - 1, binary)
+  endif
 
-    let address += offset
-  endwhile
+  if ret < 0
+    let ret = a:is_next ? vinarise.filesize : 0
+  endif
 
-  call s:move_to_address(address)
+  call s:move_to_address(ret)
 endfunction "}}}
 
 let &cpo = s:save_cpo

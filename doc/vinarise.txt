@@ -240,11 +240,11 @@ VINARISE BUFFER KEY MAPPINGS 			*vinarise-buffer-key-mappings*
 		Note: You should not use this feature in Console mode.  It is
 		too slow and may be crash.
 
-<Plug>(vinarise_next_nonzero)			*<Plug>(vinarise_next_nonzero)*
-		Move to next nonzero address.
+<Plug>(vinarise_next_skip)			*<Plug>(vinarise_next_skip)*
+		Move to next skip address.
 
-<Plug>(vinarise_prev_nonzero)			*<Plug>(vinarise_prev_nonzero)*
-		Move to previous nonzero address.
+<Plug>(vinarise_prev_skip)			*<Plug>(vinarise_prev_skip)*
+		Move to previous skip address.
 
  					*vinarise-default-mappings*
 
@@ -287,8 +287,8 @@ E			<Plug>(vinarise_change_encoding)
 <C-l>			<Plug>(vinarise_redraw)
 g<C-l>			<Plug>(vinarise_reload)
 B			<Plug>(vinarise_bitmapview)
-w			<Plug>(vinarise_next_nonzero)
-b			<Plug>(vinarise_prev_nonzero)
+w			<Plug>(vinarise_next_skip)
+b			<Plug>(vinarise_prev_skip)
 
 ------------------------------------------------------------------------------
 OPTIONS 					*vinarise-options*

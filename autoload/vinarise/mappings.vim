@@ -91,10 +91,10 @@ function! vinarise#mappings#define_default_mappings() "{{{
         \ :<C-u>call <SID>reload()<CR>
   nnoremap <buffer><silent> <Plug>(vinarise_bitmapview)
         \ :<C-u>VinarisePluginBitmapView<CR>
-  nnoremap <buffer><silent> <Plug>(vinarise_next_nonzero)
-        \ :<C-u>call <SID>move_nonzero(1)<CR>
-  nnoremap <buffer><silent> <Plug>(vinarise_prev_nonzero)
-        \ :<C-u>call <SID>move_nonzero(0)<CR>
+  nnoremap <buffer><silent> <Plug>(vinarise_next_skip)
+        \ :<C-u>call <SID>move_skip(1)<CR>
+  nnoremap <buffer><silent> <Plug>(vinarise_prev_skip)
+        \ :<C-u>call <SID>move_skip(0)<CR>
   "}}}
 
   if exists('g:vinarise_no_default_keymappings') &&
@@ -139,8 +139,8 @@ function! vinarise#mappings#define_default_mappings() "{{{
   nmap <buffer> <C-l>      <Plug>(vinarise_redraw)
   nmap <buffer> g<C-l>     <Plug>(vinarise_reload)
   nmap <buffer> B          <Plug>(vinarise_bitmapview)
-  nmap <buffer> w          <Plug>(vinarise_next_nonzero)
-  nmap <buffer> b          <Plug>(vinarise_prev_nonzero)
+  nmap <buffer> w          <Plug>(vinarise_next_skip)
+  nmap <buffer> b          <Plug>(vinarise_prev_skip)
 endfunction"}}}
 
 function! vinarise#mappings#move_by_input_address(input) "{{{
@@ -432,22 +432,31 @@ function! s:move_by_input_offset(input) "{{{
 
   call vinarise#mappings#move_by_input_address(printf("0x%x", address))
 endfunction "}}}
-function! s:move_nonzero(is_next) "{{{
+function! s:move_skip(is_next) "{{{
+  let vinarise = b:vinarise
+
   let [type, address] = vinarise#helper#parse_address(getline('.'),
         \ vinarise#get_cur_text(getline('.'), col('.')))
-  let offset = a:is_next ? 1 : -1
-  let address += offset
 
-  while address >= 0 && address < b:vinarise.filesize
-    let value = b:vinarise.get_byte(address)
-    if value != 0
-      break
-    endif
+  let value = vinarise.get_byte(address)
+  let binary = '00'
+  if value != 0
+    " Search zero
+    let ret = a:is_next ?
+          \ vinarise.find_binary(address + 1, binary) :
+          \ vinarise.rfind_binary(address - 1, binary)
+  else
+    " Search non zero
+    let ret = a:is_next ?
+          \ vinarise.find_binary_not(address + 1, binary) :
+          \ vinarise.rfind_binary_not(address - 1, binary)
+  endif
 
-    let address += offset
-  endwhile
+  if ret < 0
+    let ret = a:is_next ? vinarise.filesize : 0
+  endif
 
-  call vinarise#mappings#move_to_address(address)
+  call vinarise#mappings#move_to_address(ret)
 endfunction "}}}
 function! s:search_buffer(type, is_reverse, string) "{{{
   if a:string != ''
