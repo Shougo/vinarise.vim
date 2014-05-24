@@ -105,15 +105,22 @@ class VinariseBuffer(object):
         return ((self.fsize - 1) * int(percent)) // 100
 
     def find(self, address, str, from_enc, to_enc):
-        pattern = unicode(str, from_enc, 'replace').encode(to_enc, 'replace')
+        pattern = unicode(str, from_enc, 'replace')
+        if not PY3:
+            pattern = str.encode(to_enc, 'replace')
         return self.mmap.find(pattern, int(address))
 
     def rfind(self, address, str, from_enc, to_enc):
-        pattern = unicode(str, from_enc, 'replace').encode(to_enc, 'replace')
+        pattern = unicode(str, from_enc, 'replace')
+        if not PY3:
+            pattern = str.encode(to_enc, 'replace')
         return self.mmap.rfind(pattern, 0, int(address))
 
     def find_regexp(self, address, str, from_enc, to_enc):
-        pattern = re.compile(unicode(str, from_enc, 'replace').encode(to_enc, 'replace'))
+        s = unicode(str, from_enc, 'replace')
+        if not PY3:
+            s = s.encode(to_enc, 'replace')
+        pattern = re.compile(s)
         m = pattern.search(self.mmap, int(address))
         if m is None:
             return -1
