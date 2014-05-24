@@ -443,6 +443,8 @@ function! s:move_nonzero(is_next) "{{{
     if value != 0
       break
     endif
+
+    let address += offset
   endwhile
 
   call vinarise#mappings#move_to_address(address)
