@@ -76,10 +76,11 @@ function! s:make_utf8_line(line_address, bytes) "{{{
   let base_address = a:line_address * b:vinarise.width
   " Make new line.
   let ascii_line = '   '
-  let prev_offset = 0
   let offset = 0
 
   while offset < b:vinarise.width
+        \ && strwidth(ascii_line) < b:vinarise.width + 2
+
     if offset >= len(a:bytes)
       let ascii_line .= ' '
       let offset += 1
@@ -87,8 +88,6 @@ function! s:make_utf8_line(line_address, bytes) "{{{
     endif
 
     let num = a:bytes[offset]
-    echomsg num
-    echomsg offset
     if num < 0x80
       " Ascii.
       let ascii_line .= (num <= 0x1f || num == 0x7f) ?
@@ -130,7 +129,7 @@ function! s:make_utf8_line(line_address, bytes) "{{{
     try
       let chars = b:vinarise.get_chars(
             \ base_address + offset, add_offset, encoding, &encoding)
-      if chars =~ '?'
+      if stridx(chars, '�') >= 0
         " Failed convert.
         let chars = '.'
       endif
@@ -144,7 +143,6 @@ function! s:make_utf8_line(line_address, bytes) "{{{
       let ascii_line .= repeat('.', add_offset - strwidth(chars))
     endif
 
-    let prev_offset = offset
     let offset += add_offset
   endwhile
 
@@ -160,6 +158,8 @@ function! s:make_utf16_line(line_address, bytes, is_little_endian) "{{{
 
   let offset = 0
   while offset < b:vinarise.width
+        \ && strwidth(ascii_line) < b:vinarise.width + 2
+
     if offset >= len(a:bytes)
       let ascii_line .= ' '
       let offset += 1
@@ -204,7 +204,7 @@ function! s:make_utf16_line(line_address, bytes, is_little_endian) "{{{
     try
       let chars = b:vinarise.get_chars(
             \ base_address + offset, add_offset, encoding, &encoding)
-      if chars =~ '?'
+      if stridx(chars, '�') >= 0
         " Failed convert.
         let chars = '.'
       endif
@@ -232,6 +232,8 @@ function! s:make_euc_jp_line(line_address, bytes) "{{{
 
   let offset = 0
   while offset < b:vinarise.width
+        \ && strwidth(ascii_line) < b:vinarise.width + 2
+
     if offset >= len(a:bytes)
       let ascii_line .= ' '
       let offset += 1
@@ -301,7 +303,7 @@ function! s:make_euc_jp_line(line_address, bytes) "{{{
     try
       let chars = b:vinarise.get_chars(
             \ base_address + offset, add_offset, encoding, &encoding)
-      if chars =~ '?'
+      if stridx(chars, '�') >= 0
         " Failed convert.
         let chars = '.'
       endif
@@ -329,6 +331,8 @@ function! s:make_cp932_line(line_address, bytes) "{{{
 
   let offset = 0
   while offset < b:vinarise.width
+        \ && strwidth(ascii_line) < b:vinarise.width + 2
+
     if offset >= len(a:bytes)
       let ascii_line .= ' '
       let offset += 1
@@ -383,7 +387,7 @@ function! s:make_cp932_line(line_address, bytes) "{{{
     try
       let chars = b:vinarise.get_chars(
             \ base_address + offset, add_offset, encoding, &encoding)
-      if chars =~ '?'
+      if stridx(chars, '�') >= 0
         " Failed convert.
         let chars = '.'
       endif
