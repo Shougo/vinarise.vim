@@ -77,6 +77,7 @@ function! s:make_utf8_line(line_address, bytes) "{{{
   " Make new line.
   let ascii_line = '   '
   let offset = 0
+  let prev_offset = 0
 
   while offset < b:vinarise.width
         \ && strwidth(ascii_line) <= b:vinarise.width + 2
@@ -84,6 +85,7 @@ function! s:make_utf8_line(line_address, bytes) "{{{
     if offset >= len(a:bytes)
       let ascii_line .= ' '
       let offset += 1
+      let prev_offset = offset
       continue
     endif
 
@@ -93,6 +95,7 @@ function! s:make_utf8_line(line_address, bytes) "{{{
       let ascii_line .= (num <= 0x1f || num == 0x7f) ?
             \ '.' : nr2char(num)
       let offset += 1
+      let prev_offset = offset
       continue
     elseif num < 0xc0
       " Search first byte.
@@ -103,6 +106,7 @@ function! s:make_utf8_line(line_address, bytes) "{{{
         " Skip.
         let ascii_line .= '.'
         let offset += 1
+        let prev_offset = offset
         continue
       endif
 
@@ -139,12 +143,21 @@ function! s:make_utf8_line(line_address, bytes) "{{{
       let chars = '.'
     endtry
 
+    let offset += add_offset
+    if offset == prev_offset
+      " Infinite loop
+      let ascii_line .= '.'
+      let offset += 1
+      let prev_offset = offset
+      continue
+    endif
+
     let ascii_line .= chars
     if strwidth(ascii_line) < b:vinarise.width + 2
       let ascii_line .= repeat('.', add_offset - strwidth(chars))
     endif
 
-    let offset += add_offset
+    let prev_offset = offset
   endwhile
 
   return ascii_line . repeat(' ',
