@@ -34,8 +34,8 @@ function! vinarise#view#print_lines(lines, ...) "{{{
   if a:0 >= 1
     let address = a:1
   else
-    let [_, address] = vinarise#helper#parse_address(
-          \ (a:lines < 0 ? getline(1) : getline('$')), '')
+    let address = vinarise#helper#parse_address(
+          \ (a:lines < 0 ? getline(1) : getline('$')), '')[1]
   endif
 
   let line_address = address / b:vinarise.width

@@ -214,8 +214,8 @@ function! s:print_lines(lines, ...) "{{{
   if a:0 >= 1
     let address = a:1
   else
-    let [_, address] = s:parse_address(
-          \ (a:lines < 0 ? getline(1) : getline('$')), '')
+    let address = s:parse_address(
+          \ (a:lines < 0 ? getline(1) : getline('$')), '')[1]
   endif
 
   let line_address = address / b:bitmapview.width
@@ -345,8 +345,8 @@ function! s:print_current_position() "{{{
 endfunction"}}}
 function! s:move_to_current_address() "{{{
   " Get current address.
-  let [type, address] = s:parse_address(getline('.'),
-        \ vinarise#get_cur_text(getline('.'), col('.')))
+  let address = s:parse_address(getline('.'),
+        \ vinarise#get_cur_text(getline('.'), col('.')))[1]
 
   execute 'buffer' b:bitmapview.vinarise.bufnr
 
@@ -394,8 +394,8 @@ function! s:move_half_screen(is_next) "{{{
 endfunction "}}}
 function! s:move_by_input_offset(input) "{{{
   " Get current address.
-  let [type, address] = s:parse_address(getline('.'),
-        \ vinarise#get_cur_text(getline('.'), col('.')))
+  let address = s:parse_address(getline('.'),
+        \ vinarise#get_cur_text(getline('.'), col('.')))[1]
   let rest = max([0, b:bitmapview.vinarise.filesize - address - 1])
   let offset = (a:input == '') ?
         \ input(printf('Please input offset(min -0x%x, max 0x%x) : ',
@@ -448,8 +448,8 @@ endfunction "}}}
 function! s:move_skip(is_next) "{{{
   let vinarise = b:bitmapview.vinarise
 
-  let [type, address] = s:parse_address(getline('.'),
-        \ vinarise#get_cur_text(getline('.'), col('.')))
+  let address = s:parse_address(getline('.'),
+        \ vinarise#get_cur_text(getline('.'), col('.')))[1]
 
   let value = vinarise.get_byte(address)
   let binary = '00'

@@ -33,7 +33,7 @@ function! vinarise#parser#parse_one_line(line, vinarise, offset, ...)
     throw printf('[vinarise] Parse error in "%s"', a:line)
   endif
 
-  let [all, type, name; _] = matchlist
+  let [type, name] = matchlist[1:2]
 
   let offset = a:offset
   let value = { 'name' : name, 'address' : a:offset, 'type' : type }

@@ -194,8 +194,8 @@ endfunction "}}}
 function! vinarise#mappings#redraw() "{{{
   " Redraw vinarise buffer.
 
-  let [_, address] = vinarise#helper#parse_address(getline('.'),
-        \ vinarise#get_cur_text(getline('.'), col('.')))
+  let address = vinarise#helper#parse_address(getline('.'),
+        \ vinarise#get_cur_text(getline('.'), col('.')))[1]
   call vinarise#mappings#move_to_address(address)
 endfunction "}}}
 
@@ -365,8 +365,8 @@ function! s:move_line(is_next) "{{{
   endif
 endfunction "}}}
 function! s:move_line_address(is_first) "{{{
-  let [type, address] = vinarise#helper#parse_address(getline('.'),
-        \ vinarise#get_cur_text(getline('.'), col('.')))
+  let address = vinarise#helper#parse_address(getline('.'),
+        \ vinarise#get_cur_text(getline('.'), col('.')))[1]
   let address = (address / b:vinarise.width) * b:vinarise.width
   if !a:is_first
     let address += 15
@@ -402,8 +402,8 @@ function! s:move_half_screen(is_next) "{{{
 endfunction "}}}
 function! s:move_by_input_offset(input) "{{{
   " Get current address.
-  let [type, address] = vinarise#helper#parse_address(getline('.'),
-        \ vinarise#get_cur_text(getline('.'), col('.')))
+  let address = vinarise#helper#parse_address(getline('.'),
+        \ vinarise#get_cur_text(getline('.'), col('.')))[1]
   let rest = max([0, b:vinarise.filesize - address - 1])
   let offset = (a:input == '') ?
         \ input(printf('Please input offset(min -0x%x, max 0x%x) : ',
@@ -435,8 +435,8 @@ endfunction "}}}
 function! s:move_skip(is_next) "{{{
   let vinarise = b:vinarise
 
-  let [type, address] = vinarise#helper#parse_address(getline('.'),
-        \ vinarise#get_cur_text(getline('.'), col('.')))
+  let address = vinarise#helper#parse_address(getline('.'),
+        \ vinarise#get_cur_text(getline('.'), col('.')))[1]
 
   let value = vinarise.get_byte(address)
   let binary = '00'
@@ -459,6 +459,7 @@ function! s:move_skip(is_next) "{{{
   call vinarise#mappings#move_to_address(ret)
 endfunction "}}}
 function! s:search_buffer(type, is_reverse, string) "{{{
+  let string = ''
   if a:string != ''
     let string = a:string
   elseif a:type ==# 'binary'
@@ -477,6 +478,8 @@ function! s:search_buffer(type, is_reverse, string) "{{{
     return
   endif
 
+  let is_not_pattern = 0
+  let binary = ''
   if a:type ==# 'binary'
     let binary = string
 
@@ -503,8 +506,8 @@ function! s:search_buffer(type, is_reverse, string) "{{{
     endif
   endif
 
-  let [_, start] = vinarise#helper#parse_address(getline('.'),
-        \ vinarise#get_cur_text(getline('.'), col('.')))
+  let start = vinarise#helper#parse_address(getline('.'),
+        \ vinarise#get_cur_text(getline('.'), col('.')))[1]
   if a:is_reverse
     let start -= 1
   else

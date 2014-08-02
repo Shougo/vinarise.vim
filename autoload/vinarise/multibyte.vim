@@ -23,6 +23,8 @@
 " }}}
 "=============================================================================
 
+scriptencoding utf-8
+
 function! vinarise#multibyte#get_supported_encoding_pattern() "{{{
   " Ascii only.
   return '^\%('.join(vinarise#multibyte#get_supported_encoding_list(), '\|').'\)$'
