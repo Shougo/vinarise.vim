@@ -447,7 +447,7 @@ function! s:hex2script(filename) "{{{
   call hexript#dict_to_file(dict, a:filename)
 
   " Open file.
-  split `=a:filename`
+  execute 'split' fnameescape(a:filename)
 endfunction"}}}
 
 let &cpo = s:save_cpo

@@ -204,7 +204,7 @@ function! s:edit_with_vim() "{{{
   let g:vinarise_enable_auto_detect = 0
 
   try
-    edit `=b:vinarise.filename`
+    execute 'edit' fnameescape(b:vinarise.filename)
   finally
     let g:vinarise_enable_auto_detect = save_auto_detect
   endtry
