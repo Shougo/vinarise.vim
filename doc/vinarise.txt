@@ -56,18 +56,6 @@ COMMANDS 					*vinarise-commands*
 		|vinarise-options| for a option; you must escape with \ when
 		it contains spaces or "%".
 
-:VinariseScript2Hex [{options}...] [{path}]	*:VinariseScript2Hex*
-		Convert hexript to vinarise binary data.
-		The {options} is same to |:Vinarise|.
-		If {path} is set, vinarise will write the data in {path}.
-		Note: This command uses |hexript.vim| plugin.
-		https://github.com/rbtnn/hexript.vim
-
-:VinariseHex2Script {path}			*:VinariseHex2Script*
-		Convert vinarise binary data to hexript in {path} file.
-		Note: This command uses |hexript.vim| plugin.
-		https://github.com/rbtnn/hexript.vim
-
 The commands of plugins				*:vinarise-sources-commands*
 
 :VinarisePluginDump				*:VinarisePluginDump*

@@ -46,8 +46,6 @@ command! -nargs=* -complete=customlist,vinarise#complete Vinarise
       \ call s:call_vinarise({}, <q-args>)
 command! -nargs=? -complete=customlist,vinarise#complete VinariseDump
       \ call vinarise#dump#open(<q-args>, 0)
-command! -nargs=* -complete=customlist,vinarise#complete VinariseScript2Hex
-      \ call s:call_script2hex({'split' : 1}, <q-args>)
 
 if g:vinarise_enable_auto_detect
   augroup vinarise
@@ -59,22 +57,6 @@ endif
 
 function! s:call_vinarise(default, args) "{{{
   let [args, context] = s:parse_args(a:default, a:args)
-
-  call vinarise#init#start(join(args), context)
-endfunction"}}}
-function! s:call_script2hex(default, args) "{{{
-  let [args, context] = s:parse_args(a:default, a:args)
-  if !get(g:, 'loaded_hexript', 0)
-    call vinarise#view#print_error('hexript plugin is needed.')
-    return
-  elseif &filetype !=# 'hexript' || !filereadable(expand('%'))
-    call vinarise#view#print_error('hexript file is not found.')
-    return
-  endif
-
-  " Get hexript data.
-  let dict = hexript#file_to_dict(expand('%'))
-  let context.bytes = dict.bytes
 
   call vinarise#init#start(join(args), context)
 endfunction"}}}
