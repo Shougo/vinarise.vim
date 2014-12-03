@@ -103,45 +103,51 @@ function! vinarise#mappings#define_default_mappings() "{{{
   endif
 
   " Normal mode key-mappings.
-  nmap <buffer><nowait> V        <Plug>(vinarise_edit_with_vim)
-  nmap <buffer><nowait> q        <Plug>(vinarise_hide)
-  nmap <buffer><nowait> Q        <Plug>(vinarise_exit)
-  nmap <buffer><nowait> l        <Plug>(vinarise_next_column)
-  nmap <buffer><nowait> h        <Plug>(vinarise_prev_column)
-  nmap <buffer><nowait> j        <Plug>(vinarise_next_line)
-  nmap <buffer><nowait> k        <Plug>(vinarise_prev_line)
-  nmap <buffer><nowait> <C-f>    <Plug>(vinarise_next_screen)
-  nmap <buffer><nowait> <C-b>    <Plug>(vinarise_prev_screen)
-  nmap <buffer><nowait> <PageDown>   <Plug>(vinarise_next_screen)
-  nmap <buffer><nowait> <PageUp>     <Plug>(vinarise_prev_screen)
-  nmap <buffer><nowait> <C-d>    <Plug>(vinarise_next_half_screen)
-  nmap <buffer><nowait> <C-u>    <Plug>(vinarise_prev_half_screen)
-  nmap <buffer><nowait> <C-g>    <Plug>(vinarise_print_current_position)
-  nmap <buffer><nowait> r        <Plug>(vinarise_change_current_address)
-  nmap <buffer><nowait> R        <Plug>(vinarise_overwrite_from_current_address)
-  nmap <buffer><nowait> gG       <Plug>(vinarise_move_by_input_address)
-  nmap <buffer><nowait> go       <Plug>(vinarise_move_by_input_offset)
-  nmap <buffer><nowait> gg       <Plug>(vinarise_move_to_first_address)
-  nmap <buffer><nowait> G        <Plug>(vinarise_move_to_last_address)
-  nmap <buffer><nowait> 0        <Plug>(vinarise_line_first_address)
-  nmap <buffer><nowait> ^        <Plug>(vinarise_line_first_address)
-  nmap <buffer><nowait> gh       <Plug>(vinarise_line_first_address)
-  nmap <buffer><nowait> $        <Plug>(vinarise_line_last_address)
-  nmap <buffer><nowait> gl       <Plug>(vinarise_line_last_address)
-  nmap <buffer><nowait> /        <Plug>(vinarise_search_binary)
-  nmap <buffer><nowait> ?        <Plug>(vinarise_search_binary_reverse)
-  nmap <buffer><nowait> g/       <Plug>(vinarise_search_string)
-  nmap <buffer><nowait> g?       <Plug>(vinarise_search_string_reverse)
-  nmap <buffer><nowait> e/       <Plug>(vinarise_search_regexp)
-  nmap <buffer><nowait> n        <Plug>(vinarise_search_last_pattern)
-  nmap <buffer><nowait> N        <Plug>(vinarise_search_last_pattern_reverse)
-  nmap <buffer><nowait> E        <Plug>(vinarise_change_encoding)
-  nmap <buffer><nowait> <C-l>    <Plug>(vinarise_redraw)
-  nmap <buffer><nowait> g<C-l>   <Plug>(vinarise_reload)
-  nmap <buffer><nowait> B        <Plug>(vinarise_bitmapview)
-  nmap <buffer><nowait> w        <Plug>(vinarise_next_skip)
-  nmap <buffer><nowait> b        <Plug>(vinarise_prev_skip)
+  execute s:nowait_nmap() 'V'        '<Plug>(vinarise_edit_with_vim)'
+  execute s:nowait_nmap() 'q'        '<Plug>(vinarise_hide)'
+  execute s:nowait_nmap() 'Q'        '<Plug>(vinarise_exit)'
+  execute s:nowait_nmap() 'l'        '<Plug>(vinarise_next_column)'
+  execute s:nowait_nmap() 'h'        '<Plug>(vinarise_prev_column)'
+  execute s:nowait_nmap() 'j'        '<Plug>(vinarise_next_line)'
+  execute s:nowait_nmap() 'k'        '<Plug>(vinarise_prev_line)'
+  execute s:nowait_nmap() '<C-f>'    '<Plug>(vinarise_next_screen)'
+  execute s:nowait_nmap() '<C-b>'    '<Plug>(vinarise_prev_screen)'
+  execute s:nowait_nmap() '<PageDown>'   '<Plug>(vinarise_next_screen)'
+  execute s:nowait_nmap() '<PageUp>'     '<Plug>(vinarise_prev_screen)'
+  execute s:nowait_nmap() '<C-d>'    '<Plug>(vinarise_next_half_screen)'
+  execute s:nowait_nmap() '<C-u>'    '<Plug>(vinarise_prev_half_screen)'
+  execute s:nowait_nmap() '<C-g>'    '<Plug>(vinarise_print_current_position)'
+  execute s:nowait_nmap() 'r'        '<Plug>(vinarise_change_current_address)'
+  execute s:nowait_nmap() 'R'        '<Plug>(vinarise_overwrite_from_current_address)'
+  execute s:nowait_nmap() 'gG'       '<Plug>(vinarise_move_by_input_address)'
+  execute s:nowait_nmap() 'go'       '<Plug>(vinarise_move_by_input_offset)'
+  execute s:nowait_nmap() 'gg'       '<Plug>(vinarise_move_to_first_address)'
+  execute s:nowait_nmap() 'G'        '<Plug>(vinarise_move_to_last_address)'
+  execute s:nowait_nmap() '0'        '<Plug>(vinarise_line_first_address)'
+  execute s:nowait_nmap() '^'        '<Plug>(vinarise_line_first_address)'
+  execute s:nowait_nmap() 'gh'       '<Plug>(vinarise_line_first_address)'
+  execute s:nowait_nmap() '$'        '<Plug>(vinarise_line_last_address)'
+  execute s:nowait_nmap() 'gl'       '<Plug>(vinarise_line_last_address)'
+  execute s:nowait_nmap() '/'        '<Plug>(vinarise_search_binary)'
+  execute s:nowait_nmap() '?'        '<Plug>(vinarise_search_binary_reverse)'
+  execute s:nowait_nmap() 'g/'       '<Plug>(vinarise_search_string)'
+  execute s:nowait_nmap() 'g?'       '<Plug>(vinarise_search_string_reverse)'
+  execute s:nowait_nmap() 'e/'       '<Plug>(vinarise_search_regexp)'
+  execute s:nowait_nmap() 'n'        '<Plug>(vinarise_search_last_pattern)'
+  execute s:nowait_nmap() 'N'        '<Plug>(vinarise_search_last_pattern_reverse)'
+  execute s:nowait_nmap() 'E'        '<Plug>(vinarise_change_encoding)'
+  execute s:nowait_nmap() '<C-l>'    '<Plug>(vinarise_redraw)'
+  execute s:nowait_nmap() 'g<C-l>'   '<Plug>(vinarise_reload)'
+  execute s:nowait_nmap() 'B'        '<Plug>(vinarise_bitmapview)'
+  execute s:nowait_nmap() 'w'        '<Plug>(vinarise_next_skip)'
+  execute s:nowait_nmap() 'b'        '<Plug>(vinarise_prev_skip)'
 endfunction"}}}
+
+function! s:nowait_nmap() "{{{
+  return 'nmap <buffer>'
+        \ . ((v:version > 703 || (v:version == 703 && has('patch1261'))) ?
+        \ '<nowait>' : '')
+endfunction "}}}
 
 function! vinarise#mappings#move_by_input_address(input) "{{{
   let address = (a:input == '') ?
