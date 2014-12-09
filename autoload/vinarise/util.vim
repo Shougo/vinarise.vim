@@ -60,9 +60,6 @@ function! vinarise#util#strchars(...) "{{{
   return call(s:get_prelude().strchars, a:000)
 endfunction"}}}
 
-function! vinarise#util#wcswidth(...) "{{{
-  return call(s:get_prelude().wcswidth, a:000)
-endfunction"}}}
 function! vinarise#util#strwidthpart(...) "{{{
   return call(s:get_prelude().strwidthpart, a:000)
 endfunction"}}}
