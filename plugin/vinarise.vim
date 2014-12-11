@@ -109,7 +109,7 @@ function! s:browse_check(path) "{{{
     return
   endif
 
-  if lines[0] =~ '[\x00-\x09\x10-\x1a\x1c-\x1f]\{5,}'
+  if lines[0] =~ '[\x01-\x08\x10-\x1a\x1c-\x1f]\{5,}'
         \ || (g:vinarise_detect_large_file_size > 0 &&
         \        getfsize(path) > g:vinarise_detect_large_file_size)
     call s:call_vinarise({'overwrite' : 1}, path)
