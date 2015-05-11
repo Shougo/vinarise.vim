@@ -85,6 +85,7 @@ function! s:bitmapview_open() "{{{
   setlocal nofoldenable
   setlocal hidden
   setlocal foldcolumn=0
+  setlocal nonumber
 
   " Autocommands.
   augroup plugin-vinarise
