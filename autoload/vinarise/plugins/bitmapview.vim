@@ -49,7 +49,8 @@ let s:plugin = {
       \}
 
 function! s:plugin.initialize(vinarise, context) "{{{
-  command! VinarisePluginBitmapView call s:bitmapview_open()
+  command! -bar VinarisePluginBitmapView
+        \ call s:bitmapview_open()
 endfunction"}}}
 function! s:plugin.finalize(vinarise, context) "{{{
 endfunction"}}}

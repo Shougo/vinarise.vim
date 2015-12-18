@@ -42,9 +42,11 @@ let g:vinarise_cursor_ascii_highlight =
       \ get(g:, 'vinarise_cursor_ascii_highlight', 'Search')
 "}}}
 
-command! -nargs=* -complete=customlist,vinarise#complete Vinarise
+command! -nargs=* -bar -complete=customlist,vinarise#complete
+      \ Vinarise
       \ call s:call_vinarise({}, <q-args>)
-command! -nargs=? -complete=customlist,vinarise#complete VinariseDump
+command! -nargs=? -bar -complete=customlist,vinarise#complete
+      \ VinariseDump
       \ call vinarise#dump#open(<q-args>, 0)
 
 if g:vinarise_enable_auto_detect

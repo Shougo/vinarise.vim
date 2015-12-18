@@ -51,7 +51,8 @@ let s:plugin = {
       \}
 
 function! s:plugin.initialize(vinarise, context) "{{{
-  command! VinarisePluginDump call s:dump_open()
+  command! -bar VinarisePluginDump
+        \ call s:dump_open()
 endfunction"}}}
 
 function! s:dump_open() "{{{
