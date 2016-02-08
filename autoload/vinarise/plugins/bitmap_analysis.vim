@@ -26,7 +26,7 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-function! vinarise#plugins#bitmap_analysis#define()
+function! vinarise#plugins#bitmap_analysis#define() abort
   return s:plugin
 endfunction
 
@@ -38,10 +38,10 @@ let s:plugin = {
       \ 'description' : 'bitmap analyzer',
       \}
 
-function! s:plugin.initialize(vinarise, context) "{{{
+function! s:plugin.initialize(vinarise, context) abort "{{{
   call unite#sources#vinarise_analysis#add_analyzers(s:analyzer)
 endfunction"}}}
-function! s:plugin.finalize(vinarise, context) "{{{
+function! s:plugin.finalize(vinarise, context) abort "{{{
 endfunction"}}}
 
 let s:analyzer = {
@@ -49,11 +49,11 @@ let s:analyzer = {
       \ 'description' : 'bitmap analyzer',
       \}
 
-function! s:analyzer.detect(vinarise, context) "{{{
+function! s:analyzer.detect(vinarise, context) abort "{{{
   return a:vinarise.get_bytes(0, 2) == [0x42, 0x4d]
 endfunction"}}}
 
-function! s:analyzer.parse(vinarise, context) "{{{
+function! s:analyzer.parse(vinarise, context) abort "{{{
   let candidates = []
   let offset = 0
 
@@ -114,7 +114,7 @@ function! s:analyzer.parse(vinarise, context) "{{{
   return candidates
 endfunction"}}}
 
-function! s:analyze_info_header(vinarise, candidates, offset) "{{{
+function! s:analyze_info_header(vinarise, candidates, offset) abort "{{{
   " BITMAPINFOHEADER
   let offset = a:offset
   let info_header = { 'name' : 'BITMAPINFOHEADER', 'value' : []}

@@ -41,7 +41,7 @@ let s:manager = vinarise#util#get_vital().import('Vim.Buffer')
 let s:save_cpo = &cpo
 set cpo&vim
 
-function! vinarise#plugins#dump#define()
+function! vinarise#plugins#dump#define() abort
   return s:plugin
 endfunction
 
@@ -50,12 +50,12 @@ let s:plugin = {
       \ 'description' : 'hex dump by objdump',
       \}
 
-function! s:plugin.initialize(vinarise, context) "{{{
+function! s:plugin.initialize(vinarise, context) abort "{{{
   command! -bar VinarisePluginDump
         \ call s:dump_open()
 endfunction"}}}
 
-function! s:dump_open() "{{{
+function! s:dump_open() abort "{{{
   if !executable(g:vinarise_objdump_command)
     echoerr g:vinarise_objdump_command . ' is not installed.'
     return
@@ -81,7 +81,7 @@ function! s:dump_open() "{{{
 endfunction"}}}
 
 " Misc.
-function! s:initialize_dump_buffer() "{{{
+function! s:initialize_dump_buffer() abort "{{{
   " Basic settings.
   setlocal buftype=nofile
   setlocal noswapfile

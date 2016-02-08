@@ -57,12 +57,12 @@ if g:vinarise_enable_auto_detect
   augroup END
 endif
 
-function! s:call_vinarise(default, args) "{{{
+function! s:call_vinarise(default, args) abort "{{{
   let [args, context] = s:parse_args(a:default, a:args)
 
   call vinarise#init#start(join(args), context)
 endfunction"}}}
-function! s:parse_args(default, args) "{{{
+function! s:parse_args(default, args) abort "{{{
   let args = []
   let context = a:default
   for arg in split(a:args, '\%(\\\@<!\s\)\+')
@@ -86,7 +86,7 @@ function! s:parse_args(default, args) "{{{
   return [args, context]
 endfunction"}}}
 
-function! s:browse_check(path) "{{{
+function! s:browse_check(path) abort "{{{
   if bufnr('%') != expand('<abuf>')
         \ || a:path == ''
     return

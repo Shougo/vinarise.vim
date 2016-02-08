@@ -26,7 +26,7 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-function! vinarise#helper#parse_address(string, cur_text) "{{{
+function! vinarise#helper#parse_address(string, cur_text) abort "{{{
   " Get last address.
   let base_address = matchstr(a:string, '^\x\+')
 

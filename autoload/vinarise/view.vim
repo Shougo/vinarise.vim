@@ -26,10 +26,10 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-function! vinarise#view#print_error(string) "{{{
+function! vinarise#view#print_error(string) abort "{{{
   echohl Error | echo a:string | echohl None
 endfunction"}}}
-function! vinarise#view#print_lines(lines, ...) "{{{
+function! vinarise#view#print_lines(lines, ...) abort "{{{
   " Get last address.
   if a:0 >= 1
     let address = a:1
@@ -79,7 +79,7 @@ function! vinarise#view#print_lines(lines, ...) "{{{
   let &l:modified = modified_save
   setlocal nomodifiable
 endfunction"}}}
-function! vinarise#view#make_line(line_address) "{{{
+function! vinarise#view#make_line(line_address) abort "{{{
   " Make new line.
   let bytes = b:vinarise.get_bytes(
         \ a:line_address * b:vinarise.width, b:vinarise.width)
@@ -97,7 +97,7 @@ function! vinarise#view#make_line(line_address) "{{{
         \ a:line_address, hex_line, ascii_line)
 endfunction"}}}
 
-function! vinarise#view#set_cursor_address(address) "{{{
+function! vinarise#view#set_cursor_address(address) abort "{{{
   let line_address = (a:address / b:vinarise.width) * b:vinarise.width
   let hex_line = repeat(' \x\x', a:address - line_address + 1)
   let [lnum, col] = searchpos(

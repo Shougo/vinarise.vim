@@ -26,7 +26,7 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-function! vinarise#version() "{{{
+function! vinarise#version() abort "{{{
   return str2nr(printf('%02d%02d', 2, 0))
 endfunction"}}}
 
@@ -40,7 +40,7 @@ let s:current_vinarise = {}
 let s:use_current_vinarise = 0
 "}}}
 
-function! vinarise#complete(arglead, cmdline, cursorpos) "{{{
+function! vinarise#complete(arglead, cmdline, cursorpos) abort "{{{
   let _ = []
 
   let args = split(join(split(a:cmdline)[1:]), '\\\@<!\s\+')
@@ -77,21 +77,21 @@ function! vinarise#complete(arglead, cmdline, cursorpos) "{{{
 
   return _
 endfunction"}}}
-function! vinarise#complete_encodings(arglead, cmdline, cursorpos) "{{{
+function! vinarise#complete_encodings(arglead, cmdline, cursorpos) abort "{{{
   return sort(filter(vinarise#multibyte#get_supported_encoding_list(),
         \ 'stridx(v:val, a:arglead) == 0'))
 endfunction"}}}
-function! vinarise#get_options() "{{{
+function! vinarise#get_options() abort "{{{
   return copy(s:vinarise_options)
 endfunction"}}}
-function! vinarise#get_cur_text(string, col) "{{{
+function! vinarise#get_cur_text(string, col) abort "{{{
   return matchstr(a:string, '^.*\%' . a:col . 'c.')
 endfunction"}}}
 
-function! vinarise#set_current_vinarise(vinarise) "{{{
+function! vinarise#set_current_vinarise(vinarise) abort "{{{
   let s:current_vinarise = a:vinarise
 endfunction"}}}
-function! vinarise#get_current_vinarise() "{{{
+function! vinarise#get_current_vinarise() abort "{{{
   return exists('b:vinarise') && !s:use_current_vinarise ?
         \ b:vinarise : s:current_vinarise
 endfunction"}}}

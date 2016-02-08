@@ -29,7 +29,7 @@
 " Actions "{{{
 " }}}
 
-function! unite#sources#vinarise_analysis#define() "{{{
+function! unite#sources#vinarise_analysis#define() abort "{{{
   return s:source
 endfunction "}}}
 
@@ -41,7 +41,7 @@ let s:source = {
       \ 'default_action' : 'jump',
       \ }
 
-function! s:source.hooks.on_init(args, context) "{{{
+function! s:source.hooks.on_init(args, context) abort "{{{
   if &filetype !=# 'vinarise'
     return
   endif
@@ -71,7 +71,7 @@ function! s:source.hooks.on_init(args, context) "{{{
   endif
 endfunction"}}}
 
-function! s:source.gather_candidates(args, context) "{{{
+function! s:source.gather_candidates(args, context) abort "{{{
   if !has_key(a:context, 'source__vinarise')
     call unite#print_message(
           \ '[vinarise/analysis] not in vinarise buffer.')
@@ -98,7 +98,7 @@ endfunction "}}}
 let s:source.action_table.jump = {
       \ 'description' : 'jump to the structure item',
       \ }
-function! s:source.action_table.jump.func(candidate) "{{{
+function! s:source.action_table.jump.func(candidate) abort "{{{
   if !has_key(a:candidate, 'action__address')
         \ || &filetype !=# 'vinarise'
     return
@@ -111,7 +111,7 @@ let s:source.action_table.edit = {
       \ 'description' : 'edit the structure item',
       \ 'is_invalidate_cache' : 1,
       \ }
-function! s:source.action_table.edit.func(candidate) "{{{
+function! s:source.action_table.edit.func(candidate) abort "{{{
   if !has_key(a:candidate, 'action__address')
         \ || !has_key(a:candidate, 'action__size')
         \ || !has_key(a:candidate, 'action__value')
@@ -137,7 +137,7 @@ function! s:source.action_table.edit.func(candidate) "{{{
 endfunction"}}}
 "}}}
 
-function! s:initialize_candidates(list, level) "{{{
+function! s:initialize_candidates(list, level) abort "{{{
   let candidates = []
   for item in a:list
     let dict = (type(item) == type('')) ?
@@ -183,7 +183,7 @@ function! s:initialize_candidates(list, level) "{{{
   return candidates
 endfunction"}}}
 
-function! s:call_analyzer(analyzer_name, function, vinarise, context) "{{{
+function! s:call_analyzer(analyzer_name, function, vinarise, context) abort "{{{
   let analyzer = s:analyzers[a:analyzer_name]
   if has_key(analyzer, a:function)
     return call(analyzer[a:function], [a:vinarise, a:context], analyzer)
@@ -192,7 +192,7 @@ function! s:call_analyzer(analyzer_name, function, vinarise, context) "{{{
   return 0
 endfunction"}}}
 
-function! unite#sources#vinarise_analysis#add_analyzers(analyzer) "{{{
+function! unite#sources#vinarise_analysis#add_analyzers(analyzer) abort "{{{
   let s:analyzers[a:analyzer.name] = a:analyzer
 endfunction"}}}
 

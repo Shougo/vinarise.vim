@@ -26,7 +26,7 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-function! vinarise#plugins#zip_analysis#define()
+function! vinarise#plugins#zip_analysis#define() abort
   return s:plugin
 endfunction
 
@@ -38,10 +38,10 @@ let s:plugin = {
       \ 'description' : 'zip analyzer',
       \}
 
-function! s:plugin.initialize(vinarise, context) "{{{
+function! s:plugin.initialize(vinarise, context) abort "{{{
   call unite#sources#vinarise_analysis#add_analyzers(s:analyzer)
 endfunction"}}}
-function! s:plugin.finalize(vinarise, context) "{{{
+function! s:plugin.finalize(vinarise, context) abort "{{{
 endfunction"}}}
 
 let s:analyzer = {
@@ -49,11 +49,11 @@ let s:analyzer = {
       \ 'description' : 'zip analyzer',
       \}
 
-function! s:analyzer.detect(vinarise, context) "{{{
+function! s:analyzer.detect(vinarise, context) abort "{{{
   return a:vinarise.get_bytes(0, 2) == [0x50, 0x4b]
 endfunction"}}}
 
-function! s:analyzer.parse(vinarise, context) "{{{
+function! s:analyzer.parse(vinarise, context) abort "{{{
   let candidates = []
   let offset = 0
 
@@ -85,7 +85,7 @@ function! s:analyzer.parse(vinarise, context) "{{{
   return candidates
 endfunction"}}}
 
-function! s:analyze_zip_header(vinarise, candidates, offset) "{{{
+function! s:analyze_zip_header(vinarise, candidates, offset) abort "{{{
   " ZIP_HEADER
   let offset = a:offset
   let header = { 'name' : 'ZIP_HEADER', 'value' : []}
@@ -191,7 +191,7 @@ function! s:analyze_zip_header(vinarise, candidates, offset) "{{{
   return [a:candidates, offset]
 endfunction"}}}
 
-function! s:analyze_zip_header2(vinarise, candidates, offset) "{{{
+function! s:analyze_zip_header2(vinarise, candidates, offset) abort "{{{
   " ZIP_HEADER
   let offset = a:offset
   let header = { 'name' : 'ZIP_HEADER(PK78)', 'value' : []}
@@ -228,7 +228,7 @@ function! s:analyze_zip_header2(vinarise, candidates, offset) "{{{
   return [a:candidates, offset]
 endfunction"}}}
 
-function! s:analyze_zip_central_header(vinarise, candidates, offset) "{{{
+function! s:analyze_zip_central_header(vinarise, candidates, offset) abort "{{{
   " ZIP_CENTRAL_HEADER
   let offset = a:offset
   let header = { 'name' : 'ZIP_CENTRAL_HEADER', 'value' : []}
@@ -350,7 +350,7 @@ function! s:analyze_zip_central_header(vinarise, candidates, offset) "{{{
   return [a:candidates, offset]
 endfunction"}}}
 
-function! s:analyze_zip_end_header(vinarise, candidates, offset) "{{{
+function! s:analyze_zip_end_header(vinarise, candidates, offset) abort "{{{
   " ZIP_END_HEADER
   let offset = a:offset
   let header = { 'name' : 'ZIP_END_HEADER', 'value' : []}

@@ -26,7 +26,7 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-function! vinarise#handlers#release_buffer(bufnr) "{{{
+function! vinarise#handlers#release_buffer(bufnr) abort "{{{
   " Close previous variable.
   let vinarise = getbufvar(a:bufnr, 'vinarise')
 
@@ -39,7 +39,7 @@ function! vinarise#handlers#release_buffer(bufnr) "{{{
 
   call vinarise.close()
 endfunction"}}}
-function! vinarise#handlers#write_buffer(filename) "{{{
+function! vinarise#handlers#write_buffer(filename) abort "{{{
   let vinarise = vinarise#get_current_vinarise()
   let filename = (a:filename ==# vinarise.bufname) ?
         \ vinarise.filename : a:filename
@@ -66,7 +66,7 @@ function! vinarise#handlers#write_buffer(filename) "{{{
   setlocal nomodified
   echo printf('"%s" %d bytes', filename, b:vinarise.filesize)
 endfunction"}}}
-function! vinarise#handlers#match_ascii() "{{{
+function! vinarise#handlers#match_ascii() abort "{{{
   let [type, address] = vinarise#helper#parse_address(getline('.'),
         \ vinarise#get_cur_text(getline('.'), col('.')))
   if type != 'hex'

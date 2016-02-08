@@ -23,63 +23,63 @@
 " }}}
 "=============================================================================
 
-function! vinarise#util#get_vital() "{{{
+function! vinarise#util#get_vital() abort "{{{
   if !exists('s:V')
     let s:V = vital#of('vinarise')
   endif
   return s:V
 endfunction"}}}
-function! s:get_prelude() "{{{
+function! s:get_prelude() abort "{{{
   if !exists('s:Prelude')
     let s:Prelude = vinarise#util#get_vital().import('Prelude')
   endif
   return s:Prelude
 endfunction"}}}
-function! s:get_list() "{{{
+function! s:get_list() abort "{{{
   if !exists('s:List')
     let s:List = vinarise#util#get_vital().import('Data.List')
   endif
   return s:List
 endfunction"}}}
-function! s:get_process() "{{{
+function! s:get_process() abort "{{{
   if !exists('s:Process')
     let s:Process = vinarise#util#get_vital().import('Process')
   endif
   return s:Process
 endfunction"}}}
 
-function! vinarise#util#truncate_smart(...) "{{{
+function! vinarise#util#truncate_smart(...) abort "{{{
   return call(s:get_prelude().truncate_smart, a:000)
 endfunction"}}}
 
-function! vinarise#util#truncate(...) "{{{
+function! vinarise#util#truncate(...) abort "{{{
   return call(s:get_prelude().truncate, a:000)
 endfunction"}}}
 
-function! vinarise#util#strchars(...) "{{{
+function! vinarise#util#strchars(...) abort "{{{
   return call(s:get_prelude().strchars, a:000)
 endfunction"}}}
 
-function! vinarise#util#strwidthpart(...) "{{{
+function! vinarise#util#strwidthpart(...) abort "{{{
   return call(s:get_prelude().strwidthpart, a:000)
 endfunction"}}}
-function! vinarise#util#strwidthpart_reverse(...) "{{{
+function! vinarise#util#strwidthpart_reverse(...) abort "{{{
   return call(s:get_prelude().strwidthpart_reverse, a:000)
 endfunction"}}}
-function! vinarise#util#is_windows(...) "{{{
+function! vinarise#util#is_windows(...) abort "{{{
   return call(s:get_prelude().is_windows, a:000)
 endfunction"}}}
-function! vinarise#util#is_mac(...) "{{{
+function! vinarise#util#is_mac(...) abort "{{{
   return call(s:get_prelude().is_mac, a:000)
 endfunction"}}}
 
-function! s:buflisted(bufnr) "{{{
+function! s:buflisted(bufnr) abort "{{{
   return exists('t:unite_buffer_dictionary') ?
         \ has_key(t:unite_buffer_dictionary, a:bufnr) && buflisted(a:bufnr) :
         \ buflisted(a:bufnr)
 endfunction"}}}
 
-function! vinarise#util#expand(path) "{{{
+function! vinarise#util#expand(path) abort "{{{
   return s:get_prelude().substitute_path_separator(
         \ (a:path =~ '^\~') ? substitute(a:path, '^\~', expand('~'), '') :
         \ (a:path =~ '^\$\h\w*') ? substitute(a:path,
@@ -87,25 +87,25 @@ function! vinarise#util#expand(path) "{{{
         \ a:path)
 endfunction"}}}
 
-function! vinarise#util#substitute_path_separator(...) "{{{
+function! vinarise#util#substitute_path_separator(...) abort "{{{
   return call(s:get_prelude().substitute_path_separator, a:000)
 endfunction"}}}
-function! vinarise#util#escape_file_searching(...) "{{{
+function! vinarise#util#escape_file_searching(...) abort "{{{
   return call(s:get_prelude().escape_file_searching, a:000)
 endfunction"}}}
-function! vinarise#util#iconv(...) "{{{
+function! vinarise#util#iconv(...) abort "{{{
   return call(s:get_process().iconv, a:000)
 endfunction"}}}
 
-function! vinarise#util#sort_by(...) "{{{
+function! vinarise#util#sort_by(...) abort "{{{
   return call(s:get_list().sort_by, a:000)
 endfunction"}}}
 
-function! vinarise#util#is_cmdwin() "{{{
+function! vinarise#util#is_cmdwin() abort "{{{
   return bufname('%') ==# '[Command Line]'
 endfunction"}}}
 
-function! vinarise#util#alternate_buffer() "{{{
+function! vinarise#util#alternate_buffer() abort "{{{
   if s:buflisted(bufnr('#'))
     buffer #
     return
@@ -121,12 +121,12 @@ function! vinarise#util#alternate_buffer() "{{{
           \ listed_buffer[current+1] : listed_buffer[current-1])
   endif
 endfunction"}}}
-function! vinarise#util#delete_buffer(...) "{{{
+function! vinarise#util#delete_buffer(...) abort "{{{
   let bufnr = get(a:000, 0, bufnr('%'))
   call vinarise#util#alternate_buffer()
   execute 'bdelete!' bufnr
 endfunction"}}}
-function! s:buflisted(bufnr) "{{{
+function! s:buflisted(bufnr) abort "{{{
   return exists('t:unite_buffer_dictionary') ?
         \ has_key(t:unite_buffer_dictionary, a:bufnr) && buflisted(a:bufnr) :
         \ buflisted(a:bufnr)

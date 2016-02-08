@@ -26,7 +26,7 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-function! vinarise#parser#parse_one_line(line, vinarise, offset, ...)
+function! vinarise#parser#parse_one_line(line, vinarise, offset, ...) abort
   let is_little = get(a:000, 0, 1)
   let matchlist = matchlist(a:line, '^\s*\(\S\+\)\s\+\(\S\+\)\s*;\s*$')
   if len(matchlist) < 3
