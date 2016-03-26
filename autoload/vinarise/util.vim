@@ -25,7 +25,7 @@
 
 function! vinarise#util#get_vital() abort "{{{
   if !exists('s:V')
-    let s:V = vital#of('vinarise')
+    let s:V = vital#vinarise#of()
   endif
   return s:V
 endfunction"}}}
@@ -34,6 +34,12 @@ function! s:get_prelude() abort "{{{
     let s:Prelude = vinarise#util#get_vital().import('Prelude')
   endif
   return s:Prelude
+endfunction"}}}
+function! s:get_string() abort "{{{
+  if !exists('s:String')
+    let s:String = unite#util#get_vital().import('Data.String')
+  endif
+  return s:String
 endfunction"}}}
 function! s:get_list() abort "{{{
   if !exists('s:List')
@@ -49,22 +55,22 @@ function! s:get_process() abort "{{{
 endfunction"}}}
 
 function! vinarise#util#truncate_smart(...) abort "{{{
-  return call(s:get_prelude().truncate_smart, a:000)
+  return call(s:get_string().truncate_skipping, a:000)
 endfunction"}}}
 
 function! vinarise#util#truncate(...) abort "{{{
-  return call(s:get_prelude().truncate, a:000)
+  return call(s:get_string().truncate, a:000)
 endfunction"}}}
 
 function! vinarise#util#strchars(...) abort "{{{
-  return call(s:get_prelude().strchars, a:000)
+  return call(s:get_string().strchars, a:000)
 endfunction"}}}
 
 function! vinarise#util#strwidthpart(...) abort "{{{
-  return call(s:get_prelude().strwidthpart, a:000)
+  return call(s:get_string().strwidthpart, a:000)
 endfunction"}}}
 function! vinarise#util#strwidthpart_reverse(...) abort "{{{
-  return call(s:get_prelude().strwidthpart_reverse, a:000)
+  return call(s:get_string().strwidthpart_reverse, a:000)
 endfunction"}}}
 function! vinarise#util#is_windows(...) abort "{{{
   return call(s:get_prelude().is_windows, a:000)
