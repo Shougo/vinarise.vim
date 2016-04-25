@@ -1,21 +1,39 @@
+# pylint: disable=missing-docstring
 import mmap
 import os
 import re
-import vim
 import sys
+
+import vim  # NOQA pylint: disable=import-error,unused-import
 
 WINDOWS = sys.platform == 'win32'
 PY3 = sys.version_info[0] == 3
 
 if PY3:
-    unicode = str      # str is already unicode.
-    ord_wrap = lambda x: x  # mmap[i] returns int.
-    chr_wrap = lambda x: x  # mmap[i] must be int.
-else:
-    ord_wrap = lambda x: ord(x)  # mmap[i] returns int.
-    chr_wrap = lambda x: chr(x)  # mmap[i] must be int.
+    def ord_wrap(obj):
+        ''' mmap[i] returns int '''
+        return obj
 
-class VinariseBuffer(object):
+    def chr_wrap(obj):
+        ''' mmap[i] must be int '''
+        return obj
+else:
+    def ord_wrap(obj):
+        ''' mmap[i] returns int '''
+        return ord(obj)
+
+    def chr_wrap(obj):
+        ''' mmap[i] must be int '''
+        return chr(obj)
+
+
+class VinariseBuffer(object):  # pylint: disable=too-many-public-methods
+    def __init__(self):
+        self.file = None
+        self.path = None
+        self.fsize = None
+        self.mmap = None
+
     def open(self, path):
         # init vars
         self.file = open(path, 'rb')
@@ -46,13 +64,13 @@ class VinariseBuffer(object):
     def write(self, path):
         if path == self.path:
             # Close current file temporary.
-            str = self.mmap[0:]
+            string = self.mmap[0:]
             self.close()
         else:
-            str = self.mmap
+            string = self.mmap
 
         write_file = open(path, 'wb')
-        write_file.write(str)
+        write_file.write(string)
         write_file.close()
 
         if path == self.path:
@@ -65,35 +83,34 @@ class VinariseBuffer(object):
     def get_bytes(self, addr, count):
         if int(count) == 0:
             return []
-        return [ord_wrap(x) for x in self.mmap[int(addr) : int(addr)+int(count)]]
+        return [ord_wrap(x) for x in self.mmap[int(addr): int(addr)+int(count)]]
 
     def get_int8(self, addr):
         return self.get_byte(addr)
 
     def get_int16_le(self, addr):
-        bytes = self.get_bytes(addr, 2)
-        return bytes[0] + bytes[1] * 0x100
+        bytesobj = self.get_bytes(addr, 2)
+        return bytesobj[0] + bytesobj[1] * 0x100
 
     def get_int16_be(self, addr):
-        bytes = self.get_bytes(addr, 2)
-        return bytes[1] + bytes[0] * 0x100
+        bytesobj = self.get_bytes(addr, 2)
+        return bytesobj[1] + bytesobj[0] * 0x100
 
     def get_int32_le(self, addr):
-        bytes = self.get_bytes(addr, 4)
-        return bytes[0] +  bytes[1] * 0x100 + bytes[2] * 0x10000 + bytes[3] * 0x1000000
+        bytesobj = self.get_bytes(addr, 4)
+        return bytesobj[0] + bytesobj[1] * 0x100 + bytesobj[2] * 0x10000 + bytesobj[3] * 0x1000000
 
     def get_int32_be(self, addr):
-        bytes = self.get_bytes(addr, 4)
-        return bytes[3] +  bytes[2] * 0x100 + bytes[1] * 0x10000 + bytes[0] * 0x1000000
+        bytesobj = self.get_bytes(addr, 4)
+        return bytesobj[3] + bytesobj[2] * 0x100 + bytesobj[1] * 0x10000 + bytesobj[0] * 0x1000000
 
     def get_chars(self, addr, count, from_enc, to_enc):
         if int(count) == 0:
             return ""
-        chars = self.mmap[int(addr) : int(addr)+int(count)]
-        s = unicode(chars, from_enc, 'replace')
+        chars = self.mmap[int(addr): int(addr)+int(count)]
         if not PY3:
-            s = s.encode(to_enc, 'replace')
-        return s
+            string = unicode(chars, from_enc, 'replace')
+        return string.encode(to_enc, 'replace')
 
     def set_byte(self, addr, value):
         self.mmap[int(addr)] = chr_wrap(int(value))
@@ -104,61 +121,62 @@ class VinariseBuffer(object):
     def get_percentage_address(self, percent):
         return ((self.fsize - 1) * int(percent)) // 100
 
-    def find(self, address, str, from_enc, to_enc):
-        pattern = unicode(str, from_enc, 'replace')
+    def find(self, address, string, from_enc, to_enc):
         if not PY3:
-            pattern = str.encode(to_enc, 'replace')
-        return self.mmap.find(pattern, int(address))
+            string = unicode(string, from_enc, 'replace')
+        return self.mmap.find(string.encode(to_enc, 'replace'), int(address))
 
-    def rfind(self, address, str, from_enc, to_enc):
-        pattern = unicode(str, from_enc, 'replace')
+    def rfind(self, address, string, from_enc, to_enc):
         if not PY3:
-            pattern = str.encode(to_enc, 'replace')
-        return self.mmap.rfind(pattern, 0, int(address))
+            string = unicode(string, from_enc, 'replace')
+        return self.mmap.rfind(string.encode(to_enc, 'replace'), 0, int(address))
 
-    def find_regexp(self, address, str, from_enc, to_enc):
-        s = unicode(str, from_enc, 'replace')
+    def find_regexp(self, address, string, from_enc, to_enc):
         if not PY3:
-            s = s.encode(to_enc, 'replace')
-        pattern = re.compile(s)
-        m = pattern.search(self.mmap, int(address))
-        if m is None:
+            string = unicode(string, from_enc, 'replace')
+        pattern = re.compile(string.encode(to_enc, 'replace'))
+        match = pattern.search(self.mmap, int(address))
+        if match is None:
             return -1
         else:
-            return m.start()
+            return match.start()
 
     def find_binary(self, address, binary):
         addr = int(address)
-        bytes = [int(binary[i*2 : i*2+2], 16) for i in range(len(binary) // 2)]
+        bytesobj = [int(binary[i*2: i*2+2], 16) for i in range(len(binary) // 2)]
         while addr >= 0 and addr < self.fsize:
-            if self.get_byte(addr) == bytes[0] and bytes == self.get_bytes(addr, len(bytes)):
+            if self.get_byte(addr) == bytesobj[0] and \
+                    bytesobj == self.get_bytes(addr, len(bytesobj)):
                 return addr
             addr += 1
         return -1
 
     def rfind_binary(self, address, binary):
         addr = int(address)
-        bytes = [int(binary[i*2 : i*2+2], 16) for i in range(len(binary) // 2)]
+        bytesobj = [int(binary[i*2: i*2+2], 16) for i in range(len(binary) // 2)]
         while addr >= 0 and addr < self.fsize:
-            if self.get_byte(addr) == bytes[0] and bytes == self.get_bytes(addr, len(bytes)):
+            if self.get_byte(addr) == bytesobj[0] and \
+                    bytesobj == self.get_bytes(addr, len(bytesobj)):
                 return addr
             addr -= 1
         return -1
 
     def find_binary_not(self, address, binary):
         addr = int(address)
-        bytes = [int(binary[i*2 : i*2+2], 16) for i in range(len(binary) // 2)]
+        bytesobj = [int(binary[i*2: i*2+2], 16) for i in range(len(binary) // 2)]
         while addr >= 0 and addr < self.fsize:
-            if self.get_byte(addr) != bytes[0] and bytes != self.get_bytes(addr, len(bytes)):
+            if self.get_byte(addr) != bytesobj[0] and \
+                    bytesobj != self.get_bytes(addr, len(bytesobj)):
                 return addr
             addr += 1
         return -1
 
     def rfind_binary_not(self, address, binary):
         addr = int(address)
-        bytes = [int(binary[i*2 : i*2+2], 16) for i in range(len(binary) // 2)]
+        bytesobj = [int(binary[i*2: i*2+2], 16) for i in range(len(binary) // 2)]
         while addr >= 0 and addr < self.fsize:
-            if self.get_byte(addr) != bytes[0] and bytes != self.get_bytes(addr, len(bytes)):
+            if self.get_byte(addr) != bytesobj[0] and \
+                    bytesobj != self.get_bytes(addr, len(bytesobj)):
                 return addr
             addr -= 1
         return -1
