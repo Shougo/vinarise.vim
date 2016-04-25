@@ -10,8 +10,6 @@ WINDOWS = sys.platform == 'win32'
 PY3 = sys.version_info[0] == 3
 
 if PY3:
-    unicode = str      # str is already unicode. pylint: disable=invalid-name
-
     def ord_wrap(obj):
         ''' mmap[i] returns int '''
         return obj
@@ -110,10 +108,9 @@ class VinariseBuffer(object):  # pylint: disable=too-many-public-methods
         if int(count) == 0:
             return ""
         chars = self.mmap[int(addr): int(addr)+int(count)]
-        string = unicode(chars, from_enc, 'replace')
         if not PY3:
-            string = string.encode(to_enc, 'replace')
-        return string
+            string = unicode(chars, from_enc, 'replace')
+        return string.encode(to_enc, 'replace')
 
     def set_byte(self, addr, value):
         self.mmap[int(addr)] = chr_wrap(int(value))
@@ -125,22 +122,19 @@ class VinariseBuffer(object):  # pylint: disable=too-many-public-methods
         return ((self.fsize - 1) * int(percent)) // 100
 
     def find(self, address, string, from_enc, to_enc):
-        pattern = unicode(string, from_enc, 'replace')
         if not PY3:
-            pattern = string.encode(to_enc, 'replace')
-        return self.mmap.find(pattern, int(address))
+            string = unicode(string, from_enc, 'replace')
+        return self.mmap.find(string.encode(to_enc, 'replace'), int(address))
 
     def rfind(self, address, string, from_enc, to_enc):
-        pattern = unicode(string, from_enc, 'replace')
         if not PY3:
-            pattern = string.encode(to_enc, 'replace')
-        return self.mmap.rfind(pattern, 0, int(address))
+            string = unicode(string, from_enc, 'replace')
+        return self.mmap.rfind(string.encode(to_enc, 'replace'), 0, int(address))
 
     def find_regexp(self, address, string, from_enc, to_enc):
-        string = unicode(string, from_enc, 'replace')
         if not PY3:
-            string = string.encode(to_enc, 'replace')
-        pattern = re.compile(string)
+            string = unicode(string, from_enc, 'replace')
+        pattern = re.compile(string.encode(to_enc, 'replace'))
         match = pattern.search(self.mmap, int(address))
         if match is None:
             return -1
