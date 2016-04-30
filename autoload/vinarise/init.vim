@@ -62,7 +62,7 @@ function! vinarise#init#start(filename, context) abort "{{{
 
   if empty(context.bytes)
     if filename == ''
-      let filename = bufname('%')
+      let filename = expand('%:p')
       if &l:buftype =~ 'nofile'
         call vinarise#view#print_error(
               \ '[vinarise] Nofile buffer is detected. This operation is invalid.')
@@ -434,5 +434,3 @@ endfunction"}}}
 
 let &cpo = s:save_cpo
 unlet s:save_cpo
-
-
