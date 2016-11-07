@@ -45,9 +45,6 @@ let g:vinarise_cursor_ascii_highlight =
 command! -nargs=* -bar -complete=customlist,vinarise#complete
       \ Vinarise
       \ call s:call_vinarise({}, <q-args>)
-command! -nargs=? -bar -complete=customlist,vinarise#complete
-      \ VinariseDump
-      \ call vinarise#dump#open(<q-args>, 0)
 
 if g:vinarise_enable_auto_detect
   augroup vinarise

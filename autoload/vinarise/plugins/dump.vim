@@ -74,7 +74,7 @@ function! s:dump_open() abort "{{{
   call s:initialize_dump_buffer()
 
   setlocal modifiable
-  execute '%!'.g:vinarise_objdump_command.' -DCslx "'
+  execute 'silent %!'.g:vinarise_objdump_command.' -DCslx "'
         \ . vinarise.filename . '"'
   setlocal nomodifiable
   setlocal nomodified
