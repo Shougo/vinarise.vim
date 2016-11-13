@@ -37,7 +37,7 @@ function! s:get_prelude() abort "{{{
 endfunction"}}}
 function! s:get_string() abort "{{{
   if !exists('s:String')
-    let s:String = unite#util#get_vital().import('Data.String')
+    let s:String = vinarise#util#get_vital().import('Data.String')
   endif
   return s:String
 endfunction"}}}
