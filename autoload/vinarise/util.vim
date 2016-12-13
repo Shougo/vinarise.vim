@@ -25,7 +25,7 @@
 
 function! vinarise#util#get_vital() abort "{{{
   if !exists('s:V')
-    let s:V = vital#vinarise#of()
+    let s:V = vital#vinarise#new()
   endif
   return s:V
 endfunction"}}}
