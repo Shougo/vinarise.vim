@@ -119,10 +119,10 @@ VINARISE BUFFER KEY MAPPINGS 			*vinarise-buffer-key-mappings*
 <Plug>(vinarise_exit)				*<Plug>(vinarise_exit)*
 		Exit vinarise buffer.
 
-<Plug>(vinarise_next_col)			*<Plug>(vinarise_next_col)*
+<Plug>(vinarise_next_column)			*<Plug>(vinarise_next_column)*
 		Move to next col address in vinarise buffer.
 
-<Plug>(vinarise_prev_col)			*<Plug>(vinarise_prev_col)*
+<Plug>(vinarise_prev_column)			*<Plug>(vinarise_prev_column)*
 		Move to previous col address in vinarise buffer.
 
 					*<Plug>(vinarise_line_first_address)*
@@ -245,8 +245,8 @@ Default key mappings.
 V			<Plug>(vinarise_edit_with_vim)
 q			<Plug>(vinarise_hide)
 Q			<Plug>(vinarise_exit)
-l			<Plug>(vinarise_next_col)
-h			<Plug>(vinarise_next_col)
+l			<Plug>(vinarise_next_column)
+h			<Plug>(vinarise_prev_column)
 gh			<Plug>(vinarise_line_first_address)
 0			<Plug>(vinarise_line_first_address)
 ^			<Plug>(vinarise_line_first_address)
