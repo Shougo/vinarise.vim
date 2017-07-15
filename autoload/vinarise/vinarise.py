@@ -83,7 +83,8 @@ class VinariseBuffer(object):  # pylint: disable=too-many-public-methods
     def get_bytes(self, addr, count):
         if int(count) == 0:
             return []
-        return [ord_wrap(x) for x in self.mmap[int(addr): int(addr)+int(count)]]
+        return [ord_wrap(x) for x
+                in self.mmap[int(addr): int(addr)+int(count)]]
 
     def get_int8(self, addr):
         return self.get_byte(addr)
@@ -98,11 +99,13 @@ class VinariseBuffer(object):  # pylint: disable=too-many-public-methods
 
     def get_int32_le(self, addr):
         bytesobj = self.get_bytes(addr, 4)
-        return bytesobj[0] + bytesobj[1] * 0x100 + bytesobj[2] * 0x10000 + bytesobj[3] * 0x1000000
+        return (bytesobj[0] + bytesobj[1] * 0x100
+                + bytesobj[2] * 0x10000 + bytesobj[3] * 0x1000000)
 
     def get_int32_be(self, addr):
         bytesobj = self.get_bytes(addr, 4)
-        return bytesobj[3] + bytesobj[2] * 0x100 + bytesobj[1] * 0x10000 + bytesobj[0] * 0x1000000
+        return (bytesobj[3] + bytesobj[2] * 0x100
+                + bytesobj[1] * 0x10000 + bytesobj[0] * 0x1000000)
 
     def get_chars(self, addr, count, from_enc, to_enc):
         if int(count) == 0:
@@ -129,7 +132,8 @@ class VinariseBuffer(object):  # pylint: disable=too-many-public-methods
     def rfind(self, address, string, from_enc, to_enc):
         if not PY3:
             string = unicode(string, from_enc, 'replace')
-        return self.mmap.rfind(string.encode(to_enc, 'replace'), 0, int(address))
+        return self.mmap.rfind(string.encode(
+            to_enc, 'replace'), 0, int(address))
 
     def find_regexp(self, address, string, from_enc, to_enc):
         if not PY3:
@@ -143,7 +147,8 @@ class VinariseBuffer(object):  # pylint: disable=too-many-public-methods
 
     def find_binary(self, address, binary):
         addr = int(address)
-        bytesobj = [int(binary[i*2: i*2+2], 16) for i in range(len(binary) // 2)]
+        bytesobj = [int(binary[i*2: i*2+2], 16)
+                    for i in range(len(binary) // 2)]
         while addr >= 0 and addr < self.fsize:
             if self.get_byte(addr) == bytesobj[0] and \
                     bytesobj == self.get_bytes(addr, len(bytesobj)):
@@ -153,7 +158,8 @@ class VinariseBuffer(object):  # pylint: disable=too-many-public-methods
 
     def rfind_binary(self, address, binary):
         addr = int(address)
-        bytesobj = [int(binary[i*2: i*2+2], 16) for i in range(len(binary) // 2)]
+        bytesobj = [int(binary[i*2: i*2+2], 16)
+                    for i in range(len(binary) // 2)]
         while addr >= 0 and addr < self.fsize:
             if self.get_byte(addr) == bytesobj[0] and \
                     bytesobj == self.get_bytes(addr, len(bytesobj)):
@@ -163,7 +169,8 @@ class VinariseBuffer(object):  # pylint: disable=too-many-public-methods
 
     def find_binary_not(self, address, binary):
         addr = int(address)
-        bytesobj = [int(binary[i*2: i*2+2], 16) for i in range(len(binary) // 2)]
+        bytesobj = [int(binary[i*2: i*2+2], 16)
+                    for i in range(len(binary) // 2)]
         while addr >= 0 and addr < self.fsize:
             if self.get_byte(addr) != bytesobj[0] and \
                     bytesobj != self.get_bytes(addr, len(bytesobj)):
@@ -173,7 +180,8 @@ class VinariseBuffer(object):  # pylint: disable=too-many-public-methods
 
     def rfind_binary_not(self, address, binary):
         addr = int(address)
-        bytesobj = [int(binary[i*2: i*2+2], 16) for i in range(len(binary) // 2)]
+        bytesobj = [int(binary[i*2: i*2+2], 16)
+                    for i in range(len(binary) // 2)]
         while addr >= 0 and addr < self.fsize:
             if self.get_byte(addr) != bytesobj[0] and \
                     bytesobj != self.get_bytes(addr, len(bytesobj)):
