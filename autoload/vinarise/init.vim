@@ -1,10 +1,7 @@
 "=============================================================================
 " FILE: init.vim
-" AUTHOR:  Shougo Matsushita <Shougo.Matsu@gmail.com>
-" License: MIT license  {{{
-"     Permission is hereby granted, free of charge, to any person obtaining
-"     a copy of this software and associated documentation files (the
-" }}}
+" AUTHOR:  Shougo Matsushita <Shougo.Matsu at gmail.com>
+" License: MIT license
 "=============================================================================
 
 " Check Python. "{{{
@@ -19,9 +16,6 @@ else
   finish
 endif
 "}}}
-
-let s:save_cpo = &cpo
-set cpo&vim
 
 " Constants "{{{
 if vinarise#util#is_windows()
@@ -431,6 +425,3 @@ function! s:get_postfix(prefix, is_create) abort "{{{
   return num == '' && !a:is_create ? '' :
         \ '@' . (a:is_create ? (num + 1) : num)
 endfunction"}}}
-
-let &cpo = s:save_cpo
-unlet s:save_cpo
