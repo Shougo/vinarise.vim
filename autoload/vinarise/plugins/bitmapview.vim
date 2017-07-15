@@ -13,12 +13,14 @@ let s:save_gui = []
 
 let s:font_pattern =
       \ vinarise#util#is_windows() ||
-      \ vinarise#util#is_mac() ?  ':h\zs\d\+':
+      \ vinarise#util#is_mac() || has('nvim') ?  ':h\zs\d\+':
       \ has('gui_gtk') ?       '\s\+\zs\d\+$':
       \ has('X11') ?           '\v%([^-]*-){6}\zs\d+\ze%(-[^-]*){7}':
       \                        '*Unknown system*'
 
 let s:manager = vinarise#util#get_vital().import('Vim.Buffer')
+
+let g:vinarise_guifont = get(g:, 'vinarise_guifont', '')
 "}}}
 
 let s:plugin = {
@@ -48,7 +50,7 @@ function! s:bitmapview_open() abort "{{{
     return
   endif
 
-  if !has('gui_running')
+  if !exists(':GuiFont') && !has('gui_running')
     call vinarise#view#print_error(
           \ '[vinarise] You should not use this feature in Console mode.'
           \.'  It is too slow and may be crash.')
@@ -255,17 +257,17 @@ function! s:set_cursor_address(address) abort "{{{
 endfunction"}}}
 
 function! s:change_windowsize() abort "{{{
-  if !has('gui_running') || !empty(s:save_gui) || !exists('b:bitmapview')
+  if (!exists(':GuiFont') && !has('gui_running'))
+        \ || !empty(s:save_gui) || !exists('b:bitmapview')
     return
   endif
 
-  let old_fontsize = matchstr(&guifont, s:font_pattern)
-  if old_fontsize == ''
-    return
+  if has('nvim')
+    let s:save_gui = [&lines, &columns, getwinposx(), getwinposy()]
+  else
+    let s:save_gui = [&guifont, &guifontwide, &lines, &columns,
+          \ getwinposx(), getwinposy()]
   endif
-
-  let s:save_gui = [&guifont, &guifontwide, &lines, &columns,
-        \ getwinposx(), getwinposy()]
   let fontsize =
         \ b:bitmapview.filesize <    1000 ? 16 :
         \ b:bitmapview.filesize <    4000 ? 8 :
@@ -273,8 +275,16 @@ function! s:change_windowsize() abort "{{{
         \ b:bitmapview.filesize < 1000000 ? 2 :
         \ 1
 
-  let &guifont = s:change_fontsize(&guifont, fontsize)
-  let &guifontwide = s:change_fontsize(&guifontwide, fontsize)
+  if has('nvim') && exists(':GuiFont')
+    execute 'GuiFont' s:change_fontsize(g:vinarise_guifont, fontsize)
+  else
+    if matchstr(&guifont, s:font_pattern) == ''
+      return
+    endif
+
+    let &guifont = s:change_fontsize(&guifont, fontsize)
+    let &guifontwide = s:change_fontsize(&guifontwide, fontsize)
+  endif
   let &lines = 800 / fontsize
   let &columns = 1024 / fontsize + 20
   let b:bitmapview.width = 512 / fontsize
@@ -284,8 +294,12 @@ function! s:restore_windowsize() abort "{{{
     return
   endif
 
-  let [&guifont, &guifontwide, &lines, &columns,
-        \ posx, posy] = s:save_gui
+  if has('nvim')
+    let [&lines, &columns, posx, posy] = s:save_gui
+  else
+    let [&guifont, &guifontwide, &lines, &columns,
+          \ posx, posy] = s:save_gui
+  endif
   execute 'winpos' posx posy
 
   let s:save_gui = []
