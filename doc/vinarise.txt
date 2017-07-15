@@ -47,6 +47,7 @@ The commands of plugins				*:vinarise-sources-commands*
 :VinarisePluginViewBitmapView			*:VinarisePluginBitmapView*
 		View the file with Bitmap View.
 		Note: This command is available in vinarise buffer.
+		Note: neovim GUI client is supported.
 		Note: You should not use this feature in Console mode.  It is
 		too slow and may be crash.
 
