@@ -74,6 +74,7 @@ g:vinarise_detect_large_file_size
 
 g:vinarise_guifont				*g:vinarise_guifont*
 		The current guifont configuration for neovim GUI client.
+		It is the argument of |:GuiFont| command.
 		Note: It is neovim only.
 >
 			let g:vinarise_guifont = 'Courier\ 10\ Pitch:h14'
