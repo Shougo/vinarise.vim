@@ -51,9 +51,14 @@ function! s:bitmapview_open() abort "{{{
   endif
 
   if !exists(':GuiFont') && !has('gui_running')
-    call vinarise#view#print_error(
-          \ '[vinarise] You should not use this feature in Console mode.'
-          \.'  It is too slow and may be crash.')
+    if has('nvim') && !exists(':GuiFont')
+      call vinarise#view#print_error('[vinarise] '
+            \.'You should install neovim-gui-shim plugin with GUI client.')
+    else
+      call vinarise#view#print_error('[vinarise] '
+            \ 'You should not use this feature in Console mode.'
+            \.'  It is too slow and may be crash.')
+    endif
   endif
 
   match
@@ -296,11 +301,14 @@ function! s:restore_windowsize() abort "{{{
 
   if has('nvim')
     let [&lines, &columns, posx, posy] = s:save_gui
+    execute 'GuiFont' g:vinarise_guifont
   else
     let [&guifont, &guifontwide, &lines, &columns,
           \ posx, posy] = s:save_gui
   endif
-  execute 'winpos' posx posy
+  if posx >= 0 && posy >= 0
+    execute 'winpos' posx posy
+  endif
 
   let s:save_gui = []
 endfunction"}}}

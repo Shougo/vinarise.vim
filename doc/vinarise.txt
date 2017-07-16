@@ -58,26 +58,36 @@ g:vinarise_enable_auto_detect			*g:vinarise_enable_auto_detect*
 		If this variable is 1, vinarise detects binary file or large
 		file automatically.
 		
-		Default value is 0.
+		Default: 0
 
-g:vinarise_detect_large_file_size		*g:vinarise_detect_large_file_size*
+					*g:vinarise_detect_large_file_size*
+g:vinarise_detect_large_file_size
 		This variable is |vinarise| detect large file size.
 		If this variable value is less equal than 0, will disable
 		large file detection.
 		Note: This variable is valid in |g:vinarise_enable_auto_detect|
 		is 1.
 		
-		Default value is 10000000.
+		Default: 10000000
 
-g:vinarise_cursor_ascii_highlight		*g:vinarise_cursor_ascii_highlight*
+g:vinarise_guifont				*g:vinarise_guifont*
+		The current guifont configuration for neovim GUI client.
+		Note: It is neovim only.
+>
+			let g:vinarise_guifont = 'Courier\ 10\ Pitch:h14'
+<
+		Default: ""
+
+					*g:vinarise_cursor_ascii_highlight*
+g:vinarise_cursor_ascii_highlight
 		This variable is cursor ascii character highlight.
 		
-		Default value is "Search".
+		Default: "Search"
 
 g:vinarise_objdump_command			*g:vinarise_objdump_command*
 		The command name of objdump.
 		
-		Default value is "objdump".
+		Default: "objdump"
 
 ------------------------------------------------------------------------------
 PLUGINS 					*vinarise-plugins*
@@ -211,6 +221,9 @@ VINARISE BUFFER KEY MAPPINGS 			*vinarise-buffer-key-mappings*
 		Execute |:VinarisePluginBitmapView| command.
 		Note: You should not use this feature in Console mode.  It is
 		too slow and may be crash.
+		Note: neovim GUI client is supported.  But neovim-gui-shim and
+		|g:vinarise_guifont| configuration are needed.
+		https://github.com/equalsraf/neovim-gui-shim
 
 <Plug>(vinarise_next_skip)			*<Plug>(vinarise_next_skip)*
 		If the cursor is on zero, move to next nonzero address.
