@@ -76,6 +76,8 @@ function! vinarise#mappings#define_default_mappings() abort "{{{
         \ :<C-u>call <SID>move_skip(1)<CR>
   nnoremap <buffer><silent> <Plug>(vinarise_prev_skip)
         \ :<C-u>call <SID>move_skip(0)<CR>
+  nnoremap <buffer><silent> <Plug>(vinarise_insert_bytes)
+        \ :<C-u>call <SID>insert_bytes()<CR>
   "}}}
 
   if exists('g:vinarise_no_default_keymappings') &&
@@ -122,6 +124,7 @@ function! vinarise#mappings#define_default_mappings() abort "{{{
   execute s:nowait_nmap() 'B'        '<Plug>(vinarise_bitmapview)'
   execute s:nowait_nmap() 'w'        '<Plug>(vinarise_next_skip)'
   execute s:nowait_nmap() 'b'        '<Plug>(vinarise_prev_skip)'
+  execute s:nowait_nmap() 'i'        '<Plug>(vinarise_insert_bytes)'
 endfunction"}}}
 
 function! s:nowait_nmap() abort "{{{
@@ -266,6 +269,32 @@ function! s:change_current_address() abort "{{{
   setlocal modified
 
   setlocal nomodifiable
+endfunction"}}}
+function! s:insert_bytes() abort "{{{
+  " Get current address.
+  let [type, address] = vinarise#helper#parse_address(getline('.'),
+        \ vinarise#get_cur_text(getline('.'), col('.')))
+  if type == 'address'
+    " Invalid.
+    return
+  endif
+
+  let old_value = b:vinarise.get_byte(address)
+
+  let value = input('Please input insert value: ')
+  redraw
+  if value == ''
+    return
+  elseif value !~ '^\x\x\?$'
+    echo 'Invalid value.'
+    return
+  endif
+  let value = str2nr(value, 16)
+
+  call b:vinarise.insert_bytes(address, [value])
+
+  " Redraw vinarise buffer.
+  call vinarise#mappings#redraw()
 endfunction"}}}
 function! s:overwrite_from_current_address() abort "{{{
   " Get current address.

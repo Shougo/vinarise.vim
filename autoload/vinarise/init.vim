@@ -342,6 +342,10 @@ function! s:initialize_vinarise_buffer(context, filename, filesize) abort "{{{
           \ ".rfind_binary_not(vim.eval('a:address'), vim.eval('a:binary'))))"
     return address
   endfunction"}}}
+  function! b:vinarise.insert_bytes(address, bytes) abort "{{{
+    execute s:python self.python .
+          \ '.insert_bytes(vim.eval("a:address"), vim.eval("a:bytes"))'
+  endfunction"}}}
 
   " Basic settings.
   setlocal nolist

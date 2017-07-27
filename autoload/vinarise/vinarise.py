@@ -33,6 +33,7 @@ class VinariseBuffer(object):  # pylint: disable=too-many-public-methods
         self.path = None
         self.fsize = None
         self.mmap = None
+        self.is_mmap = False
 
     def open(self, path):
         # init vars
@@ -55,11 +56,13 @@ class VinariseBuffer(object):  # pylint: disable=too-many-public-methods
             self.mmap = mmap.mmap(fno, size, None, mmap.ACCESS_COPY, 0)
         else:
             self.mmap = mmap.mmap(fno, size, access=mmap.ACCESS_COPY, offset=0)
+        self.is_mmap = True
 
     def close(self):
         if hasattr(self, 'file'):
             self.file.close()
-        self.mmap.close()
+        if self.is_mmap:
+            self.mmap.close()
 
     def write(self, path):
         if path == self.path:
@@ -188,3 +191,14 @@ class VinariseBuffer(object):  # pylint: disable=too-many-public-methods
                 return addr
             addr -= 1
         return -1
+
+    def insert_bytes(self, addr, bs):
+        bs = bytes([chr_wrap(int(x)) for x in bs])
+        mmap = self.mmap[0:]
+        if self.is_mmap:
+            self.mmap.close()
+        self.mmap = mmap[:int(addr)] + bs + mmap[int(addr):]
+        self.fsize += len(bs)
+        # Disable mmap
+        self.is_mmap = False
+

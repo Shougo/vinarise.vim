@@ -236,6 +236,11 @@ VINARISE BUFFER KEY MAPPINGS 			*vinarise-buffer-key-mappings*
 		If the cursor is on zero, move to previous nonzero address.
 		If the cursor is on nonzero, move to previous zero address.
 
+					*<Plug>(vinarise_insert_bytes)*
+<Plug>(vinarise_insert_bytes)
+		Insert the value in the current address.
+
+
  					*vinarise-default-mappings*
 
 Default key mappings.
@@ -279,6 +284,7 @@ g<C-l>			<Plug>(vinarise_reload)
 B			<Plug>(vinarise_bitmapview)
 w			<Plug>(vinarise_next_skip)
 b			<Plug>(vinarise_prev_skip)
+i			<Plug>(vinarise_insert_bytes)
 
 ------------------------------------------------------------------------------
 OPTIONS 					*vinarise-options*
