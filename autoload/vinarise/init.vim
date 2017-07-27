@@ -346,6 +346,10 @@ function! s:initialize_vinarise_buffer(context, filename, filesize) abort "{{{
     execute s:python self.python .
           \ '.insert_bytes(vim.eval("a:address"), vim.eval("a:bytes"))'
   endfunction"}}}
+  function! b:vinarise.delete_byte(address) abort "{{{
+    execute s:python self.python .
+          \ '.delete_byte(vim.eval("a:address"))'
+  endfunction"}}}
 
   " Basic settings.
   setlocal nolist

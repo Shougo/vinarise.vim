@@ -192,13 +192,20 @@ class VinariseBuffer(object):  # pylint: disable=too-many-public-methods
             addr -= 1
         return -1
 
-    def insert_bytes(self, addr, bs):
-        bs = bytes([chr_wrap(int(x)) for x in bs])
-        mmap = self.mmap[0:]
+    def update_bytes(self, bs):
         if self.is_mmap:
             self.mmap.close()
-        self.mmap = mmap[:int(addr)] + bs + mmap[int(addr):]
-        self.fsize += len(bs)
+        self.mmap = bs
+
+        self.fsize = len(self.mmap)
         # Disable mmap
         self.is_mmap = False
 
+    def insert_bytes(self, addr, bs):
+        bs = bytes([chr_wrap(int(x)) for x in bs])
+        mm = self.mmap[0:]
+        self.update_bytes(mm[:int(addr)] + bs + mm[int(addr):])
+
+    def delete_byte(self, addr):
+        mm = self.mmap[0:]
+        self.update_bytes(mm[:int(addr)] + mm[int(addr)+1:])

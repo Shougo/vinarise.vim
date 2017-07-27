@@ -78,6 +78,8 @@ function! vinarise#mappings#define_default_mappings() abort "{{{
         \ :<C-u>call <SID>move_skip(0)<CR>
   nnoremap <buffer><silent> <Plug>(vinarise_insert_bytes)
         \ :<C-u>call <SID>insert_bytes()<CR>
+  nnoremap <buffer><silent> <Plug>(vinarise_delete_current_address)
+        \ :<C-u>call <SID>delete_current_address()<CR>
   "}}}
 
   if exists('g:vinarise_no_default_keymappings') &&
@@ -125,6 +127,7 @@ function! vinarise#mappings#define_default_mappings() abort "{{{
   execute s:nowait_nmap() 'w'        '<Plug>(vinarise_next_skip)'
   execute s:nowait_nmap() 'b'        '<Plug>(vinarise_prev_skip)'
   execute s:nowait_nmap() 'i'        '<Plug>(vinarise_insert_bytes)'
+  execute s:nowait_nmap() 'x'        '<Plug>(vinarise_delete_current_address)'
 endfunction"}}}
 
 function! s:nowait_nmap() abort "{{{
@@ -334,6 +337,20 @@ function! s:overwrite_from_current_address() abort "{{{
   call vinarise#mappings#move_to_address(address)
 
   setlocal modified
+endfunction"}}}
+function! s:delete_current_address() abort "{{{
+  " Get current address.
+  let [type, address] = vinarise#helper#parse_address(getline('.'),
+        \ vinarise#get_cur_text(getline('.'), col('.')))
+  if type == 'address'
+    " Invalid.
+    return
+  endif
+
+  call b:vinarise.delete_byte(address)
+
+  " Redraw vinarise buffer.
+  call vinarise#mappings#redraw()
 endfunction"}}}
 
 function! s:move_col(is_next) abort "{{{
