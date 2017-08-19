@@ -589,11 +589,15 @@ function! s:change_encoding() abort "{{{
   call vinarise#mappings#redraw()
 endfunction"}}}
 function! s:reload() abort "{{{
+  let address = s:parse_current_address()[1]
+
   let vinarise = vinarise#get_current_vinarise()
   let context = deepcopy(vinarise.context)
   let filename = vinarise#get_current_vinarise().filename
 
   call vinarise#init#start(filename, context)
+
+  call vinarise#mappings#move_to_address(address)
 endfunction"}}}
 
 " vim: foldmethod=marker
