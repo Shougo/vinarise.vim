@@ -186,9 +186,7 @@ function! vinarise#mappings#move_to_address(address) abort "{{{
 endfunction "}}}
 function! vinarise#mappings#redraw() abort "{{{
   " Redraw vinarise buffer.
-
-  let address = vinarise#helper#parse_address(getline('.'),
-        \ vinarise#get_cur_text(getline('.'), col('.')))[1]
+  let address = s:parse_current_address()[1]
   call vinarise#mappings#move_to_address(address)
 endfunction "}}}
 
@@ -233,18 +231,14 @@ function! s:exit() abort "{{{
   call vinarise#util#delete_buffer()
 endfunction"}}}
 function! s:print_current_position() abort "{{{
-  " Get current address.
-  let [type, address] = vinarise#helper#parse_address(getline('.'),
-        \ vinarise#get_cur_text(getline('.'), col('.')))
+  let [type, address] = s:parse_current_address()
   let percentage = b:vinarise.get_percentage(address)
 
   echo printf('[%s] %8d / %8d (%3d%%)',
         \ type, address, b:vinarise.filesize - 1, percentage)
 endfunction"}}}
 function! s:change_current_address() abort "{{{
-  " Get current address.
-  let [type, address] = vinarise#helper#parse_address(getline('.'),
-        \ vinarise#get_cur_text(getline('.'), col('.')))
+  let [type, address] = s:parse_current_address()
   if type == 'address'
     " Invalid.
     return
@@ -274,9 +268,7 @@ function! s:change_current_address() abort "{{{
   setlocal nomodifiable
 endfunction"}}}
 function! s:insert_bytes() abort "{{{
-  " Get current address.
-  let [type, address] = vinarise#helper#parse_address(getline('.'),
-        \ vinarise#get_cur_text(getline('.'), col('.')))
+  let [type, address] = s:parse_current_address()
   if type == 'address'
     " Invalid.
     return
@@ -300,9 +292,7 @@ function! s:insert_bytes() abort "{{{
   call vinarise#mappings#redraw()
 endfunction"}}}
 function! s:overwrite_from_current_address() abort "{{{
-  " Get current address.
-  let [type, address] = vinarise#helper#parse_address(getline('.'),
-        \ vinarise#get_cur_text(getline('.'), col('.')))
+  let [type, address] = s:parse_current_address()
   if type == 'address'
     " Invalid.
     return
@@ -339,9 +329,7 @@ function! s:overwrite_from_current_address() abort "{{{
   setlocal modified
 endfunction"}}}
 function! s:delete_current_address() abort "{{{
-  " Get current address.
-  let [type, address] = vinarise#helper#parse_address(getline('.'),
-        \ vinarise#get_cur_text(getline('.'), col('.')))
+  let [type, address] = s:parse_current_address()
   if type == 'address'
     " Invalid.
     return
@@ -352,10 +340,13 @@ function! s:delete_current_address() abort "{{{
   " Redraw vinarise buffer.
   call vinarise#mappings#redraw()
 endfunction"}}}
+function! s:parse_current_address() abort "{{{
+  return vinarise#helper#parse_address(getline('.'),
+        \ vinarise#get_cur_text(getline('.'), col('.')))
+endfunction"}}}
 
 function! s:move_col(is_next) abort "{{{
-  let [type, address] = vinarise#helper#parse_address(getline('.'),
-        \ vinarise#get_cur_text(getline('.'), col('.')))
+  let [type, address] = s:parse_current_address()
   if a:is_next
     if type ==# 'hex'
       if (address % b:vinarise.width) == (b:vinarise.width - 1)
@@ -398,8 +389,7 @@ function! s:move_line(is_next) abort "{{{
   endif
 endfunction "}}}
 function! s:move_line_address(is_first) abort "{{{
-  let address = vinarise#helper#parse_address(getline('.'),
-        \ vinarise#get_cur_text(getline('.'), col('.')))[1]
+  let address = s:parse_current_address()[1]
   let address = (address / b:vinarise.width) * b:vinarise.width
   if !a:is_first
     let address += 15
@@ -434,9 +424,7 @@ function! s:move_half_screen(is_next) abort "{{{
   endif
 endfunction "}}}
 function! s:move_by_input_offset(input) abort "{{{
-  " Get current address.
-  let address = vinarise#helper#parse_address(getline('.'),
-        \ vinarise#get_cur_text(getline('.'), col('.')))[1]
+  let address = s:parse_current_address()[1]
   let rest = max([0, b:vinarise.filesize - address - 1])
   let offset = (a:input == '') ?
         \ input(printf('Please input offset(min -0x%x, max 0x%x) : ',
@@ -468,8 +456,7 @@ endfunction "}}}
 function! s:move_skip(is_next) abort "{{{
   let vinarise = b:vinarise
 
-  let address = vinarise#helper#parse_address(getline('.'),
-        \ vinarise#get_cur_text(getline('.'), col('.')))[1]
+  let address = s:parse_current_address()[1]
 
   let value = vinarise.get_byte(address)
   let binary = '00'
@@ -539,8 +526,7 @@ function! s:search_buffer(type, is_reverse, string) abort "{{{
     endif
   endif
 
-  let start = vinarise#helper#parse_address(getline('.'),
-        \ vinarise#get_cur_text(getline('.'), col('.')))[1]
+  let start = s:parse_current_address()[1]
   if a:is_reverse
     let start -= 1
   else
