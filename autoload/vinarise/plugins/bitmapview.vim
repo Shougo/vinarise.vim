@@ -56,7 +56,7 @@ function! s:bitmapview_open() abort "{{{
             \.'You should install neovim-gui-shim plugin with GUI client.')
     else
       call vinarise#view#print_error('[vinarise] '
-            \ 'You should not use this feature in Console mode.'
+            \.'You should not use this feature in Console mode.'
             \.'  It is too slow and may be crash.')
     endif
   endif
