@@ -23,5 +23,3 @@ highlight default link vinariseSep2 Identifier
 highlight default link vinariseAscii Statement
 
 let b:current_syntax = 'vinarise'
-
-" vim: foldmethod=marker

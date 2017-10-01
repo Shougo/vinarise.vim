@@ -8,30 +8,27 @@ function! vinarise#plugins#bitmap_analysis#define() abort
   return s:plugin
 endfunction
 
-" Variables  "{{{
-"}}}
-
 let s:plugin = {
       \ 'name' : 'bitmap_analysis',
       \ 'description' : 'bitmap analyzer',
       \}
 
-function! s:plugin.initialize(vinarise, context) abort "{{{
+function! s:plugin.initialize(vinarise, context) abort
   call unite#sources#vinarise_analysis#add_analyzers(s:analyzer)
-endfunction"}}}
-function! s:plugin.finalize(vinarise, context) abort "{{{
-endfunction"}}}
+endfunction
+function! s:plugin.finalize(vinarise, context) abort
+endfunction
 
 let s:analyzer = {
       \ 'name' : 'bitmap',
       \ 'description' : 'bitmap analyzer',
       \}
 
-function! s:analyzer.detect(vinarise, context) abort "{{{
+function! s:analyzer.detect(vinarise, context) abort
   return a:vinarise.get_bytes(0, 2) == [0x42, 0x4d]
-endfunction"}}}
+endfunction
 
-function! s:analyzer.parse(vinarise, context) abort "{{{
+function! s:analyzer.parse(vinarise, context) abort
   let candidates = []
   let offset = 0
 
@@ -90,9 +87,9 @@ function! s:analyzer.parse(vinarise, context) abort "{{{
   endif
 
   return candidates
-endfunction"}}}
+endfunction
 
-function! s:analyze_info_header(vinarise, candidates, offset) abort "{{{
+function! s:analyze_info_header(vinarise, candidates, offset) abort
   " BITMAPINFOHEADER
   let offset = a:offset
   let info_header = { 'name' : 'BITMAPINFOHEADER', 'value' : []}
@@ -199,6 +196,4 @@ function! s:analyze_info_header(vinarise, candidates, offset) abort "{{{
   call add(a:candidates, info_header)
 
   return [a:candidates, offset]
-endfunction"}}}
-
-" vim: foldmethod=marker
+endfunction

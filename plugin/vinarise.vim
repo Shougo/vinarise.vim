@@ -11,14 +11,14 @@ elseif v:version < 703
   finish
 endif
 
-" Global options definition. "{{{
+" Global options definition.
 let g:vinarise_enable_auto_detect =
       \ get(g:, 'vinarise_enable_auto_detect', 0)
 let g:vinarise_detect_large_file_size =
       \ get(g:, 'vinarise_detect_large_file_size', 10000000)
 let g:vinarise_cursor_ascii_highlight =
       \ get(g:, 'vinarise_cursor_ascii_highlight', 'Search')
-"}}}
+
 
 command! -nargs=* -bar -complete=customlist,vinarise#complete
       \ Vinarise
@@ -32,12 +32,12 @@ if g:vinarise_enable_auto_detect
   augroup END
 endif
 
-function! s:call_vinarise(default, args) abort "{{{
+function! s:call_vinarise(default, args) abort
   let [args, context] = s:parse_args(a:default, a:args)
 
   call vinarise#init#start(join(args), context)
-endfunction"}}}
-function! s:parse_args(default, args) abort "{{{
+endfunction
+function! s:parse_args(default, args) abort
   let args = []
   let context = a:default
   for arg in split(a:args, '\%(\\\@<!\s\)\+')
@@ -59,9 +59,9 @@ function! s:parse_args(default, args) abort "{{{
   endfor
 
   return [args, context]
-endfunction"}}}
+endfunction
 
-function! s:browse_check(path) abort "{{{
+function! s:browse_check(path) abort
   if bufnr('%') != expand('<abuf>')
         \ || a:path == ''
     return
@@ -91,9 +91,6 @@ function! s:browse_check(path) abort "{{{
         \        getfsize(path) > g:vinarise_detect_large_file_size)
     call s:call_vinarise({'overwrite' : 1}, path)
   endif
-endfunction"}}}
+endfunction
 
 let g:loaded_vinarise = 1
-
-" __END__
-" vim: foldmethod=marker

@@ -4,11 +4,11 @@
 " License: MIT license
 "=============================================================================
 
-function! vinarise#version() abort "{{{
+function! vinarise#version() abort
   return str2nr(printf('%02d%02d', 2, 0))
-endfunction"}}}
+endfunction
 
-" Variables  "{{{
+" Variables 
 let s:vinarise_options = [
       \ '-split', '-split-command',
       \ '-winwidth=', '-winheight=',
@@ -16,9 +16,9 @@ let s:vinarise_options = [
       \]
 let s:current_vinarise = {}
 let s:use_current_vinarise = 0
-"}}}
 
-function! vinarise#complete(arglead, cmdline, cursorpos) abort "{{{
+
+function! vinarise#complete(arglead, cmdline, cursorpos) abort
   let _ = []
 
   let args = split(join(split(a:cmdline)[1:]), '\\\@<!\s\+')
@@ -54,24 +54,22 @@ function! vinarise#complete(arglead, cmdline, cursorpos) abort "{{{
   endif
 
   return _
-endfunction"}}}
-function! vinarise#complete_encodings(arglead, cmdline, cursorpos) abort "{{{
+endfunction
+function! vinarise#complete_encodings(arglead, cmdline, cursorpos) abort
   return sort(filter(vinarise#multibyte#get_supported_encoding_list(),
         \ 'stridx(v:val, a:arglead) == 0'))
-endfunction"}}}
-function! vinarise#get_options() abort "{{{
+endfunction
+function! vinarise#get_options() abort
   return copy(s:vinarise_options)
-endfunction"}}}
-function! vinarise#get_cur_text(string, col) abort "{{{
+endfunction
+function! vinarise#get_cur_text(string, col) abort
   return matchstr(a:string, '^.*\%' . a:col . 'c.')
-endfunction"}}}
+endfunction
 
-function! vinarise#set_current_vinarise(vinarise) abort "{{{
+function! vinarise#set_current_vinarise(vinarise) abort
   let s:current_vinarise = a:vinarise
-endfunction"}}}
-function! vinarise#get_current_vinarise() abort "{{{
+endfunction
+function! vinarise#get_current_vinarise() abort
   return exists('b:vinarise') && !s:use_current_vinarise ?
         \ b:vinarise : s:current_vinarise
-endfunction"}}}
-
-" vim: foldmethod=marker
+endfunction

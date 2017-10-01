@@ -4,10 +4,10 @@
 " License: MIT license
 "=============================================================================
 
-function! vinarise#view#print_error(string) abort "{{{
+function! vinarise#view#print_error(string) abort
   echohl Error | echo a:string | echohl None
-endfunction"}}}
-function! vinarise#view#print_lines(lines, ...) abort "{{{
+endfunction
+function! vinarise#view#print_lines(lines, ...) abort
   " Get last address.
   if a:0 >= 1
     let address = a:1
@@ -56,8 +56,8 @@ function! vinarise#view#print_lines(lines, ...) abort "{{{
 
   let &l:modified = modified_save
   setlocal nomodifiable
-endfunction"}}}
-function! vinarise#view#make_line(line_address) abort "{{{
+endfunction
+function! vinarise#view#make_line(line_address) abort
   " Make new line.
   let bytes = b:vinarise.get_bytes(
         \ a:line_address * b:vinarise.width, b:vinarise.width)
@@ -73,14 +73,12 @@ function! vinarise#view#make_line(line_address) abort "{{{
 
   return printf('%07x0: %-48s|%s',
         \ a:line_address, hex_line, ascii_line)
-endfunction"}}}
+endfunction
 
-function! vinarise#view#set_cursor_address(address) abort "{{{
+function! vinarise#view#set_cursor_address(address) abort
   let line_address = (a:address / b:vinarise.width) * b:vinarise.width
   let hex_line = repeat(' \x\x', a:address - line_address + 1)
   let [lnum, col] = searchpos(
         \ printf('%08x:%s', line_address, hex_line), 'cew')
   call cursor(lnum, col-1)
-endfunction"}}}
-
-" vim: foldmethod=marker
+endfunction

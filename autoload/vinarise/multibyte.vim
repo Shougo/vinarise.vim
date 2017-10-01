@@ -6,17 +6,17 @@
 
 scriptencoding utf-8
 
-function! vinarise#multibyte#get_supported_encoding_pattern() abort "{{{
+function! vinarise#multibyte#get_supported_encoding_pattern() abort
   " Ascii only.
   return '^\%('.join(vinarise#multibyte#get_supported_encoding_list(), '\|').'\)$'
-endfunction"}}}
-function! vinarise#multibyte#get_supported_encoding_list() abort "{{{
+endfunction
+function! vinarise#multibyte#get_supported_encoding_list() abort
   " Ascii only.
   return (v:version < 703) ? ['latin1'] :
         \ ['latin1', 'utf-8', 'cp932', 'euc-jp',
         \  'utf-16le', 'utf-16be', 'ucs-2le', 'ucs-2be']
-endfunction"}}}
-function! vinarise#multibyte#make_ascii_line(line_address, bytes) abort "{{{
+endfunction
+function! vinarise#multibyte#make_ascii_line(line_address, bytes) abort
   let encoding = vinarise#get_current_vinarise().context.encoding
   if encoding =~? '^utf-\?8$'
     " UTF-8.
@@ -35,9 +35,9 @@ function! vinarise#multibyte#make_ascii_line(line_address, bytes) abort "{{{
     " Ascii.
     return s:make_latin1_line(a:line_address, a:bytes)
   endif
-endfunction"}}}
+endfunction
 
-function! s:make_latin1_line(line_address, bytes) abort "{{{
+function! s:make_latin1_line(line_address, bytes) abort
   " Make new line.
   let ascii_line = '   '
 
@@ -52,9 +52,9 @@ function! s:make_latin1_line(line_address, bytes) abort "{{{
   endfor
 
   return ascii_line . '  '
-endfunction"}}}
+endfunction
 
-function! s:make_utf8_line(line_address, bytes) abort "{{{
+function! s:make_utf8_line(line_address, bytes) abort
   let encoding = vinarise#get_current_vinarise().context.encoding
   let base_address = a:line_address * b:vinarise.width
   " Make new line.
@@ -145,9 +145,9 @@ function! s:make_utf8_line(line_address, bytes) abort "{{{
 
   return ascii_line . repeat(' ',
         \ strwidth(ascii_line) - (b:vinarise.width + 4))
-endfunction"}}}
+endfunction
 
-function! s:make_utf16_line(line_address, bytes, is_little_endian) abort "{{{
+function! s:make_utf16_line(line_address, bytes, is_little_endian) abort
   let encoding = vinarise#get_current_vinarise().context.encoding
   let base_address = a:line_address * b:vinarise.width
   " Make new line.
@@ -219,9 +219,9 @@ function! s:make_utf16_line(line_address, bytes, is_little_endian) abort "{{{
 
   return ascii_line . repeat(' ',
         \ strwidth(ascii_line) - (b:vinarise.width + 4))
-endfunction"}}}
+endfunction
 
-function! s:make_euc_jp_line(line_address, bytes) abort "{{{
+function! s:make_euc_jp_line(line_address, bytes) abort
   let encoding = vinarise#get_current_vinarise().context.encoding
   let base_address = a:line_address * b:vinarise.width
   " Make new line.
@@ -318,9 +318,9 @@ function! s:make_euc_jp_line(line_address, bytes) abort "{{{
 
   return ascii_line . repeat(' ',
         \ strwidth(ascii_line) - (b:vinarise.width + 4))
-endfunction"}}}
+endfunction
 
-function! s:make_cp932_line(line_address, bytes) abort "{{{
+function! s:make_cp932_line(line_address, bytes) abort
   let encoding = vinarise#get_current_vinarise().context.encoding
   let base_address = a:line_address * b:vinarise.width
   " Make new line.
@@ -402,6 +402,4 @@ function! s:make_cp932_line(line_address, bytes) abort "{{{
 
   return ascii_line . repeat(' ',
         \ strwidth(ascii_line) - (b:vinarise.width + 4))
-endfunction"}}}
-
-" vim: foldmethod=marker
+endfunction

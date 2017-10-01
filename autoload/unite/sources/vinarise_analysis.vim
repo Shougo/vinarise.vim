@@ -4,15 +4,9 @@
 " License: MIT license
 "=============================================================================
 
-" Variables  "{{{
-"}}}
-
-" Actions "{{{
-" }}}
-
-function! unite#sources#vinarise_analysis#define() abort "{{{
+function! unite#sources#vinarise_analysis#define() abort
   return s:source
-endfunction "}}}
+endfunction
 
 let s:analyzers = {}
 let s:source = {
@@ -22,7 +16,7 @@ let s:source = {
       \ 'default_action' : 'jump',
       \ }
 
-function! s:source.hooks.on_init(args, context) abort "{{{
+function! s:source.hooks.on_init(args, context) abort
   if &filetype !=# 'vinarise'
     return
   endif
@@ -50,9 +44,9 @@ function! s:source.hooks.on_init(args, context) abort "{{{
           \ a:context.source__analyzer_name, 'initialize',
           \ a:context.source__vinarise, a:context)
   endif
-endfunction"}}}
+endfunction
 
-function! s:source.gather_candidates(args, context) abort "{{{
+function! s:source.gather_candidates(args, context) abort
   if !has_key(a:context, 'source__vinarise')
     call unite#print_message(
           \ '[vinarise/analysis] not in vinarise buffer.')
@@ -73,26 +67,26 @@ function! s:source.gather_candidates(args, context) abort "{{{
         \ a:context.source__vinarise, a:context), 0)
 
   return candidates
-endfunction "}}}
+endfunction 
 
-" Actions "{{{
+" Actions
 let s:source.action_table.jump = {
       \ 'description' : 'jump to the structure item',
       \ }
-function! s:source.action_table.jump.func(candidate) abort "{{{
+function! s:source.action_table.jump.func(candidate) abort
   if !has_key(a:candidate, 'action__address')
         \ || &filetype !=# 'vinarise'
     return
   endif
 
   call vinarise#mappings#move_to_address(a:candidate.action__address)
-endfunction"}}}
+endfunction
 
 let s:source.action_table.edit = {
       \ 'description' : 'edit the structure item',
       \ 'is_invalidate_cache' : 1,
       \ }
-function! s:source.action_table.edit.func(candidate) abort "{{{
+function! s:source.action_table.edit.func(candidate) abort
   if !has_key(a:candidate, 'action__address')
         \ || !has_key(a:candidate, 'action__size')
         \ || !has_key(a:candidate, 'action__value')
@@ -113,12 +107,11 @@ function! s:source.action_table.edit.func(candidate) abort "{{{
     return
   endif
 "   let value = str2nr(value, 16)
-" 
 "   call b:vinarise.set_byte(address, value)
-endfunction"}}}
-"}}}
+endfunction
 
-function! s:initialize_candidates(list, level) abort "{{{
+
+function! s:initialize_candidates(list, level) abort
   let candidates = []
   for item in a:list
     let dict = (type(item) == type('')) ?
@@ -162,19 +155,17 @@ function! s:initialize_candidates(list, level) abort "{{{
   endfor
 
   return candidates
-endfunction"}}}
+endfunction
 
-function! s:call_analyzer(analyzer_name, function, vinarise, context) abort "{{{
+function! s:call_analyzer(analyzer_name, function, vinarise, context) abort
   let analyzer = s:analyzers[a:analyzer_name]
   if has_key(analyzer, a:function)
     return call(analyzer[a:function], [a:vinarise, a:context], analyzer)
   endif
 
   return 0
-endfunction"}}}
+endfunction
 
-function! unite#sources#vinarise_analysis#add_analyzers(analyzer) abort "{{{
+function! unite#sources#vinarise_analysis#add_analyzers(analyzer) abort
   let s:analyzers[a:analyzer.name] = a:analyzer
-endfunction"}}}
-
-" vim: foldmethod=marker
+endfunction

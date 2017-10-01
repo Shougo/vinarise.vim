@@ -5,8 +5,8 @@
 "=============================================================================
 
 " Define default mappings.
-function! vinarise#mappings#define_default_mappings() abort "{{{
-  " Plugin keymappings "{{{
+function! vinarise#mappings#define_default_mappings() abort
+  " Plugin keymappings
   nnoremap <buffer><silent> <Plug>(vinarise_edit_with_vim)
         \ :<C-u>call <SID>edit_with_vim()<CR>
   nnoremap <buffer><silent> <Plug>(vinarise_hide)
@@ -80,7 +80,7 @@ function! vinarise#mappings#define_default_mappings() abort "{{{
         \ :<C-u>call <SID>insert_bytes()<CR>
   nnoremap <buffer><silent> <Plug>(vinarise_delete_current_address)
         \ :<C-u>call <SID>delete_current_address()<CR>
-  "}}}
+  
 
   if exists('g:vinarise_no_default_keymappings') &&
         \ g:vinarise_no_default_keymappings
@@ -128,15 +128,15 @@ function! vinarise#mappings#define_default_mappings() abort "{{{
   execute s:nowait_nmap() 'b'        '<Plug>(vinarise_prev_skip)'
   execute s:nowait_nmap() 'i'        '<Plug>(vinarise_insert_bytes)'
   execute s:nowait_nmap() 'x'        '<Plug>(vinarise_delete_current_address)'
-endfunction"}}}
+endfunction
 
-function! s:nowait_nmap() abort "{{{
+function! s:nowait_nmap() abort
   return 'nmap <buffer>'
         \ . ((v:version > 703 || (v:version == 703 && has('patch1261'))) ?
         \ '<nowait>' : '')
-endfunction "}}}
+endfunction 
 
-function! vinarise#mappings#move_by_input_address(input) abort "{{{
+function! vinarise#mappings#move_by_input_address(input) abort
   let address = (a:input == '') ?
         \ input(printf('Please input new address(max 0x%x) : ',
         \     b:vinarise.filesize), '0x') : a:input
@@ -160,8 +160,8 @@ function! vinarise#mappings#move_by_input_address(input) abort "{{{
   endif
 
   call vinarise#mappings#move_to_address(address)
-endfunction "}}}
-function! vinarise#mappings#move_to_address(address) abort "{{{
+endfunction 
+function! vinarise#mappings#move_to_address(address) abort
   let address = a:address
   if address >= b:vinarise.filesize
     let address = b:vinarise.filesize - 1
@@ -183,14 +183,14 @@ function! vinarise#mappings#move_to_address(address) abort "{{{
 
   " Set cursor.
   call vinarise#view#set_cursor_address(address)
-endfunction "}}}
-function! vinarise#mappings#redraw() abort "{{{
+endfunction 
+function! vinarise#mappings#redraw() abort
   " Redraw vinarise buffer.
   let address = s:parse_current_address()[1]
   call vinarise#mappings#move_to_address(address)
-endfunction "}}}
+endfunction 
 
-function! s:edit_with_vim() abort "{{{
+function! s:edit_with_vim() abort
   let save_auto_detect = g:vinarise_enable_auto_detect
   let g:vinarise_enable_auto_detect = 0
 
@@ -199,8 +199,8 @@ function! s:edit_with_vim() abort "{{{
   finally
     let g:vinarise_enable_auto_detect = save_auto_detect
   endtry
-endfunction"}}}
-function! s:hide() abort "{{{
+endfunction
+function! s:hide() abort
   if &l:modified
     let yes = input(
           \ 'Current vinarise buffer is modified! Hide anyway?: ', 'yes')
@@ -216,8 +216,8 @@ function! s:hide() abort "{{{
   else
     call vinarise#util#alternate_buffer()
   endif
-endfunction"}}}
-function! s:exit() abort "{{{
+endfunction
+function! s:exit() abort
   if &l:modified
     let yes = input(
           \ 'Current vinarise buffer is modified! Exit anyway?: ')
@@ -229,15 +229,15 @@ function! s:exit() abort "{{{
 
   call vinarise#handlers#release_buffer(bufnr('%'))
   call vinarise#util#delete_buffer()
-endfunction"}}}
-function! s:print_current_position() abort "{{{
+endfunction
+function! s:print_current_position() abort
   let [type, address] = s:parse_current_address()
   let percentage = b:vinarise.get_percentage(address)
 
   echo printf('[%s] %8d / %8d (%3d%%)',
         \ type, address, b:vinarise.filesize - 1, percentage)
-endfunction"}}}
-function! s:change_current_address() abort "{{{
+endfunction
+function! s:change_current_address() abort
   let [type, address] = s:parse_current_address()
   if type == 'address'
     " Invalid.
@@ -266,8 +266,8 @@ function! s:change_current_address() abort "{{{
   setlocal modified
 
   setlocal nomodifiable
-endfunction"}}}
-function! s:insert_bytes() abort "{{{
+endfunction
+function! s:insert_bytes() abort
   let [type, address] = s:parse_current_address()
   if type == 'address'
     " Invalid.
@@ -290,8 +290,8 @@ function! s:insert_bytes() abort "{{{
 
   " Redraw vinarise buffer.
   call vinarise#mappings#redraw()
-endfunction"}}}
-function! s:overwrite_from_current_address() abort "{{{
+endfunction
+function! s:overwrite_from_current_address() abort
   let [type, address] = s:parse_current_address()
   if type == 'address'
     " Invalid.
@@ -327,8 +327,8 @@ function! s:overwrite_from_current_address() abort "{{{
   call vinarise#mappings#move_to_address(address)
 
   setlocal modified
-endfunction"}}}
-function! s:delete_current_address() abort "{{{
+endfunction
+function! s:delete_current_address() abort
   let [type, address] = s:parse_current_address()
   if type == 'address'
     " Invalid.
@@ -339,13 +339,13 @@ function! s:delete_current_address() abort "{{{
 
   " Redraw vinarise buffer.
   call vinarise#mappings#redraw()
-endfunction"}}}
-function! s:parse_current_address() abort "{{{
+endfunction
+function! s:parse_current_address() abort
   return vinarise#helper#parse_address(getline('.'),
         \ vinarise#get_cur_text(getline('.'), col('.')))
-endfunction"}}}
+endfunction
 
-function! s:move_col(is_next) abort "{{{
+function! s:move_col(is_next) abort
   let [type, address] = s:parse_current_address()
   if a:is_next
     if type ==# 'hex'
@@ -374,8 +374,8 @@ function! s:move_col(is_next) abort "{{{
       endif
     endif
   endif
-endfunction "}}}
-function! s:move_line(is_next) abort "{{{
+endfunction 
+function! s:move_line(is_next) abort
   if a:is_next
     if line('.') == line('$')
       call vinarise#view#print_lines(2)
@@ -387,8 +387,8 @@ function! s:move_line(is_next) abort "{{{
     endif
     call cursor(line('.') - 1, 0)
   endif
-endfunction "}}}
-function! s:move_line_address(is_first) abort "{{{
+endfunction 
+function! s:move_line_address(is_first) abort
   let address = s:parse_current_address()[1]
   let address = (address / b:vinarise.width) * b:vinarise.width
   if !a:is_first
@@ -396,8 +396,8 @@ function! s:move_line_address(is_first) abort "{{{
   endif
 
   call vinarise#view#set_cursor_address(address)
-endfunction "}}}
-function! s:move_screen(is_next) abort "{{{
+endfunction 
+function! s:move_screen(is_next) abort
   if a:is_next
     if line('.') + 2 * winheight(0) > line('$')
       call vinarise#view#print_lines(winheight(0))
@@ -409,8 +409,8 @@ function! s:move_screen(is_next) abort "{{{
     endif
     execute "normal! \<C-b>"
   endif
-endfunction "}}}
-function! s:move_half_screen(is_next) abort "{{{
+endfunction 
+function! s:move_half_screen(is_next) abort
   if a:is_next
     if line('.') + winheight(0) > line('$')
       call vinarise#view#print_lines(winheight(0)/2)
@@ -422,8 +422,8 @@ function! s:move_half_screen(is_next) abort "{{{
     endif
     execute "normal! \<C-u>"
   endif
-endfunction "}}}
-function! s:move_by_input_offset(input) abort "{{{
+endfunction 
+function! s:move_by_input_offset(input) abort
   let address = s:parse_current_address()[1]
   let rest = max([0, b:vinarise.filesize - address - 1])
   let offset = (a:input == '') ?
@@ -452,8 +452,8 @@ function! s:move_by_input_offset(input) abort "{{{
   endif
 
   call vinarise#mappings#move_by_input_address(printf("0x%x", address))
-endfunction "}}}
-function! s:move_skip(is_next) abort "{{{
+endfunction 
+function! s:move_skip(is_next) abort
   let vinarise = b:vinarise
 
   let address = s:parse_current_address()[1]
@@ -477,8 +477,8 @@ function! s:move_skip(is_next) abort "{{{
   endif
 
   call vinarise#mappings#move_to_address(ret)
-endfunction "}}}
-function! s:search_buffer(type, is_reverse, string) abort "{{{
+endfunction 
+function! s:search_buffer(type, is_reverse, string) abort
   let string = ''
   if a:string != ''
     let string = a:string
@@ -566,8 +566,8 @@ function! s:search_buffer(type, is_reverse, string) abort "{{{
 
   let b:vinarise.last_search_string = string
   let b:vinarise.last_search_type = a:type
-endfunction "}}}
-function! s:change_encoding() abort "{{{
+endfunction 
+function! s:change_encoding() abort
   let context = vinarise#get_current_vinarise().context
   let encoding = input('Please input new encoding type: '.
         \ context.encoding . ' -> ', '', 'customlist,vinarise#complete_encodings')
@@ -587,8 +587,8 @@ function! s:change_encoding() abort "{{{
 
   " Redraw vinarise buffer.
   call vinarise#mappings#redraw()
-endfunction"}}}
-function! s:reload() abort "{{{
+endfunction
+function! s:reload() abort
   let address = s:parse_current_address()[1]
 
   let vinarise = vinarise#get_current_vinarise()
@@ -598,6 +598,4 @@ function! s:reload() abort "{{{
   call vinarise#init#start(filename, context)
 
   call vinarise#mappings#move_to_address(address)
-endfunction"}}}
-
-" vim: foldmethod=marker
+endfunction

@@ -4,7 +4,7 @@
 " License: MIT license
 "=============================================================================
 
-function! vinarise#helper#parse_address(string, cur_text) abort "{{{
+function! vinarise#helper#parse_address(string, cur_text) abort
   " Get last address.
   let base_address = matchstr(a:string, '^\x\+')
 
@@ -37,6 +37,4 @@ function! vinarise#helper#parse_address(string, cur_text) abort "{{{
   endif
 
   return [type, address]
-endfunction"}}}
-
-" vim: foldmethod=marker
+endfunction

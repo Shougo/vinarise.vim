@@ -64,5 +64,3 @@ highlight vinarise_BitmapviewFF guifg=#f0f0f0 guibg=#f0f0f0 ctermfg=white ctermb
 
 
 let b:current_syntax = 'vinarise-bitmapview'
-
-" vim: foldmethod=marker

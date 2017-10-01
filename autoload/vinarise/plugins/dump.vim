@@ -4,20 +4,20 @@
 " License: MIT license
 "=============================================================================
 
-" Constants "{{{
+" Constants
 if vinarise#util#is_windows()
   let s:dump_BUFFER_NAME = '[vinarise-dump-objdump]'
 else
   let s:dump_BUFFER_NAME = '*vinarise-dump-objdump*'
 endif
-"}}}
-" Variables  "{{{
+
+" Variables 
 if !exists('g:vinarise_objdump_command')
   let g:vinarise_objdump_command = 'objdump'
 endif
 
 let s:manager = vinarise#util#get_vital().import('Vim.Buffer')
-"}}}
+
 
 function! vinarise#plugins#dump#define() abort
   return s:plugin
@@ -28,12 +28,12 @@ let s:plugin = {
       \ 'description' : 'hex dump by objdump',
       \}
 
-function! s:plugin.initialize(vinarise, context) abort "{{{
+function! s:plugin.initialize(vinarise, context) abort
   command! -bar VinarisePluginDump
         \ call s:dump_open()
-endfunction"}}}
+endfunction
 
-function! s:dump_open() abort "{{{
+function! s:dump_open() abort
   if !executable(g:vinarise_objdump_command)
     echoerr g:vinarise_objdump_command . ' is not installed.'
     return
@@ -56,10 +56,10 @@ function! s:dump_open() abort "{{{
         \ . vinarise.filename . '"'
   setlocal nomodifiable
   setlocal nomodified
-endfunction"}}}
+endfunction
 
 " Misc.
-function! s:initialize_dump_buffer() abort "{{{
+function! s:initialize_dump_buffer() abort
   " Basic settings.
   setlocal buftype=nofile
   setlocal noswapfile
@@ -70,6 +70,4 @@ function! s:initialize_dump_buffer() abort "{{{
 
   " User's initialization.
   setfiletype vinarise-dump-objdump
-endfunction"}}}
-
-" vim: foldmethod=marker
+endfunction

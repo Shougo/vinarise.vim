@@ -36,5 +36,3 @@ function! vinarise#parser#parse_one_line(line, vinarise, offset, ...) abort
 
   return [value, offset]
 endfunction
-
-" vim: foldmethod=marker
