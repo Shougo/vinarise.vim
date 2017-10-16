@@ -8,7 +8,7 @@ function! vinarise#version() abort
   return str2nr(printf('%02d%02d', 2, 0))
 endfunction
 
-" Variables 
+" Variables
 let s:vinarise_options = [
       \ '-split', '-split-command',
       \ '-winwidth=', '-winheight=',
