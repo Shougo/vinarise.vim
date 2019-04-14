@@ -1,4 +1,4 @@
-# vimfiler
+# vinarise
 A hexa-decimal editor implemented in Vim script
 
 **Note**: Active development on vinarise.vim has stopped. The only future
