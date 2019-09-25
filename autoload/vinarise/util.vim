@@ -77,9 +77,7 @@ endfunction
 function! vinarise#util#substitute_path_separator(...) abort
   return call(s:get_prelude().substitute_path_separator, a:000)
 endfunction
-function! vinarise#util#escape_file_searching(...) abort
-  return call(s:get_prelude().escape_file_searching, a:000)
-endfunction
+
 function! vinarise#util#iconv(...) abort
   return call(s:get_process().iconv, a:000)
 endfunction
