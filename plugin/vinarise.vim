@@ -18,6 +18,8 @@ let g:vinarise_detect_large_file_size =
       \ get(g:, 'vinarise_detect_large_file_size', 10000000)
 let g:vinarise_cursor_ascii_highlight =
       \ get(g:, 'vinarise_cursor_ascii_highlight', 'Search')
+let g:vinarise_objdump_intel_assembly =
+      \ get(g:, 'vinarise_objdump_intel_assembly', 0)
 
 
 command! -nargs=* -bar -complete=customlist,vinarise#complete
