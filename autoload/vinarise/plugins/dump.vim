@@ -11,6 +11,12 @@ else
   let s:dump_BUFFER_NAME = '*vinarise-dump-objdump*'
 endif
 
+if g:vinarise_objdump_intel_assembly
+  let s:flags = ' -M intel-mnemonic -DCslx "'
+else
+  let s:flags = ' -DCslx "'
+endif
+
 " Variables 
 if !exists('g:vinarise_objdump_command')
   let g:vinarise_objdump_command = 'objdump'
@@ -52,7 +58,7 @@ function! s:dump_open() abort
   call s:initialize_dump_buffer()
 
   setlocal modifiable
-  execute 'silent %!'.g:vinarise_objdump_command.' -DCslx "'
+  execute 'silent %!'.g:vinarise_objdump_command.s:flags
         \ . vinarise.filename . '"'
   setlocal nomodifiable
   setlocal nomodified
