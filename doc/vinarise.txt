@@ -92,7 +92,8 @@ g:vinarise_objdump_command			*g:vinarise_objdump_command*
 		
 		Default: "objdump"
 
-g:vinarise_objdump_intel_assembly		*g:vinarise_enable_auto_detect*
+					*g:vinarise_objdump_intel_assembly*
+g:vinarise_objdump_intel_assembly
 		If this variable is set to 1, then the assembly output from
 		objdump will use intel assembly syntax rather than at&t
 		assembly syntax.
