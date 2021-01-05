@@ -83,12 +83,8 @@ function! s:browse_check(path) abort
     return
   endif
 
-  let lines = readfile(path, 'b', 1)
-  if empty(lines)
-    return
-  endif
-
-  if lines[0] =~ '[\x00-\x08\x10-\x1a\x1c-\x1f]\{5,}'
+  let head = readfile(path, 'b', 5)
+  if head =~# '[\x00-\x08\x10-\x1a\x1c-\x1f]\{2,}'
         \ || (g:vinarise_detect_large_file_size > 0 &&
         \        getfsize(path) > g:vinarise_detect_large_file_size)
     call s:call_vinarise({'overwrite' : 1}, path)
