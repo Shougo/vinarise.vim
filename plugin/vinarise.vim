@@ -83,7 +83,7 @@ function! s:browse_check(path) abort
     return
   endif
 
-  let head = readfile(path, 'b', 5)
+  let head = join(readfile(path, 'b', 5), '\n')
   if head =~# '[\x00-\x08\x10-\x1a\x1c-\x1f]\{2,}'
         \ || (g:vinarise_detect_large_file_size > 0 &&
         \        getfsize(path) > g:vinarise_detect_large_file_size)
